@@ -1,0 +1,214 @@
+﻿
+@{
+    ViewBag.Title = "Users";
+}
+
+
+<style>
+    table.dataTable {
+        border-collapse: collapse !important;
+    }
+</style>
+
+
+<div class="page-header card">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="fa fa-users bg-c-blue"></i>
+                <div class="d-inline">
+                    <h5>Users List</h5>
+                    <span>Users list goes here</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="page-header-breadcrumb">
+                <ul class=" breadcrumb breadcrumb-title">
+                    <li class="breadcrumb-item">
+                        <a href="@Url.Action("Admin","Dashboard")"><i class="feather icon-home"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#!">Admin Module</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#!">Users</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="pcoded-inner-content">
+
+    <div class="main-body">
+        <div class="page-wrapper">
+
+            <div class="page-body">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-header-right">
+                            <ul class="list-unstyled card-option">
+                                @*<li class="first-opt">*@
+                                <i class="feather icon-chevron-left open-card-option"></i></li>
+                                <li><i class="feather icon-maximize full-card"></i></li>
+                                <li><i class="feather icon-minus minimize-card"></i></li>
+                                <li><i class="feather icon-refresh-cw reload-card" id="tblUsers-refresh"></i></li>
+                                @*<li><i class="feather icon-trash close-card"></i></li>*@
+                                <li><i class="feather icon-chevron-left open-card-option"></i></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-block">
+                        <div class="dt-responsive table-responsive">
+                            <table id="tblUsers" class="table table-striped table-bordered nowrap" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>SNo.</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Credit Score</th>
+                                        <th>Signup Date</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>SNo.</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Credit Score</th>
+                                        <th>Signup Date</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="styleSelector">
+    </div>
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            loadDataTable();
+        });
+
+        //Approves a User
+        $(document).on("click", "#tblUsers tbody tr td button.btnapprove", function () {
+            var id = $(this).data('id');
+            var score = $(this).data('score');
+            swal({
+                title: "Approve!",
+                text: "Credit Score",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true,
+                inputPlaceholder: "Credit Score",
+                inputValue: parseInt(score)
+            }, function (inputValue) {
+                    if (inputValue === false)
+                        return false;
+                    if (inputValue === "" || parseInt(inputValue) === 0) {
+                        swal.showInputError("Credit Score is required");
+                        return false;
+                    }
+                    updateUserStatus(id, parseInt(inputValue),2)
+            });
+        });
+
+        //Makes User Inactive
+        $(document).on("click", "#tblUsers tbody tr td button.btninactivate", function () {
+            var id = $(this).data('id');
+            var score = $(this).data('score');
+            swal({
+                title: "Are you sure?", text: "You want to Inactivate this user",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, Inactivate !",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+            }, function () {
+                    updateUserStatus(id, score, 3);
+            })
+           
+        });
+
+        //Activate Inactive Users
+        $(document).on("click", "#tblUsers tbody tr td button.btnactivate", function () {
+            var id = $(this).data('id');
+            var score = $(this).data('score');
+            swal({
+                title: "Are you sure?", text: "You want to Activate this user",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, Activate !",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+            }, function () {
+                    updateUserStatus(id, score, 2);
+            })
+            
+        });
+        function updateUserStatus(id, score, statusId) {
+            $.ajax({
+                url: '@Url.Action("UpdateUserStatus", "Admin")',
+                type: 'post',
+                datatype: "json",
+                data: {
+                    userId: id,
+                    creditScore: score,
+                    statusId: statusId
+                },
+                success: function (data) {
+                    loadDataTable();
+                    swal("Done!", "User Details Updated Successfully.", "success");
+                },
+                error: function (jqXhr, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+
+        }
+        $('#tblUsers-refresh').click(function (e) {
+            loadDataTable();
+        });
+        function loadDataTable() {
+            $('#tblUsers').DataTable({
+                'responsive': false,
+                'autoWidth': true,
+                "bDestroy": true,
+                "iDisplayLength": 10,
+                "ajax": "/Admin/UsersGrid",
+                "columns": [
+                    { "data": "SNo" },
+                    { "data": "Name" },
+                    { "data": "Email" },
+                    { "data": "Phone" },
+                    { "data": "CreditScore" },
+                    { "data": "CreatedAt" },
+                    { "data": "Status" },
+                    { "data": "EditBtn" }
+                ],
+            });
+        }
+    </script>
+}

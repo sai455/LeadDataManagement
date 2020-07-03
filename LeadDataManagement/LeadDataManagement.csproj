@@ -1,0 +1,1172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FC9214F7-BD38-4CFF-9FEF-063E3A0312D1}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LeadDataManagement</RootNamespace>
+    <AssemblyName>LeadDataManagement</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44366</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>3.8</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Abstractions, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.11.1\lib\net46\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.11.1\lib\net46\Unity.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mvc5, Version=1.4.0.0, Culture=neutral, PublicKeyToken=43da31bc42a85347, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Mvc5.1.4.0\lib\net45\Unity.Mvc5.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\UnityConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Models\ViewModels\LeadViewModel.cs" />
+    <Compile Include="Repository\Interface\ILeadMasterDataRepository.cs" />
+    <Compile Include="Repository\LeadMasterDataRepository.cs" />
+    <Compile Include="Repository\LeadRepository.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Context\DbEntities.cs" />
+    <Compile Include="Models\Context\LeadDbContext.cs" />
+    <Compile Include="Models\ViewModels\UserViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\GenericRepository.cs" />
+    <Compile Include="Repository\Interface\IGenericRepository.cs" />
+    <Compile Include="Repository\Interface\ILeadRepository.cs" />
+    <Compile Include="Repository\Interface\IUserRepository.cs" />
+    <Compile Include="Repository\UserRepository.cs" />
+    <Compile Include="Services\Interface\ILeadService.cs" />
+    <Compile Include="Services\Interface\IUserService.cs" />
+    <Compile Include="Services\LeadService.cs" />
+    <Compile Include="Services\UserService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\lead-app-content\css\animate.css" />
+    <Content Include="Content\lead-app-content\css\autofill.datatables.min.css" />
+    <Content Include="Content\lead-app-content\css\bars-1to10.css" />
+    <Content Include="Content\lead-app-content\css\bars-horizontal.css" />
+    <Content Include="Content\lead-app-content\css\bars-movie.css" />
+    <Content Include="Content\lead-app-content\css\bars-pill.css" />
+    <Content Include="Content\lead-app-content\css\bars-reversed.css" />
+    <Content Include="Content\lead-app-content\css\bars-square.css" />
+    <Content Include="Content\lead-app-content\css\bootstrap-datetimepicker.css" />
+    <Content Include="Content\lead-app-content\css\bootstrap-multiselect.css" />
+    <Content Include="Content\lead-app-content\css\bootstrap-slider.css" />
+    <Content Include="Content\lead-app-content\css\bootstrap-tagsinput.css" />
+    <Content Include="Content\lead-app-content\css\bootstrap.min.css" />
+    <Content Include="Content\lead-app-content\css\buttons.datatables.min-2.css" />
+    <Content Include="Content\lead-app-content\css\buttons.datatables.min.css" />
+    <Content Include="Content\lead-app-content\css\c3.css" />
+    <Content Include="Content\lead-app-content\css\chartist.css" />
+    <Content Include="Content\lead-app-content\css\clndr.css" />
+    <Content Include="Content\lead-app-content\css\component.css" />
+    <Content Include="Content\lead-app-content\css\cropper.css" />
+    <Content Include="Content\lead-app-content\css\css-stars.css" />
+    <Content Include="Content\lead-app-content\css\custom-toolbar.css" />
+    <Content Include="Content\lead-app-content\css\datatables.bootstrap4.min.css" />
+    <Content Include="Content\lead-app-content\css\datedropper.min.css" />
+    <Content Include="Content\lead-app-content\css\daterangepicker.css" />
+    <Content Include="Content\lead-app-content\css\feather.css" />
+    <Content Include="Content\lead-app-content\css\flag-icon.min.css" />
+    <Content Include="Content\lead-app-content\css\font-awesome-n.min.css" />
+    <Content Include="Content\lead-app-content\css\font-awesome.min-2.css" />
+    <Content Include="Content\lead-app-content\css\font-awesome.min.css" />
+    <Content Include="Content\lead-app-content\css\fontawesome-stars-o.css" />
+    <Content Include="Content\lead-app-content\css\fontawesome-stars.css" />
+    <Content Include="Content\lead-app-content\css\footable.bootstrap.min.css" />
+    <Content Include="Content\lead-app-content\css\footable.standalone.min.css" />
+    <Content Include="Content\lead-app-content\css\fullcalendar.css" />
+    <Content Include="Content\lead-app-content\css\fullcalendar.print.css" />
+    <Content Include="Content\lead-app-content\css\handsontable.full.min.css" />
+    <Content Include="Content\lead-app-content\css\icofont.css" />
+    <Content Include="Content\lead-app-content\css\introjs.css" />
+    <Content Include="Content\lead-app-content\css\jqpagination.css" />
+    <Content Include="Content\lead-app-content\css\jquery-filer.css" />
+    <Content Include="Content\lead-app-content\css\jquery-jvectormap-2.0.2.css" />
+    <Content Include="Content\lead-app-content\css\jquery.datatables.min-2.css" />
+    <Content Include="Content\lead-app-content\css\jquery.datatables.min.css" />
+    <Content Include="Content\lead-app-content\css\jquery.filer-dragdropbox-theme.css" />
+    <Content Include="Content\lead-app-content\css\jquery.filer.css" />
+    <Content Include="Content\lead-app-content\css\jquery.minicolors.css" />
+    <Content Include="Content\lead-app-content\css\jquery.steps.css" />
+    <Content Include="Content\lead-app-content\css\jquery.toolbar.css" />
+    <Content Include="Content\lead-app-content\css\leaflet.css" />
+    <Content Include="Content\lead-app-content\css\list.css" />
+    <Content Include="Content\lead-app-content\css\mapbox-gl.css" />
+    <Content Include="Content\lead-app-content\css\markercluster.css" />
+    <Content Include="Content\lead-app-content\css\markercluster.default.css" />
+    <Content Include="Content\lead-app-content\css\morris.css" />
+    <Content Include="Content\lead-app-content\css\multi-select.css" />
+    <Content Include="Content\lead-app-content\css\nestable.css" />
+    <Content Include="Content\lead-app-content\css\notification.css" />
+    <Content Include="Content\lead-app-content\css\nv.d3.css" />
+    <Content Include="Content\lead-app-content\css\offline-language-english.css" />
+    <Content Include="Content\lead-app-content\css\offline-theme-slide.css" />
+    <Content Include="Content\lead-app-content\css\owl.carousel.css" />
+    <Content Include="Content\lead-app-content\css\owl.theme.default.css" />
+    <Content Include="Content\lead-app-content\css\pages.css" />
+    <Content Include="Content\lead-app-content\css\prism.css" />
+    <Content Include="Content\lead-app-content\css\radial.css" />
+    <Content Include="Content\lead-app-content\css\responsive.bootstrap4.min.css" />
+    <Content Include="Content\lead-app-content\css\responsive.datatables.css" />
+    <Content Include="Content\lead-app-content\css\select.datatables.min-2.css" />
+    <Content Include="Content\lead-app-content\css\select.datatables.min.css" />
+    <Content Include="Content\lead-app-content\css\select2.min.css" />
+    <Content Include="Content\lead-app-content\css\simple-line-icons.css" />
+    <Content Include="Content\lead-app-content\css\spectrum.css" />
+    <Content Include="Content\lead-app-content\css\stroll.css" />
+    <Content Include="Content\lead-app-content\css\style.css" />
+    <Content Include="Content\lead-app-content\css\style.min.css" />
+    <Content Include="Content\lead-app-content\css\sweetalert.css" />
+    <Content Include="Content\lead-app-content\css\swiper.min.css" />
+    <Content Include="Content\lead-app-content\css\switchery.min.css" />
+    <Content Include="Content\lead-app-content\css\themify-icons.css" />
+    <Content Include="Content\lead-app-content\css\treeview.css" />
+    <Content Include="Content\lead-app-content\css\waves.min.css" />
+    <Content Include="Content\lead-app-content\css\widget.css" />
+    <Content Include="Content\lead-app-content\gif\throbber.gif" />
+    <Content Include="Content\lead-app-content\jpg\01.jpg" />
+    <Content Include="Content\lead-app-content\jpg\03.jpg" />
+    <Content Include="Content\lead-app-content\jpg\animate.jpg" />
+    <Content Include="Content\lead-app-content\jpg\avatar-1.jpg" />
+    <Content Include="Content\lead-app-content\jpg\avatar-2.jpg" />
+    <Content Include="Content\lead-app-content\jpg\avatar-3.jpg" />
+    <Content Include="Content\lead-app-content\jpg\avatar-4.jpg" />
+    <Content Include="Content\lead-app-content\jpg\avatar-5.jpg" />
+    <Content Include="Content\lead-app-content\jpg\card1.jpg" />
+    <Content Include="Content\lead-app-content\jpg\card13.jpg" />
+    <Content Include="Content\lead-app-content\jpg\card14.jpg" />
+    <Content Include="Content\lead-app-content\jpg\card2.jpg" />
+    <Content Include="Content\lead-app-content\jpg\cs-1.jpg" />
+    <Content Include="Content\lead-app-content\jpg\cs-2.jpg" />
+    <Content Include="Content\lead-app-content\jpg\error-1.jpg" />
+    <Content Include="Content\lead-app-content\jpg\error-2.jpg" />
+    <Content Include="Content\lead-app-content\jpg\error-3.jpg" />
+    <Content Include="Content\lead-app-content\jpg\error-4.jpg" />
+    <Content Include="Content\lead-app-content\jpg\error-5.jpg" />
+    <Content Include="Content\lead-app-content\jpg\error-6.jpg" />
+    <Content Include="Content\lead-app-content\jpg\nav1.jpg" />
+    <Content Include="Content\lead-app-content\jpg\nav10.jpg" />
+    <Content Include="Content\lead-app-content\jpg\nav11.jpg" />
+    <Content Include="Content\lead-app-content\jpg\nav12.jpg" />
+    <Content Include="Content\lead-app-content\jpg\nav2.jpg" />
+    <Content Include="Content\lead-app-content\jpg\nav3.jpg" />
+    <Content Include="Content\lead-app-content\jpg\nav4.jpg" />
+    <Content Include="Content\lead-app-content\jpg\nav5.jpg" />
+    <Content Include="Content\lead-app-content\jpg\nav6.jpg" />
+    <Content Include="Content\lead-app-content\jpg\nav7.jpg" />
+    <Content Include="Content\lead-app-content\jpg\nav8.jpg" />
+    <Content Include="Content\lead-app-content\jpg\nav9.jpg" />
+    <Content Include="Content\lead-app-content\jpg\overflow.jpg" />
+    <Content Include="Content\lead-app-content\jpg\p1.jpg" />
+    <Content Include="Content\lead-app-content\jpg\p2.jpg" />
+    <Content Include="Content\lead-app-content\jpg\p3.jpg" />
+    <Content Include="Content\lead-app-content\jpg\p4.jpg" />
+    <Content Include="Content\lead-app-content\jpg\sale-img.jpg" />
+    <Content Include="Content\lead-app-content\jpg\slide1.jpg" />
+    <Content Include="Content\lead-app-content\jpg\slide2.jpg" />
+    <Content Include="Content\lead-app-content\jpg\slide3.jpg" />
+    <Content Include="Content\lead-app-content\jpg\slide4.jpg" />
+    <Content Include="Content\lead-app-content\jpg\slider5.jpg" />
+    <Content Include="Content\lead-app-content\jpg\slider6.jpg" />
+    <Content Include="Content\lead-app-content\jpg\slider7.jpg" />
+    <Content Include="Content\lead-app-content\jpg\task-u1.jpg" />
+    <Content Include="Content\lead-app-content\jpg\task-u2.jpg" />
+    <Content Include="Content\lead-app-content\jpg\task-u3.jpg" />
+    <Content Include="Content\lead-app-content\jpg\task-u4.jpg" />
+    <Content Include="Content\lead-app-content\js\accordion.js" />
+    <Content Include="Content\lead-app-content\js\amcharts.js" />
+    <Content Include="Content\lead-app-content\js\ammap.min.js" />
+    <Content Include="Content\lead-app-content\js\analytic-dashboard.min.js" />
+    <Content Include="Content\lead-app-content\js\animation.js" />
+    <Content Include="Content\lead-app-content\js\appearance-table.js" />
+    <Content Include="Content\lead-app-content\js\autonumeric.js" />
+    <Content Include="Content\lead-app-content\js\bootstrap-datepicker.min.js" />
+    <Content Include="Content\lead-app-content\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="Content\lead-app-content\js\bootstrap-growl.min.js" />
+    <Content Include="Content\lead-app-content\js\bootstrap-maxlength.js" />
+    <Content Include="Content\lead-app-content\js\bootstrap-multiselect.js" />
+    <Content Include="Content\lead-app-content\js\bootstrap-slider.js" />
+    <Content Include="Content\lead-app-content\js\bootstrap-tagsinput.js" />
+    <Content Include="Content\lead-app-content\js\bootstrap.min.js" />
+    <Content Include="Content\lead-app-content\js\buttons.colvis.min.js" />
+    <Content Include="Content\lead-app-content\js\buttons.flash.min.js" />
+    <Content Include="Content\lead-app-content\js\buttons.html5.min.js" />
+    <Content Include="Content\lead-app-content\js\buttons.print.min.js" />
+    <Content Include="Content\lead-app-content\js\c3-custom-chart.js" />
+    <Content Include="Content\lead-app-content\js\c3.js" />
+    <Content Include="Content\lead-app-content\js\calendar.js" />
+    <Content Include="Content\lead-app-content\js\cell-features.js" />
+    <Content Include="Content\lead-app-content\js\cell-types.js" />
+    <Content Include="Content\lead-app-content\js\chart-nvd3.js" />
+    <Content Include="Content\lead-app-content\js\chart-sparkline.js" />
+    <Content Include="Content\lead-app-content\js\chart.js" />
+    <Content Include="Content\lead-app-content\js\chartist-plugin-threshold.js" />
+    <Content Include="Content\lead-app-content\js\chartist.js" />
+    <Content Include="Content\lead-app-content\js\chartjs-custom.js" />
+    <Content Include="Content\lead-app-content\js\chartlist-custom.js" />
+    <Content Include="Content\lead-app-content\js\chroma.min.js" />
+    <Content Include="Content\lead-app-content\js\ckeditor-custom.js" />
+    <Content Include="Content\lead-app-content\js\ckeditor.js" />
+    <Content Include="Content\lead-app-content\js\classie.js" />
+    <Content Include="Content\lead-app-content\js\clndr-custom.js" />
+    <Content Include="Content\lead-app-content\js\clndr.js" />
+    <Content Include="Content\lead-app-content\js\colreorder-custom.js" />
+    <Content Include="Content\lead-app-content\js\columns-only.js" />
+    <Content Include="Content\lead-app-content\js\common-pages.js" />
+    <Content Include="Content\lead-app-content\js\crm-dashboard.min.js" />
+    <Content Include="Content\lead-app-content\js\croper.js" />
+    <Content Include="Content\lead-app-content\js\cropper.min.js" />
+    <Content Include="Content\lead-app-content\js\css-scrollbars.js" />
+    <Content Include="Content\lead-app-content\js\curvedlines.js" />
+    <Content Include="Content\lead-app-content\js\custom-dashboard.min.js" />
+    <Content Include="Content\lead-app-content\js\custom-google-chart.js" />
+    <Content Include="Content\lead-app-content\js\custom-nestable.js" />
+    <Content Include="Content\lead-app-content\js\custom-picker.js" />
+    <Content Include="Content\lead-app-content\js\custom-prism.js" />
+    <Content Include="Content\lead-app-content\js\custom-toolbar.js" />
+    <Content Include="Content\lead-app-content\js\d3.js" />
+    <Content Include="Content\lead-app-content\js\d3.min.js" />
+    <Content Include="Content\lead-app-content\js\data-operation.js" />
+    <Content Include="Content\lead-app-content\js\data-table-custom.js" />
+    <Content Include="Content\lead-app-content\js\datatables.autofill.min.js" />
+    <Content Include="Content\lead-app-content\js\datatables.bootstrap4.min.js" />
+    <Content Include="Content\lead-app-content\js\datatables.buttons.min-2.js" />
+    <Content Include="Content\lead-app-content\js\datatables.buttons.min.js" />
+    <Content Include="Content\lead-app-content\js\datatables.colreorder.min.js" />
+    <Content Include="Content\lead-app-content\js\datatables.fixedcolumns.min.js" />
+    <Content Include="Content\lead-app-content\js\datatables.fixedheader.min.js" />
+    <Content Include="Content\lead-app-content\js\datatables.keytable.min.js" />
+    <Content Include="Content\lead-app-content\js\datatables.responsive.min-2.js" />
+    <Content Include="Content\lead-app-content\js\datatables.responsive.min.js" />
+    <Content Include="Content\lead-app-content\js\datatables.rowreorder.min.js" />
+    <Content Include="Content\lead-app-content\js\datatables.scroller.min.js" />
+    <Content Include="Content\lead-app-content\js\datatables.select.min-2.js" />
+    <Content Include="Content\lead-app-content\js\datatables.select.min.js" />
+    <Content Include="Content\lead-app-content\js\datedropper.min.js" />
+    <Content Include="Content\lead-app-content\js\daterangepicker.js" />
+    <Content Include="Content\lead-app-content\js\de.js" />
+    <Content Include="Content\lead-app-content\js\dropzone-amd-module.min.js" />
+    <Content Include="Content\lead-app-content\js\editable.js" />
+    <Content Include="Content\lead-app-content\js\email-decode.min.js" />
+    <Content Include="Content\lead-app-content\js\excanvas.js" />
+    <Content Include="Content\lead-app-content\js\extension-btns-custom.js" />
+    <Content Include="Content\lead-app-content\js\extensions-custom.js" />
+    <Content Include="Content\lead-app-content\js\fixed-column-custom.js" />
+    <Content Include="Content\lead-app-content\js\fixed-header-custom.js" />
+    <Content Include="Content\lead-app-content\js\float-chart-custom.js" />
+    <Content Include="Content\lead-app-content\js\foo-table-custom.js" />
+    <Content Include="Content\lead-app-content\js\footable.min.js" />
+    <Content Include="Content\lead-app-content\js\form-mask.js" />
+    <Content Include="Content\lead-app-content\js\form-validation.js" />
+    <Content Include="Content\lead-app-content\js\form-wizard.js" />
+    <Content Include="Content\lead-app-content\js\fullcalendar.min.js" />
+    <Content Include="Content\lead-app-content\js\gauge.js" />
+    <Content Include="Content\lead-app-content\js\gdp-data.js" />
+    <Content Include="Content\lead-app-content\js\gmaps.js" />
+    <Content Include="Content\lead-app-content\js\google-maps.js" />
+    <Content Include="Content\lead-app-content\js\handsontable.full.js" />
+    <Content Include="Content\lead-app-content\js\horizontal-layout.min.js" />
+    <Content Include="Content\lead-app-content\js\i18next.min.js" />
+    <Content Include="Content\lead-app-content\js\i18nextbrowserlanguagedetector.min.js" />
+    <Content Include="Content\lead-app-content\js\i18nextxhrbackend.min.js" />
+    <Content Include="Content\lead-app-content\js\icon-modal.js" />
+    <Content Include="Content\lead-app-content\js\inputmask.js" />
+    <Content Include="Content\lead-app-content\js\integration.js" />
+    <Content Include="Content\lead-app-content\js\intro.js" />
+    <Content Include="Content\lead-app-content\js\jquery-i18next.min.js" />
+    <Content Include="Content\lead-app-content\js\jquery-jvectormap-2.0.2.min.js" />
+    <Content Include="Content\lead-app-content\js\jquery-jvectormap-asia-mill.js" />
+    <Content Include="Content\lead-app-content\js\jquery-jvectormap-au-mill.js" />
+    <Content Include="Content\lead-app-content\js\jquery-jvectormap-ca-lcc.js" />
+    <Content Include="Content\lead-app-content\js\jquery-jvectormap-de-mill.js" />
+    <Content Include="Content\lead-app-content\js\jquery-jvectormap-in-mill.js" />
+    <Content Include="Content\lead-app-content\js\jquery-jvectormap-uk-mill-en.js" />
+    <Content Include="Content\lead-app-content\js\jquery-jvectormap-us-aea-en.js" />
+    <Content Include="Content\lead-app-content\js\jquery-jvectormap-us-il-chicago-mill-en.js" />
+    <Content Include="Content\lead-app-content\js\jquery-jvectormap-world-mill-en.js" />
+    <Content Include="Content\lead-app-content\js\jquery-ui.min.js" />
+    <Content Include="Content\lead-app-content\js\jquery.barrating.js" />
+    <Content Include="Content\lead-app-content\js\jquery.cookie.js" />
+    <Content Include="Content\lead-app-content\js\jquery.datatables.min-2.js" />
+    <Content Include="Content\lead-app-content\js\jquery.datatables.min.js" />
+    <Content Include="Content\lead-app-content\js\jquery.flot.categories.js" />
+    <Content Include="Content\lead-app-content\js\jquery.flot.js" />
+    <Content Include="Content\lead-app-content\js\jquery.flot.pie.js" />
+    <Content Include="Content\lead-app-content\js\jquery.flot.tooltip.min.js" />
+    <Content Include="Content\lead-app-content\js\jquery.inputmask.js" />
+    <Content Include="Content\lead-app-content\js\jquery.jqpagination.js" />
+    <Content Include="Content\lead-app-content\js\jquery.knob.js" />
+    <Content Include="Content\lead-app-content\js\jquery.mcustomscrollbar.concat.min.js" />
+    <Content Include="Content\lead-app-content\js\jquery.min.js" />
+    <Content Include="Content\lead-app-content\js\jquery.minicolors.min.js" />
+    <Content Include="Content\lead-app-content\js\jquery.mousewheel.min.js" />
+    <Content Include="Content\lead-app-content\js\jquery.multi-select.js" />
+    <Content Include="Content\lead-app-content\js\jquery.nestable.js" />
+    <Content Include="Content\lead-app-content\js\jquery.peity.js" />
+    <Content Include="Content\lead-app-content\js\jquery.quicksearch.js" />
+    <Content Include="Content\lead-app-content\js\jquery.slimscroll.js" />
+    <Content Include="Content\lead-app-content\js\jquery.sparkline.js" />
+    <Content Include="Content\lead-app-content\js\jquery.steps.js" />
+    <Content Include="Content\lead-app-content\js\jquery.tabledit.js" />
+    <Content Include="Content\lead-app-content\js\jquery.toolbar.min.js" />
+    <Content Include="Content\lead-app-content\js\jquery.tree.js" />
+    <Content Include="Content\lead-app-content\js\jquery.validate.js" />
+    <Content Include="Content\lead-app-content\js\jquery.wavify.js" />
+    <Content Include="Content\lead-app-content\js\jscolor.js" />
+    <Content Include="Content\lead-app-content\js\jstree.min.js" />
+    <Content Include="Content\lead-app-content\js\jszip.min-2.js" />
+    <Content Include="Content\lead-app-content\js\jszip.min.js" />
+    <Content Include="Content\lead-app-content\js\key-table-custom.js" />
+    <Content Include="Content\lead-app-content\js\knob-custom-chart.js" />
+    <Content Include="Content\lead-app-content\js\leaflet-mapbox-gl.js" />
+    <Content Include="Content\lead-app-content\js\leaflet.js" />
+    <Content Include="Content\lead-app-content\js\leaflet.markercluster.js" />
+    <Content Include="Content\lead-app-content\js\light.js" />
+    <Content Include="Content\lead-app-content\js\list-custom.js" />
+    <Content Include="Content\lead-app-content\js\loader.js" />
+    <Content Include="Content\lead-app-content\js\map-api.js" />
+    <Content Include="Content\lead-app-content\js\map-vector.js" />
+    <Content Include="Content\lead-app-content\js\mapbox-gl.js" />
+    <Content Include="Content\lead-app-content\js\markerclusterer.js" />
+    <Content Include="Content\lead-app-content\js\menu-compact.js" />
+    <Content Include="Content\lead-app-content\js\menu-header-fixed.js" />
+    <Content Include="Content\lead-app-content\js\menu-hori-fixed.js" />
+    <Content Include="Content\lead-app-content\js\menu-sidebar-fixed.js" />
+    <Content Include="Content\lead-app-content\js\menu-static.js" />
+    <Content Include="Content\lead-app-content\js\modal.js" />
+    <Content Include="Content\lead-app-content\js\modaleffects.js" />
+    <Content Include="Content\lead-app-content\js\modernizr.js" />
+    <Content Include="Content\lead-app-content\js\moment-with-locales.min.js" />
+    <Content Include="Content\lead-app-content\js\moment.js" />
+    <Content Include="Content\lead-app-content\js\moment.min-2.js" />
+    <Content Include="Content\lead-app-content\js\moment.min.js" />
+    <Content Include="Content\lead-app-content\js\morris-custom-chart.js" />
+    <Content Include="Content\lead-app-content\js\morris.js" />
+    <Content Include="Content\lead-app-content\js\notification.js" />
+    <Content Include="Content\lead-app-content\js\nv.d3.js" />
+    <Content Include="Content\lead-app-content\js\offline-custom.js" />
+    <Content Include="Content\lead-app-content\js\offline.min.js" />
+    <Content Include="Content\lead-app-content\js\owl-custom.js" />
+    <Content Include="Content\lead-app-content\js\owl.carousel.min.js" />
+    <Content Include="Content\lead-app-content\js\pcoded.min.js" />
+    <Content Include="Content\lead-app-content\js\pdfmake.min-2.js" />
+    <Content Include="Content\lead-app-content\js\pdfmake.min.js" />
+    <Content Include="Content\lead-app-content\js\peity-custom-chart.js" />
+    <Content Include="Content\lead-app-content\js\pie.min.js" />
+    <Content Include="Content\lead-app-content\js\popper.min.js" />
+    <Content Include="Content\lead-app-content\js\range-slider.js" />
+    <Content Include="Content\lead-app-content\js\raphael.min.js" />
+    <Content Include="Content\lead-app-content\js\rating.js" />
+    <Content Include="Content\lead-app-content\js\responsive-custom.js" />
+    <Content Include="Content\lead-app-content\js\responsive.bootstrap4.min.js" />
+    <Content Include="Content\lead-app-content\js\rickshaw.js" />
+    <Content Include="Content\lead-app-content\js\rickshow-custom-.js" />
+    <Content Include="Content\lead-app-content\js\rocket-loader.min.js" />
+    <Content Include="Content\lead-app-content\js\row-reorder-custom.js" />
+    <Content Include="Content\lead-app-content\js\rows-cols-table.js" />
+    <Content Include="Content\lead-app-content\js\rows-only.js" />
+    <Content Include="Content\lead-app-content\js\script.js" />
+    <Content Include="Content\lead-app-content\js\script.min.js" />
+    <Content Include="Content\lead-app-content\js\scroller-custom.js" />
+    <Content Include="Content\lead-app-content\js\select-custom.js" />
+    <Content Include="Content\lead-app-content\js\select2-custom.js" />
+    <Content Include="Content\lead-app-content\js\select2.full.min.js" />
+    <Content Include="Content\lead-app-content\js\serial.js" />
+    <Content Include="Content\lead-app-content\js\session-idle-timeout-custom.js" />
+    <Content Include="Content\lead-app-content\js\sessiontimeout-custom.js" />
+    <Content Include="Content\lead-app-content\js\session_timeout.min.js" />
+    <Content Include="Content\lead-app-content\js\smoothscroll.js" />
+    <Content Include="Content\lead-app-content\js\sortable-custom.js" />
+    <Content Include="Content\lead-app-content\js\sortable.js" />
+    <Content Include="Content\lead-app-content\js\spectrum.js" />
+    <Content Include="Content\lead-app-content\js\stream_layers.js" />
+    <Content Include="Content\lead-app-content\js\stroll.js" />
+    <Content Include="Content\lead-app-content\js\sweetalert.min.js" />
+    <Content Include="Content\lead-app-content\js\swiper-custom.js" />
+    <Content Include="Content\lead-app-content\js\swiper.min.js" />
+    <Content Include="Content\lead-app-content\js\switchery.min.js" />
+    <Content Include="Content\lead-app-content\js\swithces.js" />
+    <Content Include="Content\lead-app-content\js\tinymce.min.js" />
+    <Content Include="Content\lead-app-content\js\todo.js" />
+    <Content Include="Content\lead-app-content\js\tweenmax.min.js" />
+    <Content Include="Content\lead-app-content\js\typeahead.bundle.min.js" />
+    <Content Include="Content\lead-app-content\js\underscore-min-2.js" />
+    <Content Include="Content\lead-app-content\js\underscore-min.js" />
+    <Content Include="Content\lead-app-content\js\usalow.js" />
+    <Content Include="Content\lead-app-content\js\utilities.js" />
+    <Content Include="Content\lead-app-content\js\validate.js" />
+    <Content Include="Content\lead-app-content\js\vertical-layout.min.js" />
+    <Content Include="Content\lead-app-content\js\vfs_fonts-2.js" />
+    <Content Include="Content\lead-app-content\js\vfs_fonts.js" />
+    <Content Include="Content\lead-app-content\js\waves.min.js" />
+    <Content Include="Content\lead-app-content\js\widget-chart.js" />
+    <Content Include="Content\lead-app-content\js\widget-data.js" />
+    <Content Include="Content\lead-app-content\js\widget-statistic.js" />
+    <Content Include="Content\lead-app-content\js\wysiwyg-editor.js" />
+    <Content Include="Content\lead-app-content\png\complete.png" />
+    <Content Include="Content\lead-app-content\png\details_close.png" />
+    <Content Include="Content\lead-app-content\png\details_open.png" />
+    <Content Include="Content\lead-app-content\png\euclid.png" />
+    <Content Include="Content\lead-app-content\png\jquery.minicolors.png" />
+    <Content Include="Content\lead-app-content\png\layers-2x.png" />
+    <Content Include="Content\lead-app-content\png\layers.png" />
+    <Content Include="Content\lead-app-content\png\logo-small-bottom.png" />
+    <Content Include="Content\lead-app-content\png\logo.png" />
+    <Content Include="Content\lead-app-content\png\marker-icon.png" />
+    <Content Include="Content\lead-app-content\png\select-arrow.png" />
+    <Content Include="Content\lead-app-content\png\switch.png" />
+    <Content Include="Content\lead-app-content\png\{y}.png" />
+    <Content Include="Content\lead-app-content\svg\ad-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ad.svg" />
+    <Content Include="Content\lead-app-content\svg\ae-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ae.svg" />
+    <Content Include="Content\lead-app-content\svg\af-2.svg" />
+    <Content Include="Content\lead-app-content\svg\af.svg" />
+    <Content Include="Content\lead-app-content\svg\ag-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ag.svg" />
+    <Content Include="Content\lead-app-content\svg\ai-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ai.svg" />
+    <Content Include="Content\lead-app-content\svg\al-2.svg" />
+    <Content Include="Content\lead-app-content\svg\al.svg" />
+    <Content Include="Content\lead-app-content\svg\am-2.svg" />
+    <Content Include="Content\lead-app-content\svg\am.svg" />
+    <Content Include="Content\lead-app-content\svg\ao-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ao.svg" />
+    <Content Include="Content\lead-app-content\svg\aq-2.svg" />
+    <Content Include="Content\lead-app-content\svg\aq.svg" />
+    <Content Include="Content\lead-app-content\svg\ar-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ar.svg" />
+    <Content Include="Content\lead-app-content\svg\as-2.svg" />
+    <Content Include="Content\lead-app-content\svg\as.svg" />
+    <Content Include="Content\lead-app-content\svg\at-2.svg" />
+    <Content Include="Content\lead-app-content\svg\at.svg" />
+    <Content Include="Content\lead-app-content\svg\au-2.svg" />
+    <Content Include="Content\lead-app-content\svg\au.svg" />
+    <Content Include="Content\lead-app-content\svg\aw-2.svg" />
+    <Content Include="Content\lead-app-content\svg\aw.svg" />
+    <Content Include="Content\lead-app-content\svg\ax-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ax.svg" />
+    <Content Include="Content\lead-app-content\svg\az-2.svg" />
+    <Content Include="Content\lead-app-content\svg\az.svg" />
+    <Content Include="Content\lead-app-content\svg\ba-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ba.svg" />
+    <Content Include="Content\lead-app-content\svg\bb-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bb.svg" />
+    <Content Include="Content\lead-app-content\svg\bd-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bd.svg" />
+    <Content Include="Content\lead-app-content\svg\be-2.svg" />
+    <Content Include="Content\lead-app-content\svg\be.svg" />
+    <Content Include="Content\lead-app-content\svg\bf-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bf.svg" />
+    <Content Include="Content\lead-app-content\svg\bg-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bg.svg" />
+    <Content Include="Content\lead-app-content\svg\bh-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bh.svg" />
+    <Content Include="Content\lead-app-content\svg\bi-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bi.svg" />
+    <Content Include="Content\lead-app-content\svg\bj-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bj.svg" />
+    <Content Include="Content\lead-app-content\svg\bl-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bl.svg" />
+    <Content Include="Content\lead-app-content\svg\bm-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bm.svg" />
+    <Content Include="Content\lead-app-content\svg\bn-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bn.svg" />
+    <Content Include="Content\lead-app-content\svg\bo-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bo.svg" />
+    <Content Include="Content\lead-app-content\svg\bq-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bq.svg" />
+    <Content Include="Content\lead-app-content\svg\br-2.svg" />
+    <Content Include="Content\lead-app-content\svg\br.svg" />
+    <Content Include="Content\lead-app-content\svg\bs-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bs.svg" />
+    <Content Include="Content\lead-app-content\svg\bt-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bt.svg" />
+    <Content Include="Content\lead-app-content\svg\bv-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bv.svg" />
+    <Content Include="Content\lead-app-content\svg\bw-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bw.svg" />
+    <Content Include="Content\lead-app-content\svg\by-2.svg" />
+    <Content Include="Content\lead-app-content\svg\by.svg" />
+    <Content Include="Content\lead-app-content\svg\bz-2.svg" />
+    <Content Include="Content\lead-app-content\svg\bz.svg" />
+    <Content Include="Content\lead-app-content\svg\ca-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ca.svg" />
+    <Content Include="Content\lead-app-content\svg\cc-2.svg" />
+    <Content Include="Content\lead-app-content\svg\cc.svg" />
+    <Content Include="Content\lead-app-content\svg\cd-2.svg" />
+    <Content Include="Content\lead-app-content\svg\cd.svg" />
+    <Content Include="Content\lead-app-content\svg\cf-2.svg" />
+    <Content Include="Content\lead-app-content\svg\cf.svg" />
+    <Content Include="Content\lead-app-content\svg\cg-2.svg" />
+    <Content Include="Content\lead-app-content\svg\cg.svg" />
+    <Content Include="Content\lead-app-content\svg\ch-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ch.svg" />
+    <Content Include="Content\lead-app-content\svg\ci-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ci.svg" />
+    <Content Include="Content\lead-app-content\svg\ck-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ck.svg" />
+    <Content Include="Content\lead-app-content\svg\cl-2.svg" />
+    <Content Include="Content\lead-app-content\svg\cl.svg" />
+    <Content Include="Content\lead-app-content\svg\cm-2.svg" />
+    <Content Include="Content\lead-app-content\svg\cm.svg" />
+    <Content Include="Content\lead-app-content\svg\cn-2.svg" />
+    <Content Include="Content\lead-app-content\svg\cn.svg" />
+    <Content Include="Content\lead-app-content\svg\co-2.svg" />
+    <Content Include="Content\lead-app-content\svg\co.svg" />
+    <Content Include="Content\lead-app-content\svg\cr-2.svg" />
+    <Content Include="Content\lead-app-content\svg\cr.svg" />
+    <Content Include="Content\lead-app-content\svg\cu-2.svg" />
+    <Content Include="Content\lead-app-content\svg\cu.svg" />
+    <Content Include="Content\lead-app-content\svg\cv-2.svg" />
+    <Content Include="Content\lead-app-content\svg\cv.svg" />
+    <Content Include="Content\lead-app-content\svg\cw-2.svg" />
+    <Content Include="Content\lead-app-content\svg\cw.svg" />
+    <Content Include="Content\lead-app-content\svg\cx-2.svg" />
+    <Content Include="Content\lead-app-content\svg\cx.svg" />
+    <Content Include="Content\lead-app-content\svg\cy-2.svg" />
+    <Content Include="Content\lead-app-content\svg\cy.svg" />
+    <Content Include="Content\lead-app-content\svg\cz-2.svg" />
+    <Content Include="Content\lead-app-content\svg\cz.svg" />
+    <Content Include="Content\lead-app-content\svg\dd-icon.svg" />
+    <Content Include="Content\lead-app-content\svg\de-2.svg" />
+    <Content Include="Content\lead-app-content\svg\de.svg" />
+    <Content Include="Content\lead-app-content\svg\dj-2.svg" />
+    <Content Include="Content\lead-app-content\svg\dj.svg" />
+    <Content Include="Content\lead-app-content\svg\dk-2.svg" />
+    <Content Include="Content\lead-app-content\svg\dk.svg" />
+    <Content Include="Content\lead-app-content\svg\dm-2.svg" />
+    <Content Include="Content\lead-app-content\svg\dm.svg" />
+    <Content Include="Content\lead-app-content\svg\do-2.svg" />
+    <Content Include="Content\lead-app-content\svg\do.svg" />
+    <Content Include="Content\lead-app-content\svg\dz-2.svg" />
+    <Content Include="Content\lead-app-content\svg\dz.svg" />
+    <Content Include="Content\lead-app-content\svg\ec-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ec.svg" />
+    <Content Include="Content\lead-app-content\svg\ee-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ee.svg" />
+    <Content Include="Content\lead-app-content\svg\eg-2.svg" />
+    <Content Include="Content\lead-app-content\svg\eg.svg" />
+    <Content Include="Content\lead-app-content\svg\eh-2.svg" />
+    <Content Include="Content\lead-app-content\svg\eh.svg" />
+    <Content Include="Content\lead-app-content\svg\er-2.svg" />
+    <Content Include="Content\lead-app-content\svg\er.svg" />
+    <Content Include="Content\lead-app-content\svg\es-2.svg" />
+    <Content Include="Content\lead-app-content\svg\es.svg" />
+    <Content Include="Content\lead-app-content\svg\et-2.svg" />
+    <Content Include="Content\lead-app-content\svg\et.svg" />
+    <Content Include="Content\lead-app-content\svg\eu-2.svg" />
+    <Content Include="Content\lead-app-content\svg\eu.svg" />
+    <Content Include="Content\lead-app-content\svg\fi-2.svg" />
+    <Content Include="Content\lead-app-content\svg\fi.svg" />
+    <Content Include="Content\lead-app-content\svg\fj-2.svg" />
+    <Content Include="Content\lead-app-content\svg\fj.svg" />
+    <Content Include="Content\lead-app-content\svg\fk-2.svg" />
+    <Content Include="Content\lead-app-content\svg\fk.svg" />
+    <Content Include="Content\lead-app-content\svg\fm-2.svg" />
+    <Content Include="Content\lead-app-content\svg\fm.svg" />
+    <Content Include="Content\lead-app-content\svg\fo-2.svg" />
+    <Content Include="Content\lead-app-content\svg\fo.svg" />
+    <Content Include="Content\lead-app-content\svg\fr-2.svg" />
+    <Content Include="Content\lead-app-content\svg\fr.svg" />
+    <Content Include="Content\lead-app-content\svg\ga-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ga.svg" />
+    <Content Include="Content\lead-app-content\svg\gb-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gb-eng-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gb-eng.svg" />
+    <Content Include="Content\lead-app-content\svg\gb-sct-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gb-sct.svg" />
+    <Content Include="Content\lead-app-content\svg\gb-wls-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gb-wls.svg" />
+    <Content Include="Content\lead-app-content\svg\gb.svg" />
+    <Content Include="Content\lead-app-content\svg\gd-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gd.svg" />
+    <Content Include="Content\lead-app-content\svg\ge-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ge.svg" />
+    <Content Include="Content\lead-app-content\svg\gf-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gf.svg" />
+    <Content Include="Content\lead-app-content\svg\gg-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gg.svg" />
+    <Content Include="Content\lead-app-content\svg\gh-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gh.svg" />
+    <Content Include="Content\lead-app-content\svg\gi-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gi.svg" />
+    <Content Include="Content\lead-app-content\svg\gl-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gl.svg" />
+    <Content Include="Content\lead-app-content\svg\gm-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gm.svg" />
+    <Content Include="Content\lead-app-content\svg\gn-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gn.svg" />
+    <Content Include="Content\lead-app-content\svg\gp-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gp.svg" />
+    <Content Include="Content\lead-app-content\svg\gq-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gq.svg" />
+    <Content Include="Content\lead-app-content\svg\gr-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gr.svg" />
+    <Content Include="Content\lead-app-content\svg\gs-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gs.svg" />
+    <Content Include="Content\lead-app-content\svg\gt-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gt.svg" />
+    <Content Include="Content\lead-app-content\svg\gu-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gu.svg" />
+    <Content Include="Content\lead-app-content\svg\gw-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gw.svg" />
+    <Content Include="Content\lead-app-content\svg\gy-2.svg" />
+    <Content Include="Content\lead-app-content\svg\gy.svg" />
+    <Content Include="Content\lead-app-content\svg\hk-2.svg" />
+    <Content Include="Content\lead-app-content\svg\hk.svg" />
+    <Content Include="Content\lead-app-content\svg\hm-2.svg" />
+    <Content Include="Content\lead-app-content\svg\hm.svg" />
+    <Content Include="Content\lead-app-content\svg\hn-2.svg" />
+    <Content Include="Content\lead-app-content\svg\hn.svg" />
+    <Content Include="Content\lead-app-content\svg\hr-2.svg" />
+    <Content Include="Content\lead-app-content\svg\hr.svg" />
+    <Content Include="Content\lead-app-content\svg\ht-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ht.svg" />
+    <Content Include="Content\lead-app-content\svg\hu-2.svg" />
+    <Content Include="Content\lead-app-content\svg\hu.svg" />
+    <Content Include="Content\lead-app-content\svg\id-2.svg" />
+    <Content Include="Content\lead-app-content\svg\id.svg" />
+    <Content Include="Content\lead-app-content\svg\ie-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ie.svg" />
+    <Content Include="Content\lead-app-content\svg\il-2.svg" />
+    <Content Include="Content\lead-app-content\svg\il.svg" />
+    <Content Include="Content\lead-app-content\svg\im-2.svg" />
+    <Content Include="Content\lead-app-content\svg\im.svg" />
+    <Content Include="Content\lead-app-content\svg\in-2.svg" />
+    <Content Include="Content\lead-app-content\svg\in.svg" />
+    <Content Include="Content\lead-app-content\svg\io-2.svg" />
+    <Content Include="Content\lead-app-content\svg\io.svg" />
+    <Content Include="Content\lead-app-content\svg\iq-2.svg" />
+    <Content Include="Content\lead-app-content\svg\iq.svg" />
+    <Content Include="Content\lead-app-content\svg\ir-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ir.svg" />
+    <Content Include="Content\lead-app-content\svg\is-2.svg" />
+    <Content Include="Content\lead-app-content\svg\is.svg" />
+    <Content Include="Content\lead-app-content\svg\it-2.svg" />
+    <Content Include="Content\lead-app-content\svg\it.svg" />
+    <Content Include="Content\lead-app-content\svg\je-2.svg" />
+    <Content Include="Content\lead-app-content\svg\je.svg" />
+    <Content Include="Content\lead-app-content\svg\jm-2.svg" />
+    <Content Include="Content\lead-app-content\svg\jm.svg" />
+    <Content Include="Content\lead-app-content\svg\jo-2.svg" />
+    <Content Include="Content\lead-app-content\svg\jo.svg" />
+    <Content Include="Content\lead-app-content\svg\jp-2.svg" />
+    <Content Include="Content\lead-app-content\svg\jp.svg" />
+    <Content Include="Content\lead-app-content\svg\ke-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ke.svg" />
+    <Content Include="Content\lead-app-content\svg\kg-2.svg" />
+    <Content Include="Content\lead-app-content\svg\kg.svg" />
+    <Content Include="Content\lead-app-content\svg\kh-2.svg" />
+    <Content Include="Content\lead-app-content\svg\kh.svg" />
+    <Content Include="Content\lead-app-content\svg\ki-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ki.svg" />
+    <Content Include="Content\lead-app-content\svg\km-2.svg" />
+    <Content Include="Content\lead-app-content\svg\km.svg" />
+    <Content Include="Content\lead-app-content\svg\kn-2.svg" />
+    <Content Include="Content\lead-app-content\svg\kn.svg" />
+    <Content Include="Content\lead-app-content\svg\kp-2.svg" />
+    <Content Include="Content\lead-app-content\svg\kp.svg" />
+    <Content Include="Content\lead-app-content\svg\kr-2.svg" />
+    <Content Include="Content\lead-app-content\svg\kr.svg" />
+    <Content Include="Content\lead-app-content\svg\kw-2.svg" />
+    <Content Include="Content\lead-app-content\svg\kw.svg" />
+    <Content Include="Content\lead-app-content\svg\ky-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ky.svg" />
+    <Content Include="Content\lead-app-content\svg\kz-2.svg" />
+    <Content Include="Content\lead-app-content\svg\kz.svg" />
+    <Content Include="Content\lead-app-content\svg\la-2.svg" />
+    <Content Include="Content\lead-app-content\svg\la.svg" />
+    <Content Include="Content\lead-app-content\svg\lb-2.svg" />
+    <Content Include="Content\lead-app-content\svg\lb.svg" />
+    <Content Include="Content\lead-app-content\svg\lc-2.svg" />
+    <Content Include="Content\lead-app-content\svg\lc.svg" />
+    <Content Include="Content\lead-app-content\svg\li-2.svg" />
+    <Content Include="Content\lead-app-content\svg\li.svg" />
+    <Content Include="Content\lead-app-content\svg\lk-2.svg" />
+    <Content Include="Content\lead-app-content\svg\lk.svg" />
+    <Content Include="Content\lead-app-content\svg\lr-2.svg" />
+    <Content Include="Content\lead-app-content\svg\lr.svg" />
+    <Content Include="Content\lead-app-content\svg\ls-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ls.svg" />
+    <Content Include="Content\lead-app-content\svg\lt-2.svg" />
+    <Content Include="Content\lead-app-content\svg\lt.svg" />
+    <Content Include="Content\lead-app-content\svg\lu-2.svg" />
+    <Content Include="Content\lead-app-content\svg\lu.svg" />
+    <Content Include="Content\lead-app-content\svg\lv-2.svg" />
+    <Content Include="Content\lead-app-content\svg\lv.svg" />
+    <Content Include="Content\lead-app-content\svg\ly-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ly.svg" />
+    <Content Include="Content\lead-app-content\svg\ma-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ma.svg" />
+    <Content Include="Content\lead-app-content\svg\mc-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mc.svg" />
+    <Content Include="Content\lead-app-content\svg\md-2.svg" />
+    <Content Include="Content\lead-app-content\svg\md.svg" />
+    <Content Include="Content\lead-app-content\svg\me-2.svg" />
+    <Content Include="Content\lead-app-content\svg\me.svg" />
+    <Content Include="Content\lead-app-content\svg\mf-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mf.svg" />
+    <Content Include="Content\lead-app-content\svg\mg-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mg.svg" />
+    <Content Include="Content\lead-app-content\svg\mh-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mh.svg" />
+    <Content Include="Content\lead-app-content\svg\mk-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mk.svg" />
+    <Content Include="Content\lead-app-content\svg\ml-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ml.svg" />
+    <Content Include="Content\lead-app-content\svg\mm-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mm.svg" />
+    <Content Include="Content\lead-app-content\svg\mn-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mn.svg" />
+    <Content Include="Content\lead-app-content\svg\mo-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mo.svg" />
+    <Content Include="Content\lead-app-content\svg\mp-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mp.svg" />
+    <Content Include="Content\lead-app-content\svg\mq-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mq.svg" />
+    <Content Include="Content\lead-app-content\svg\mr-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mr.svg" />
+    <Content Include="Content\lead-app-content\svg\ms-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ms.svg" />
+    <Content Include="Content\lead-app-content\svg\mt-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mt.svg" />
+    <Content Include="Content\lead-app-content\svg\mu-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mu.svg" />
+    <Content Include="Content\lead-app-content\svg\mv-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mv.svg" />
+    <Content Include="Content\lead-app-content\svg\mw-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mw.svg" />
+    <Content Include="Content\lead-app-content\svg\mx-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mx.svg" />
+    <Content Include="Content\lead-app-content\svg\my-2.svg" />
+    <Content Include="Content\lead-app-content\svg\my.svg" />
+    <Content Include="Content\lead-app-content\svg\mz-2.svg" />
+    <Content Include="Content\lead-app-content\svg\mz.svg" />
+    <Content Include="Content\lead-app-content\svg\na-2.svg" />
+    <Content Include="Content\lead-app-content\svg\na.svg" />
+    <Content Include="Content\lead-app-content\svg\nc-2.svg" />
+    <Content Include="Content\lead-app-content\svg\nc.svg" />
+    <Content Include="Content\lead-app-content\svg\ne-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ne.svg" />
+    <Content Include="Content\lead-app-content\svg\nf-2.svg" />
+    <Content Include="Content\lead-app-content\svg\nf.svg" />
+    <Content Include="Content\lead-app-content\svg\ng-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ng.svg" />
+    <Content Include="Content\lead-app-content\svg\ni-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ni.svg" />
+    <Content Include="Content\lead-app-content\svg\nl-2.svg" />
+    <Content Include="Content\lead-app-content\svg\nl.svg" />
+    <Content Include="Content\lead-app-content\svg\no-2.svg" />
+    <Content Include="Content\lead-app-content\svg\no.svg" />
+    <Content Include="Content\lead-app-content\svg\np-2.svg" />
+    <Content Include="Content\lead-app-content\svg\np.svg" />
+    <Content Include="Content\lead-app-content\svg\nr-2.svg" />
+    <Content Include="Content\lead-app-content\svg\nr.svg" />
+    <Content Include="Content\lead-app-content\svg\nu-2.svg" />
+    <Content Include="Content\lead-app-content\svg\nu.svg" />
+    <Content Include="Content\lead-app-content\svg\nz-2.svg" />
+    <Content Include="Content\lead-app-content\svg\nz.svg" />
+    <Content Include="Content\lead-app-content\svg\om-2.svg" />
+    <Content Include="Content\lead-app-content\svg\om.svg" />
+    <Content Include="Content\lead-app-content\svg\pa-2.svg" />
+    <Content Include="Content\lead-app-content\svg\pa.svg" />
+    <Content Include="Content\lead-app-content\svg\pe-2.svg" />
+    <Content Include="Content\lead-app-content\svg\pe.svg" />
+    <Content Include="Content\lead-app-content\svg\pf-2.svg" />
+    <Content Include="Content\lead-app-content\svg\pf.svg" />
+    <Content Include="Content\lead-app-content\svg\pg-2.svg" />
+    <Content Include="Content\lead-app-content\svg\pg.svg" />
+    <Content Include="Content\lead-app-content\svg\ph-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ph.svg" />
+    <Content Include="Content\lead-app-content\svg\pk-2.svg" />
+    <Content Include="Content\lead-app-content\svg\pk.svg" />
+    <Content Include="Content\lead-app-content\svg\pl-2.svg" />
+    <Content Include="Content\lead-app-content\svg\pl.svg" />
+    <Content Include="Content\lead-app-content\svg\pm-2.svg" />
+    <Content Include="Content\lead-app-content\svg\pm.svg" />
+    <Content Include="Content\lead-app-content\svg\pn-2.svg" />
+    <Content Include="Content\lead-app-content\svg\pn.svg" />
+    <Content Include="Content\lead-app-content\svg\pr-2.svg" />
+    <Content Include="Content\lead-app-content\svg\pr.svg" />
+    <Content Include="Content\lead-app-content\svg\ps-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ps.svg" />
+    <Content Include="Content\lead-app-content\svg\pt-2.svg" />
+    <Content Include="Content\lead-app-content\svg\pt.svg" />
+    <Content Include="Content\lead-app-content\svg\pw-2.svg" />
+    <Content Include="Content\lead-app-content\svg\pw.svg" />
+    <Content Include="Content\lead-app-content\svg\py-2.svg" />
+    <Content Include="Content\lead-app-content\svg\py.svg" />
+    <Content Include="Content\lead-app-content\svg\qa-2.svg" />
+    <Content Include="Content\lead-app-content\svg\qa.svg" />
+    <Content Include="Content\lead-app-content\svg\re-2.svg" />
+    <Content Include="Content\lead-app-content\svg\re.svg" />
+    <Content Include="Content\lead-app-content\svg\ro-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ro.svg" />
+    <Content Include="Content\lead-app-content\svg\rs-2.svg" />
+    <Content Include="Content\lead-app-content\svg\rs.svg" />
+    <Content Include="Content\lead-app-content\svg\ru-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ru.svg" />
+    <Content Include="Content\lead-app-content\svg\rw-2.svg" />
+    <Content Include="Content\lead-app-content\svg\rw.svg" />
+    <Content Include="Content\lead-app-content\svg\sa-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sa.svg" />
+    <Content Include="Content\lead-app-content\svg\sb-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sb.svg" />
+    <Content Include="Content\lead-app-content\svg\sc-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sc.svg" />
+    <Content Include="Content\lead-app-content\svg\sd-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sd.svg" />
+    <Content Include="Content\lead-app-content\svg\se-2.svg" />
+    <Content Include="Content\lead-app-content\svg\se.svg" />
+    <Content Include="Content\lead-app-content\svg\sg-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sg.svg" />
+    <Content Include="Content\lead-app-content\svg\sh-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sh.svg" />
+    <Content Include="Content\lead-app-content\svg\si-2.svg" />
+    <Content Include="Content\lead-app-content\svg\si.svg" />
+    <Content Include="Content\lead-app-content\svg\sj-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sj.svg" />
+    <Content Include="Content\lead-app-content\svg\sk-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sk.svg" />
+    <Content Include="Content\lead-app-content\svg\sl-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sl.svg" />
+    <Content Include="Content\lead-app-content\svg\sm-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sm.svg" />
+    <Content Include="Content\lead-app-content\svg\sn-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sn.svg" />
+    <Content Include="Content\lead-app-content\svg\so-2.svg" />
+    <Content Include="Content\lead-app-content\svg\so.svg" />
+    <Content Include="Content\lead-app-content\svg\sr-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sr.svg" />
+    <Content Include="Content\lead-app-content\svg\ss-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ss.svg" />
+    <Content Include="Content\lead-app-content\svg\st-2.svg" />
+    <Content Include="Content\lead-app-content\svg\st.svg" />
+    <Content Include="Content\lead-app-content\svg\sv-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sv.svg" />
+    <Content Include="Content\lead-app-content\svg\sx-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sx.svg" />
+    <Content Include="Content\lead-app-content\svg\sy-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sy.svg" />
+    <Content Include="Content\lead-app-content\svg\sz-2.svg" />
+    <Content Include="Content\lead-app-content\svg\sz.svg" />
+    <Content Include="Content\lead-app-content\svg\tc-2.svg" />
+    <Content Include="Content\lead-app-content\svg\tc.svg" />
+    <Content Include="Content\lead-app-content\svg\td-2.svg" />
+    <Content Include="Content\lead-app-content\svg\td.svg" />
+    <Content Include="Content\lead-app-content\svg\tf-2.svg" />
+    <Content Include="Content\lead-app-content\svg\tf.svg" />
+    <Content Include="Content\lead-app-content\svg\tg-2.svg" />
+    <Content Include="Content\lead-app-content\svg\tg.svg" />
+    <Content Include="Content\lead-app-content\svg\th-2.svg" />
+    <Content Include="Content\lead-app-content\svg\th.svg" />
+    <Content Include="Content\lead-app-content\svg\themify9f24.svg" />
+    <Content Include="Content\lead-app-content\svg\tj-2.svg" />
+    <Content Include="Content\lead-app-content\svg\tj.svg" />
+    <Content Include="Content\lead-app-content\svg\tk-2.svg" />
+    <Content Include="Content\lead-app-content\svg\tk.svg" />
+    <Content Include="Content\lead-app-content\svg\tl-2.svg" />
+    <Content Include="Content\lead-app-content\svg\tl.svg" />
+    <Content Include="Content\lead-app-content\svg\tm-2.svg" />
+    <Content Include="Content\lead-app-content\svg\tm.svg" />
+    <Content Include="Content\lead-app-content\svg\tn-2.svg" />
+    <Content Include="Content\lead-app-content\svg\tn.svg" />
+    <Content Include="Content\lead-app-content\svg\to-2.svg" />
+    <Content Include="Content\lead-app-content\svg\to.svg" />
+    <Content Include="Content\lead-app-content\svg\tr-2.svg" />
+    <Content Include="Content\lead-app-content\svg\tr.svg" />
+    <Content Include="Content\lead-app-content\svg\tt-2.svg" />
+    <Content Include="Content\lead-app-content\svg\tt.svg" />
+    <Content Include="Content\lead-app-content\svg\tv-2.svg" />
+    <Content Include="Content\lead-app-content\svg\tv.svg" />
+    <Content Include="Content\lead-app-content\svg\tw-2.svg" />
+    <Content Include="Content\lead-app-content\svg\tw.svg" />
+    <Content Include="Content\lead-app-content\svg\tz-2.svg" />
+    <Content Include="Content\lead-app-content\svg\tz.svg" />
+    <Content Include="Content\lead-app-content\svg\ua-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ua.svg" />
+    <Content Include="Content\lead-app-content\svg\ug-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ug.svg" />
+    <Content Include="Content\lead-app-content\svg\um-2.svg" />
+    <Content Include="Content\lead-app-content\svg\um.svg" />
+    <Content Include="Content\lead-app-content\svg\us-2.svg" />
+    <Content Include="Content\lead-app-content\svg\us.svg" />
+    <Content Include="Content\lead-app-content\svg\uy-2.svg" />
+    <Content Include="Content\lead-app-content\svg\uy.svg" />
+    <Content Include="Content\lead-app-content\svg\uz-2.svg" />
+    <Content Include="Content\lead-app-content\svg\uz.svg" />
+    <Content Include="Content\lead-app-content\svg\va-2.svg" />
+    <Content Include="Content\lead-app-content\svg\va.svg" />
+    <Content Include="Content\lead-app-content\svg\vc-2.svg" />
+    <Content Include="Content\lead-app-content\svg\vc.svg" />
+    <Content Include="Content\lead-app-content\svg\ve-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ve.svg" />
+    <Content Include="Content\lead-app-content\svg\vg-2.svg" />
+    <Content Include="Content\lead-app-content\svg\vg.svg" />
+    <Content Include="Content\lead-app-content\svg\vi-2.svg" />
+    <Content Include="Content\lead-app-content\svg\vi.svg" />
+    <Content Include="Content\lead-app-content\svg\vn-2.svg" />
+    <Content Include="Content\lead-app-content\svg\vn.svg" />
+    <Content Include="Content\lead-app-content\svg\vu-2.svg" />
+    <Content Include="Content\lead-app-content\svg\vu.svg" />
+    <Content Include="Content\lead-app-content\svg\wf-2.svg" />
+    <Content Include="Content\lead-app-content\svg\wf.svg" />
+    <Content Include="Content\lead-app-content\svg\ws-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ws.svg" />
+    <Content Include="Content\lead-app-content\svg\ye-2.svg" />
+    <Content Include="Content\lead-app-content\svg\ye.svg" />
+    <Content Include="Content\lead-app-content\svg\yt-2.svg" />
+    <Content Include="Content\lead-app-content\svg\yt.svg" />
+    <Content Include="Content\lead-app-content\svg\za-2.svg" />
+    <Content Include="Content\lead-app-content\svg\za.svg" />
+    <Content Include="Content\lead-app-content\svg\zm-2.svg" />
+    <Content Include="Content\lead-app-content\svg\zm.svg" />
+    <Content Include="Content\lead-app-content\svg\zw-2.svg" />
+    <Content Include="Content\lead-app-content\svg\zw.svg" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\lead-app-content\eot\dd-icon.eot" />
+    <Content Include="Content\lead-app-content\eot\dd-icond41d.eot" />
+    <Content Include="Content\lead-app-content\eot\jquery-filer.eot" />
+    <Content Include="Content\lead-app-content\eot\jquery-filerd41d.eot" />
+    <Content Include="Content\lead-app-content\eot\themify9f24.eot" />
+    <Content Include="Content\lead-app-content\eot\themifyd41d.eot" />
+    <Content Include="Content\lead-app-content\ttf\dd-icon.ttf" />
+    <Content Include="Content\lead-app-content\ttf\themify9f24.ttf" />
+    <Content Include="Content\lead-app-content\woff\dd-icon.woff" />
+    <Content Include="Content\lead-app-content\woff\themify9f24.woff" />
+    <None Include="Properties\PublishProfiles\LeadDataManagement - Web Deploy.pubxml" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Login\Signup.cshtml" />
+    <Content Include="Views\Login\SignUpCompleted.cshtml" />
+    <Content Include="Views\Admin\Users.cshtml" />
+    <Content Include="Views\Login\ForgotPassword.cshtml" />
+    <Content Include="Views\Login\ResetPasswordCompleted.cshtml" />
+    <Content Include="Views\Admin\LeadTypes.cshtml" />
+    <Content Include="Views\Admin\Dashboard.cshtml" />
+    <Content Include="Views\Admin\LeadMasterData.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="packages.config" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>59075</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44366/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

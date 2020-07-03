@@ -1,0 +1,232 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "name": "lead-resource",
+      "location": "eastus",
+      "apiVersion": "2019-10-01"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "[concat('lead-resourceDeployment', uniqueString(subscription().subscriptionId))]",
+      "resourceGroup": "lead-resource",
+      "apiVersion": "2019-10-01",
+      "dependsOn": [
+        "lead-resource"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": [
+            {
+              "id": "/subscriptions/ad706dca-57d4-47b6-8b3e-cf16cc59bfa7/resourceGroups/lead-resource/providers/Microsoft.Web/sites/LeadDataManagement",
+              "name": "LeadDataManagement",
+              "type": "Microsoft.Web/sites",
+              "kind": "app",
+              "location": "South Central US",
+              "tags": {
+                "hidden-related:/subscriptions/ad706dca-57d4-47b6-8b3e-cf16cc59bfa7/resourceGroups/lead-resource/providers/Microsoft.Web/serverfarms/LeadDataManagement20200701223633Plan": "empty"
+              },
+              "properties": {
+                "name": "LeadDataManagement",
+                "state": "Running",
+                "hostNames": [
+                  "leaddatamanagement.azurewebsites.net"
+                ],
+                "webSpace": "lead-resource-SouthCentralUSwebspace",
+                "selfLink": "https://waws-prod-sn1-127.api.azurewebsites.windows.net:454/subscriptions/ad706dca-57d4-47b6-8b3e-cf16cc59bfa7/webspaces/lead-resource-SouthCentralUSwebspace/sites/LeadDataManagement",
+                "repositorySiteName": "LeadDataManagement",
+                "owner": null,
+                "usageState": 0,
+                "enabled": true,
+                "adminEnabled": true,
+                "enabledHostNames": [
+                  "leaddatamanagement.azurewebsites.net",
+                  "leaddatamanagement.scm.azurewebsites.net"
+                ],
+                "siteProperties": {
+                  "metadata": null,
+                  "properties": [
+                    {
+                      "name": "LinuxFxVersion",
+                      "value": ""
+                    },
+                    {
+                      "name": "WindowsFxVersion",
+                      "value": null
+                    }
+                  ],
+                  "appSettings": null
+                },
+                "availabilityState": 0,
+                "sslCertificates": null,
+                "csrs": [],
+                "cers": null,
+                "siteMode": null,
+                "hostNameSslStates": [
+                  {
+                    "name": "leaddatamanagement.azurewebsites.net",
+                    "sslState": 0,
+                    "ipBasedSslResult": null,
+                    "virtualIP": null,
+                    "thumbprint": null,
+                    "toUpdate": null,
+                    "toUpdateIpBasedSsl": null,
+                    "ipBasedSslState": 0,
+                    "hostType": 0
+                  },
+                  {
+                    "name": "leaddatamanagement.scm.azurewebsites.net",
+                    "sslState": 0,
+                    "ipBasedSslResult": null,
+                    "virtualIP": null,
+                    "thumbprint": null,
+                    "toUpdate": null,
+                    "toUpdateIpBasedSsl": null,
+                    "ipBasedSslState": 0,
+                    "hostType": 1
+                  }
+                ],
+                "computeMode": null,
+                "serverFarm": null,
+                "serverFarmId": "/subscriptions/ad706dca-57d4-47b6-8b3e-cf16cc59bfa7/resourceGroups/lead-resource/providers/Microsoft.Web/serverfarms/LeadDataManagement20200701223633Plan",
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "lastModifiedTimeUtc": "2020-07-01T17:10:29.9966667",
+                "storageRecoveryDefaultState": "Running",
+                "contentAvailabilityState": 0,
+                "runtimeAvailabilityState": 0,
+                "siteConfig": {
+                  "numberOfWorkers": null,
+                  "defaultDocuments": null,
+                  "netFrameworkVersion": null,
+                  "phpVersion": null,
+                  "pythonVersion": null,
+                  "nodeVersion": null,
+                  "powerShellVersion": null,
+                  "linuxFxVersion": null,
+                  "windowsFxVersion": null,
+                  "requestTracingEnabled": null,
+                  "remoteDebuggingEnabled": null,
+                  "remoteDebuggingVersion": null,
+                  "httpLoggingEnabled": null,
+                  "azureMonitorLogCategories": null,
+                  "acrUseManagedIdentityCreds": false,
+                  "acrUserManagedIdentityID": null,
+                  "logsDirectorySizeLimit": null,
+                  "detailedErrorLoggingEnabled": null,
+                  "publishingUsername": null,
+                  "publishingPassword": null,
+                  "appSettings": null,
+                  "metadata": null,
+                  "connectionStrings": null,
+                  "machineKey": null,
+                  "handlerMappings": null,
+                  "documentRoot": null,
+                  "scmType": null,
+                  "use32BitWorkerProcess": null,
+                  "webSocketsEnabled": null,
+                  "alwaysOn": null,
+                  "javaVersion": null,
+                  "javaContainer": null,
+                  "javaContainerVersion": null,
+                  "appCommandLine": null,
+                  "managedPipelineMode": null,
+                  "virtualApplications": null,
+                  "winAuthAdminState": null,
+                  "winAuthTenantState": null,
+                  "customAppPoolIdentityAdminState": null,
+                  "customAppPoolIdentityTenantState": null,
+                  "runtimeADUser": null,
+                  "runtimeADUserPassword": null,
+                  "loadBalancing": null,
+                  "routingRules": null,
+                  "experiments": null,
+                  "limits": null,
+                  "autoHealEnabled": null,
+                  "autoHealRules": null,
+                  "tracingOptions": null,
+                  "vnetName": null,
+                  "cors": null,
+                  "push": null,
+                  "apiDefinition": null,
+                  "apiManagementConfig": null,
+                  "autoSwapSlotName": null,
+                  "localMySqlEnabled": null,
+                  "managedServiceIdentityId": null,
+                  "xManagedServiceIdentityId": null,
+                  "ipSecurityRestrictions": null,
+                  "scmIpSecurityRestrictions": null,
+                  "scmIpSecurityRestrictionsUseMain": null,
+                  "http20Enabled": null,
+                  "minTlsVersion": null,
+                  "ftpsState": null,
+                  "preWarmedInstanceCount": null,
+                  "healthCheckPath": null,
+                  "fileChangeAuditEnabled": null,
+                  "functionsRuntimeScaleMonitoringEnabled": null,
+                  "websiteTimeZone": null,
+                  "minimumElasticInstanceCount": 0
+                },
+                "deploymentId": "LeadDataManagement",
+                "trafficManagerHostNames": null,
+                "sku": "Standard",
+                "scmSiteAlsoStopped": false,
+                "targetSwapSlot": null,
+                "hostingEnvironment": null,
+                "hostingEnvironmentProfile": null,
+                "clientAffinityEnabled": true,
+                "clientCertEnabled": false,
+                "clientCertMode": 0,
+                "clientCertExclusionPaths": null,
+                "hostNamesDisabled": false,
+                "domainVerificationIdentifiers": null,
+                "customDomainVerificationId": "DBEDE5C4C14D1F897336E9101AEA6E740FBF484637000FF6619C0E41E105FBD3",
+                "kind": "app",
+                "inboundIpAddress": "52.171.218.239",
+                "possibleInboundIpAddresses": "52.171.218.239",
+                "ftpUsername": "LeadDataManagement\\$LeadDataManagement",
+                "ftpsHostName": "ftps://waws-prod-sn1-127.ftp.azurewebsites.windows.net/site/wwwroot",
+                "outboundIpAddresses": "52.171.218.239,52.171.223.92,52.171.217.31,52.171.216.93,52.171.220.134",
+                "possibleOutboundIpAddresses": "52.171.218.239,52.171.223.92,52.171.217.31,52.171.216.93,52.171.220.134,40.84.145.193,23.98.149.67,23.98.148.122",
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "suspendedTill": null,
+                "siteDisabledReason": 0,
+                "functionExecutionUnitsCache": null,
+                "maxNumberOfWorkers": null,
+                "homeStamp": "waws-prod-sn1-127",
+                "cloningInfo": null,
+                "hostingEnvironmentId": null,
+                "tags": {
+                  "hidden-related:/subscriptions/ad706dca-57d4-47b6-8b3e-cf16cc59bfa7/resourceGroups/lead-resource/providers/Microsoft.Web/serverfarms/LeadDataManagement20200701223633Plan": "empty"
+                },
+                "resourceGroup": "lead-resource",
+                "defaultHostName": "leaddatamanagement.azurewebsites.net",
+                "slotSwapStatus": null,
+                "httpsOnly": true,
+                "redundancyMode": 0,
+                "inProgressOperationId": null,
+                "geoDistributions": null,
+                "privateEndpointConnections": [],
+                "buildVersion": null,
+                "targetBuildVersion": null
+              },
+              "identity": {
+                "type": "SystemAssigned",
+                "tenantId": "36da45f1-dd2c-4d1f-af13-5abe46b99921",
+                "principalId": "89370b85-c69b-4e10-b832-457f7f139a9c"
+              },
+              "apiVersion": "2015-05-01"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
