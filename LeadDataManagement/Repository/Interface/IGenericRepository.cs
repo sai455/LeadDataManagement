@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -31,5 +32,7 @@ namespace LeadDataManagement.Repository.Interface
         Task<int> SaveAsync();
         T Update(T t, object key);
         Task<T> UpdateAsyn(T t, object key);
+        DbRawSqlQuery<T> SQLQuery<T>(string sql, params object[] parameters);
+        int ExecuteSqlCommand(string sql, params object[] parameters);
     }
 }

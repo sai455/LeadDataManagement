@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -166,5 +167,13 @@ namespace LeadDataManagement.Repository
 
         private bool disposed = false;
 
+        public DbRawSqlQuery<T> SQLQuery<T>(string sql, params object[] parameters)
+        {
+            return _context.Database.SqlQuery<T>(sql, parameters);
+        }
+        public int ExecuteSqlCommand(string sql, params object[] parameters)
+        {
+            return _context.Database.ExecuteSqlCommand(sql, parameters);
+        }
     }
 }

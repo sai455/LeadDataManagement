@@ -20,7 +20,7 @@ namespace LeadDataManagement.Models.ViewModels
         public long Id { get; set; }
         public int SNo { get; set; }
         public string LeadType { get; set; }
-        public int Phone { get; set; }
+        public long Phone { get; set; }
         public int LeadTypeId { get; set; }
         public string Status { get; set; }
         public string CreatedAt { get; set; }

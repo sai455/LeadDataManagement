@@ -22,8 +22,11 @@ namespace LeadDataManagement.Controllers
         public ActionResult Dashboard()
         {
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
+
+
             return View();
         }
+       
         #endregion
 
         #region Users
@@ -150,6 +153,7 @@ namespace LeadDataManagement.Controllers
                 {
                     LeadType = leadTypesList.FirstOrDefault(x=>x.Id==l.LeadTypeId).Name,
                     LeadTypeId=l.LeadTypeId,
+                    Phone=l.Phone,
                     SNo = iCount,
                     Status = l.IsActive == true ? "Active" : "InActive",
                     Id = l.Id,
@@ -174,10 +178,16 @@ namespace LeadDataManagement.Controllers
                     file.SaveAs(path);
                     
                     string[] lines = System.IO.File.ReadAllLines(path);
-                    List<int> PhoneNo = lines.Take(10).Select(x => Convert.ToInt32(x.Replace(",","").Trim())).ToList();
+                    List<long> PhoneNo = lines.Select(x => Convert.ToInt64(x.Replace(",","").Trim())).ToList();
                     leadService.SaveMasterData(PhoneNo, LeadTypeId);
                 }
             }
+            ViewBag.CurrentUser = this.CurrentLoggedInUser;
+            ViewBag.LeadTypesList = leadService.GetLeadTypes().ToList().Select(x => new DropDownModel()
+            {
+                Name = x.Name,
+                Id = x.Id
+            }).OrderBy(x => x.Name).ToList();
             return View("LeadMasterData");
         }
         #endregion

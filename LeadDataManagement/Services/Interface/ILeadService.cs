@@ -11,6 +11,6 @@ namespace LeadDataManagement.Services.Interface
         IQueryable<LeadType> GetLeadTypes();
         void AddEditLeadTypes(int id, string leadType);
         IQueryable<LeadMasterData> GetAllLeadMasterData();
-        void SaveMasterData(List<int> PhoneNo, int leadTypeId);
+        void SaveMasterData(List<long> PhoneNo, int leadTypeId);
     }
 }

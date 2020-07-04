@@ -32,11 +32,12 @@ namespace LeadDataManagement.Models.Context
     {
         [Key]
         public long Id { get; set; }
-        public int Phone { get; set; }
+        public long Phone { get; set; }
         public int LeadTypeId { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
     }
 
+   
 }

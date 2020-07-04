@@ -49,18 +49,9 @@ namespace LeadDataManagement.Services
             return _leadMasterDataRepository.GetAll();
         }
 
-        public void SaveMasterData(List<int> PhoneNo, int leadTypeId)
+        public void SaveMasterData(List<long> PhoneNo, int leadTypeId)
         {
-            foreach(var p in PhoneNo)
-            {
-                _leadMasterDataRepository.Add(new LeadMasterData()
-                {
-                    Phone = p,
-                    IsActive=true,
-                    CreatedAt=DateTime.Now,
-                    LeadTypeId= leadTypeId
-                });
-            }
+            _leadMasterDataRepository.USPLoadMasterData(PhoneNo, leadTypeId);
         }
     }
 }

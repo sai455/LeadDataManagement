@@ -8,6 +8,6 @@ namespace LeadDataManagement.Repository.Interface
 {
     public interface ILeadMasterDataRepository : IGenericRepository<LeadMasterData>
     {
-
+        void USPLoadMasterData(List<long> phonesList, int leadTypeId);
     }
 }
