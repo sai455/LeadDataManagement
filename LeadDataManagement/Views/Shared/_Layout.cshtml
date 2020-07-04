@@ -313,23 +313,22 @@
                                     }
                                     else
                                     {
-                                        <li class="pcoded-hasmenu">
-                                            <a href="javascript:void(0)" class="waves-effect waves-dark">
-                                                <span class="pcoded-micon"><i class="feather icon-home"></i></span>
-                                                <span class="pcoded-mtext">Users</span>
+                                        <div class="pcoded-navigation-label" menu-title-theme="theme1">User Module</div>
+                                        <li class="">
+                                            <a href="@Url.Action("Dashboard","Users")" class="waves-effect waves-dark">
+                                                <span class="pcoded-micon">
+                                                    <i class="feather icon-home"></i>
+                                                </span>
+                                                <span class="pcoded-mtext">Dashboard</span>
                                             </a>
-                                            <ul class="pcoded-submenu">
-                                                <li class="">
-                                                    <a href="javascript:void(0)" class="waves-effect waves-dark">
-                                                        <span class="pcoded-mtext">Dashboard</span>
-                                                    </a>
-                                                </li>
-                                                <li class="">
-                                                    <a href="javascript:void(0)" class="waves-effect waves-dark">
-                                                        <span class="pcoded-mtext">Lead Uploads</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
+                                        </li>
+                                        <li class="">
+                                            <a href="@Url.Action("Scrubber","Users")" class="waves-effect waves-dark">
+                                                <span class="pcoded-micon">
+                                                    <i class="fa fa-clone"></i>
+                                                </span>
+                                                <span class="pcoded-mtext">Scrubber</span>
+                                            </a>
                                         </li>
                                     }
 
@@ -372,7 +371,8 @@
     <script src="~/Content/lead-app-content/js/responsive.bootstrap4.min.js" type="text/javascript"></script>
     <script src="~/Content/lead-app-content/js/data-table-custom.js" type="text/javascript"></script>
 
-    <script type="text/javascript" src="~/Content/lead-app-content/js/sweetalert.min.js"></script>
+  
+   
     @*<script type="text/javascript" src="~/Content/lead-app-content/js/modal.js"></script>*@
     <script type="text/javascript" src="~/Content/lead-app-content/js/pcoded.min.js"></script>
     <script type="text/javascript" src="~/Content/lead-app-content/js/vertical-layout.min.js"></script>

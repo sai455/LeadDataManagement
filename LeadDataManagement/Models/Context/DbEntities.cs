@@ -39,5 +39,18 @@ namespace LeadDataManagement.Models.Context
         public DateTime? ModifiedAt { get; set; }
     }
 
-   
+   public class UserScrub
+    {
+        [Key]
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public int LeadTypeId { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public int Duration { get; set; }
+        public string InputFilePath { get; set; }
+        public long MatchedCount { get; set; }
+        public long UnMatchedCount { get; set; }
+        public string MatchedPath { get; set; }
+        public string UnMatchedPath { get; set; }
+    }
 }

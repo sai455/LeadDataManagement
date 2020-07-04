@@ -143,7 +143,9 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Models\ViewModels\LeadViewModel.cs" />
+    <Compile Include="Repository\Interface\IUserScrubRepository.cs" />
     <Compile Include="Repository\Interface\ILeadMasterDataRepository.cs" />
     <Compile Include="Repository\LeadMasterDataRepository.cs" />
     <Compile Include="Repository\LeadRepository.cs" />
@@ -160,9 +162,12 @@
     <Compile Include="Repository\Interface\ILeadRepository.cs" />
     <Compile Include="Repository\Interface\IUserRepository.cs" />
     <Compile Include="Repository\UserRepository.cs" />
+    <Compile Include="Repository\UserScrubRepository.cs" />
     <Compile Include="Services\Interface\ILeadService.cs" />
+    <Compile Include="Services\Interface\IUserScrubService.cs" />
     <Compile Include="Services\Interface\IUserService.cs" />
     <Compile Include="Services\LeadService.cs" />
+    <Compile Include="Services\UserScrubService.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1105,6 +1110,8 @@
     <Content Include="Views\Admin\LeadTypes.cshtml" />
     <Content Include="Views\Admin\Dashboard.cshtml" />
     <Content Include="Views\Admin\LeadMasterData.cshtml" />
+    <Content Include="Views\Users\Dashboard.cshtml" />
+    <Content Include="Views\Users\Scrubber.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

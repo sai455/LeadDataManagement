@@ -27,7 +27,17 @@ namespace LeadDataManagement.Models.ViewModels
         public bool IsActive { get; set; }
         public string EditBtn { get; set; }
     }
-
+    public class UserScrubsGridModel
+    {
+        public string CreatedAt { get; set; }
+        public int Sno { get; set; }
+        public int LeadTypeId { get; set; }
+        public string LeadType { get; set; }
+        public string Matched { get; set; }
+        public string UnMatched { get; set; }
+        public int Duration { get; set; }
+        public string InputFile { get; set; }
+    }
     public class DropDownModel
     {
         public int Id { get; set; }

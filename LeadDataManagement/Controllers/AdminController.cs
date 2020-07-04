@@ -144,10 +144,10 @@ namespace LeadDataManagement.Controllers
         {
             var leadTypesList = leadService.GetLeadTypes().ToList();
             List<LeadMasterDataGridViewModel> retData = new List<LeadMasterDataGridViewModel>();
-            var leadList = leadService.GetAllLeadMasterData().ToList();
+            var leadList = leadService.GetAllLeadMasterData();
             if(leadTypeId.HasValue)
             {
-                leadList = leadList.Where(x => x.LeadTypeId == leadTypeId).ToList();
+                leadList = leadList.Where(x => x.LeadTypeId == leadTypeId);
             }
             int iCount = 0;
             foreach (var l in leadList)
@@ -167,7 +167,12 @@ namespace LeadDataManagement.Controllers
                 });
             }
             var jsonData = new { data = from emp in retData select emp };
-            return Json(jsonData, JsonRequestBehavior.AllowGet);
+            return new JsonResult()
+            {
+                Data = jsonData,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                MaxJsonLength = Int32.MaxValue // Use this value to set your maximum size for all of your Requests
+            };
         }
 
 
@@ -182,7 +187,7 @@ namespace LeadDataManagement.Controllers
                     file.SaveAs(path);
                     
                     string[] lines = System.IO.File.ReadAllLines(path);
-                    List<long> PhoneNo = lines.Select(x => Convert.ToInt64(x.Replace(",","").Trim())).ToList();
+                    List<long> PhoneNo = lines.Select(x => Convert.ToInt64(x.Replace(",","").Trim())).Take(10000).ToList();
                     leadService.SaveMasterData(PhoneNo, LeadTypeId);
                 }
             }

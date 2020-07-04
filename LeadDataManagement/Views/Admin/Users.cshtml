@@ -101,7 +101,7 @@
     <div id="styleSelector">
     </div>
 </div>
-
+<script type="text/javascript" src="~/Content/lead-app-content/js/sweetalert.min.js"></script>
 @section Scripts {
 
     <script type="text/javascript">
@@ -148,7 +148,7 @@
             }, function () {
                     updateUserStatus(id, score, 3);
             })
-           
+
         });
 
         //Activate Inactive Users
@@ -166,7 +166,7 @@
             }, function () {
                     updateUserStatus(id, score, 2);
             })
-            
+
         });
         function updateUserStatus(id, score, statusId) {
             $.ajax({

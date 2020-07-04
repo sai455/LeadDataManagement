@@ -40,7 +40,7 @@ namespace LeadDataManagement.Controllers
                     if(userData.IsAdmin)
                      return RedirectToAction("Dashboard", "Admin");
                     else
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Dashboard", "Users");
                 }
             }
             else

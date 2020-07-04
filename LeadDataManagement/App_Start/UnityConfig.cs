@@ -20,6 +20,8 @@ namespace LeadDataManagement
             container.RegisterType<ILeadRepository, LeadRepository>();
             container.RegisterType<ILeadService, LeadService>();
             container.RegisterType<ILeadMasterDataRepository, LeadMasterDataRepository>();
+            container.RegisterType<IUserScrubRepository, UserScrubRepository>();
+            container.RegisterType<IUserScrubService, UserScrubService>();
         }
     }
 }
