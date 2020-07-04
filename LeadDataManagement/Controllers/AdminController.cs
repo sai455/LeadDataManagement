@@ -144,7 +144,11 @@ namespace LeadDataManagement.Controllers
         {
             var leadTypesList = leadService.GetLeadTypes().ToList();
             List<LeadMasterDataGridViewModel> retData = new List<LeadMasterDataGridViewModel>();
-            var leadList = leadService.GetAllLeadMasterData().Where(x=> leadTypeId.HasValue?x.LeadTypeId== leadTypeId.Value:x.LeadTypeId!=0).ToList();
+            var leadList = leadService.GetAllLeadMasterData().ToList();
+            if(leadTypeId.HasValue)
+            {
+                leadList = leadList.Where(x => x.LeadTypeId == leadTypeId).ToList();
+            }
             int iCount = 0;
             foreach (var l in leadList)
             {

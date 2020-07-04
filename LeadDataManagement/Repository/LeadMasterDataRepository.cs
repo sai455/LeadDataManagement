@@ -15,7 +15,7 @@ namespace LeadDataManagement.Repository
     {
         public LeadMasterDataRepository(LeadDbContext leadDbContext) : base(leadDbContext)
         {
-            
+            leadDbContext.Database.CommandTimeout = 180;
         }
 
         public void USPLoadMasterData(List<long> phonesList, int leadTypeId)
