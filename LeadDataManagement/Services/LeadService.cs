@@ -44,7 +44,10 @@ namespace LeadDataManagement.Services
             }
         }
 
-
+        public IQueryable<LeadMasterData> GetAllLeadMasterDataByLeadType(int leadTypeId)
+        {
+            return _leadMasterDataRepository.GetAllLeadMasterDataByLeadType(leadTypeId);
+        }
         public IQueryable<LeadMasterData>GetAllLeadMasterData()
         {
             return _leadMasterDataRepository.GetAll();

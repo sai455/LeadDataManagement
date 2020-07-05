@@ -18,7 +18,10 @@ namespace LeadDataManagement.Repository
         {
             leadDbContext.Database.CommandTimeout = 180;
         }
-
+        public IQueryable<LeadMasterData> GetAllLeadMasterDataByLeadType(int leadTypeId)
+        {
+            return _context.Set<LeadMasterData>().Where(x => x.LeadTypeId == leadTypeId);
+        }
         public void USPLoadMasterData(List<long> phonesList, int leadTypeId)
         {
             var dt = PrepareUDT(phonesList);

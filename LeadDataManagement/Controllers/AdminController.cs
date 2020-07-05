@@ -168,7 +168,7 @@ namespace LeadDataManagement.Controllers
         }
         public JsonResult GetViewList(int leadTypeId)
         {
-            var data = leadService.GetAllLeadMasterData().Where(x => x.LeadTypeId == leadTypeId).Select(x=>x.Phone).ToArray();
+            var data = leadService.GetAllLeadMasterDataByLeadType(leadTypeId).Select(x=>x.Phone).ToArray();
             string retData = string.Join(", ", data);
             return new JsonResult()
             {
@@ -189,7 +189,7 @@ namespace LeadDataManagement.Controllers
                     file.SaveAs(path);
                     
                     string[] lines = System.IO.File.ReadAllLines(path);
-                    List<long> PhoneNo = lines.Select(x => Convert.ToInt64(x.Replace(",","").Trim())).Take(10000).ToList();
+                    List<long> PhoneNo = lines.Select(x => Convert.ToInt64(x.Replace(",","").Trim())).Take(200000).ToList();
                     leadService.SaveMasterData(PhoneNo, LeadTypeId);
                 }
             }

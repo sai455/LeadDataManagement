@@ -11,5 +11,6 @@ namespace LeadDataManagement.Repository.Interface
     {
         void USPLoadMasterData(List<long> phonesList, int leadTypeId);
         List<DropDownModel> UspGetLeadMasterDataGrid(int? leadTypeId);
+        IQueryable<LeadMasterData> GetAllLeadMasterDataByLeadType(int leadTypeId);
     }
 }

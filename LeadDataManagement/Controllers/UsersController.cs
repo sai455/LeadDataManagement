@@ -55,6 +55,7 @@ namespace LeadDataManagement.Controllers
                 retData.Add(new UserScrubsGridModel()
                 {
                     Sno = iCount,
+                    CreatedAt=u.CreatedDate.ToString("dd-MMM-yyyy hh:mm:ss tt"),
                     LeadTypeId = u.LeadTypeId,
                     LeadType = Leads.Where(x => x.Id == u.LeadTypeId).FirstOrDefault().Name,
                     Matched = "Matched- " + u.MatchedCount + " <a href='"+u.MatchedPath+ ".csv' style='cursor:pointer' download='Matched-"+u.Id+".csv'><i class='fa fa-download' ></i></a>",
@@ -78,21 +79,60 @@ namespace LeadDataManagement.Controllers
            
             if (string.IsNullOrEmpty(PhoneNos))
             {
-                //HttpPostedFileBase file = Request.Files["ScrubFile"];
-                //if ((file != null) && (file.ContentLength > 0) && !string.IsNullOrEmpty(file.FileName))
-                //{
+                HttpPostedFileBase file = Request.Files["ScrubFile"];
+                if ((file != null) && (file.ContentLength > 0) && !string.IsNullOrEmpty(file.FileName))
+                {
+                    string ext = Path.GetExtension(file.FileName);
+                    string newFileName = Guid.NewGuid().ToString();
+                    string path = Path.Combine(Server.MapPath("~/Content/DataLoads/"), newFileName + ext);
+                    file.SaveAs(path);
+                    List<string> inputList = new List<string>();
+                    if (ext.ToLower() == ".csv")
+                    {
+                        StreamReader myFile = new StreamReader(path);
+                        string myString = myFile.ReadToEnd();
+                        myFile.Close();
+                        string[] lines = myString.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                        inputList = lines.Skip(1).ToList();
+                    }else if(ext.ToLower() == ".xlsx")
+                    {
 
-                //     string newFileName = Guid.NewGuid().ToString();
-                //    string ext = Path.GetExtension(file.FileName);
-                //    string path = Path.Combine(Server.MapPath("~/Content/DataLoads/"), newFileName+ext);
-                //    file.SaveAs(path);
-                //}
-                sw.Stop();
+                    }
+
+                    if (inputList.Count > 0)
+                    {
+                        List<long> UserScrubPhonesList = new List<long>();
+                        foreach (var i in inputList)
+                        {
+                            long number;
+                            bool isSuccess = Int64.TryParse(i, out number);
+                            if (isSuccess)
+                            {
+                                UserScrubPhonesList.Add(number);
+                            }
+                        }
+                        var matchedList = leadService.GetAllLeadMasterDataByLeadType(LeadTypeId).Select(x => x.Phone).Where(x => UserScrubPhonesList.Contains(x)).ToList();
+                        var unmatchedCount = UserScrubPhonesList.Except(matchedList).ToList();
+
+                        sw.Stop();
+                        //Matched File Create
+                        string matchedFileName = Guid.NewGuid().ToString();
+                        CreateSaveCsvFile(matchedFileName, matchedList);
+
+                        // UnMatched File Create
+                        string unMatchedFileName = Guid.NewGuid().ToString();
+                        CreateSaveCsvFile(unMatchedFileName, unmatchedCount);
+
+                        userScrubService.SaveUserScrub(this.CurrentLoggedInUser.Id, LeadTypeId, matchedList.Count(), unmatchedCount.Count(), matchedFileName, unMatchedFileName, newFileName+".csv", sw.Elapsed.Seconds);
+                    }
+                  
+                }
             }
             else
             {
-                List<long> UserScrubPhonesList = new List<long>();
                 List<string> inputList = PhoneNos.Split(',').ToList();
+
+                List<long> UserScrubPhonesList = new List<long>();
                 foreach (var i in inputList)
                 {
                     long number;

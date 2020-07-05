@@ -12,5 +12,6 @@ namespace LeadDataManagement.Repository
         public LeadRepository(LeadDbContext leadDbContext) : base(leadDbContext)
         {
         }
+       
     }
 }

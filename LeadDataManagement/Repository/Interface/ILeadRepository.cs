@@ -8,6 +8,6 @@ namespace LeadDataManagement.Repository.Interface
 {
     public interface ILeadRepository : IGenericRepository<LeadType>
     {
-
+        
     }
 }
