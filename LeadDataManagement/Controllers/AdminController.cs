@@ -144,27 +144,19 @@ namespace LeadDataManagement.Controllers
         {
             var leadTypesList = leadService.GetLeadTypes().ToList();
             List<LeadMasterDataGridViewModel> retData = new List<LeadMasterDataGridViewModel>();
-            var leadList = leadService.GetAllLeadMasterData();
-            if(leadTypeId.HasValue)
-            {
-                leadList = leadList.Where(x => x.LeadTypeId == leadTypeId);
-            }
+            var leadList = leadService.GetLeadMasterdataGridList(leadTypeId);
             int iCount = 0;
             foreach (var l in leadList)
             {
                 iCount += 1;
                 retData.Add(new LeadMasterDataGridViewModel()
                 {
-                    LeadType = leadTypesList.FirstOrDefault(x=>x.Id==l.LeadTypeId).Name,
-                    LeadTypeId=l.LeadTypeId,
-                    Phone=l.Phone,
                     SNo = iCount,
-                    Status = l.IsActive == true ? "Active" : "InActive",
                     Id = l.Id,
-                    CreatedAt = l.CreatedAt.ToString("dd-MMM-yyyy hh:mm:ss tt"),
-                    IsActive = l.IsActive,
-                    EditBtn = "<button type='button' class='btn btn-primary m-b-10 btnedit btn-sm' data-lead='" + l.Phone + "' data-id='" + l.Id + "'><i class='fa fa-pencil-square-o'></i> Edit</button>"
-                });
+                    PhoneCount = l.Count,
+                    LeadType=l.Name,
+                    EditBtn = "<button type='button' class='btn btn-primary m-b-10 btnView btn-sm' data-name='"+l.Name+"' data-id='" + l.Id + "' ><i class='fa fa-eye'></i> View Data</button>"
+                }); ;
             }
             var jsonData = new { data = from emp in retData select emp };
             return new JsonResult()
@@ -174,7 +166,17 @@ namespace LeadDataManagement.Controllers
                 MaxJsonLength = Int32.MaxValue // Use this value to set your maximum size for all of your Requests
             };
         }
-
+        public JsonResult GetViewList(int leadTypeId)
+        {
+            var data = leadService.GetAllLeadMasterData().Where(x => x.LeadTypeId == leadTypeId).Select(x=>x.Phone).ToArray();
+            string retData = string.Join(", ", data);
+            return new JsonResult()
+            {
+                Data = retData,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                MaxJsonLength = Int32.MaxValue 
+            };
+        }
 
         public ActionResult UploadMasterData(FormCollection formCollection,int LeadTypeId)
         {

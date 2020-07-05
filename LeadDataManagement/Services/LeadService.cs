@@ -1,4 +1,5 @@
 ﻿using LeadDataManagement.Models.Context;
+using LeadDataManagement.Models.ViewModels;
 using LeadDataManagement.Repository.Interface;
 using LeadDataManagement.Services.Interface;
 using System;
@@ -52,6 +53,11 @@ namespace LeadDataManagement.Services
         public void SaveMasterData(List<long> PhoneNo, int leadTypeId)
         {
             _leadMasterDataRepository.USPLoadMasterData(PhoneNo, leadTypeId);
+        }
+
+        public List<DropDownModel> GetLeadMasterdataGridList(int? leadTypeId)
+        {
+            return _leadMasterDataRepository.UspGetLeadMasterDataGrid(leadTypeId);
         }
     }
 }

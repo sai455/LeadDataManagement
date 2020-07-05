@@ -8,6 +8,9 @@
     table.dataTable {
         border-collapse: collapse !important;
     }
+    .swal-wide {
+        width: 850px !important;
+    }
 </style>
 
 
@@ -51,7 +54,7 @@
                         <div class="col-xl-3 m-b-30">
                             <button class="btn btn-primary waves-effect waves-light btn-sm load" data-toggle="modal" data-target="#large-Modal"><i class="feather icon-plus"></i> Load Data</button>
                         </div>
-                        <div class="col-xl-3 m-b-30">
+                        @*<div class="col-xl-3 m-b-30">
                             <h4 class="sub-title">Lead Type</h4>
                             <select name="select" class="form-control form-control-primary fill" id="leadTypeddl">
                                 <option value="">Select</option>
@@ -60,7 +63,7 @@
                                     <option value="@item.Id">@item.Name</option>
                                 }
                             </select>
-                        </div>
+                        </div>*@
                         <div class="card-header-right">
                             <ul class="list-unstyled card-option">
                                 <i class="feather icon-chevron-left open-card-option"></i></li>
@@ -78,8 +81,7 @@
                                     <tr>
                                         <th>SNo.</th>
                                         <th>Lead Type</th>
-                                        <th>Phone No</th>
-                                        <th>Created At</th>
+                                        <th>No Of Phone No's</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -89,8 +91,7 @@
                                     <tr>
                                         <th>SNo.</th>
                                         <th>Lead Type</th>
-                                        <th>Phone No</th>
-                                        <th>Created At</th>
+                                        <th>No Of Phone No's</th>
                                         <th></th>
                                     </tr>
                                 </tfoot>
@@ -150,6 +151,8 @@
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function (e) {
@@ -162,10 +165,7 @@
             loadDataTable();
         })
         function loadDataTable() {
-            var leadTypeId = $('#leadTypeddl').val();
-            if (leadTypeId == "") {
-                leadTypeId = null;
-            }
+            var leadTypeId = null;
             $('#tblLeads').DataTable({
                 'responsive': false,
                 'autoWidth': true,
@@ -175,81 +175,50 @@
                 "columns": [
                     { "data": "SNo" },
                     { "data": "LeadType" },
-                    { "data": "Phone" },
-                    { "data": "CreatedAt" },
+                    { "data": "PhoneCount" },
                     { "data": "EditBtn" }
                 ],
             });
         }
-
-        $('.add').click(function (e) {
-            swal({
-                title: "Add Lead Type",
-                text: "Lead Type",
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                showLoaderOnConfirm: true,
-                inputPlaceholder: "Lead Type",
-            }, function (inputValue) {
-                if (inputValue === false)
-                    return false;
-                if (inputValue === "" || parseInt(inputValue) === 0) {
-                    swal.showInputError("Lead Type is required");
-                    return false;
-                }
-                    addEditLeadType(0, inputValue)
-            });
-        });
-
-        $(document).on("click", "#tblLeadTypes tbody tr td button.btnedit", function () {
+        $(document).on("click", "#tblLeads tbody tr td button.btnView", function () {
             var id = $(this).data('id');
-            var leadType = $(this).data('lead');
-            swal({
-                title: "Edit Lead Type",
-                text: "Lead Type",
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                showLoaderOnConfirm: true,
-                inputPlaceholder: "Lead Type",
-                inputValue: leadType
-            }, function (inputValue) {
-                if (inputValue === false)
-                    return false;
-                if (inputValue === "" || parseInt(inputValue) === 0) {
-                    swal.showInputError("Lead Type is required");
-                    return false;
-                }
-                addEditLeadType(id, inputValue)
-            });
-        });
-
-        function addEditLeadType(id,leadType) {
-            $.ajax({
-                url: '@Url.Action("AddEditLeadType", "Admin")',
-                type: 'post',
-                datatype: "json",
-                data: {
-                    id: id,
-                    leadType: leadType
-                },
-                success: function (data) {
-                    if (data.length > 0) {
-                        swal("Error!", data, "error");
-                    } else {
-                        loadDataTable();
-                        if (id == 0) {
-                            swal("Done!", "Lead Type Added Successfully.", "success");
-                        } else {
-                            swal("Done!", "Lead Type Updated Successfully.", "success");
-                        }
+            var name = $(this).data('name');
+            const inputOptions = new Promise((resolve) => {
+                $.ajax({
+                    url:'@Url.Action("GetViewList","Admin")',
+                    type: 'POST',
+                    data: {
+                        leadTypeId: id
+                    },
+                    dataType: "json",
+                    success: function (result) {
+                        resolve(
+                            result
+                        )
                     }
-                },
-                error: function (jqXhr, textStatus, errorThrown) {
-                    alert(errorThrown);
-                }
+                });
             });
-        }
+            (async () => {
+                await Swal.fire({
+                    title: name + ' - Master Data',
+                    input: 'textarea',
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    inputValue: inputOptions,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    showCancelButton: false,
+                    customClass: 'swal-wide',
+                    onBeforeOpen() {
+                        Swal.showLoading()
+                    },
+                    onAfterClose() {
+                        Swal.hideLoading()
+                    },
+                })
+            })();
+            $('.swal2-textarea').prop('disabled', true);
+        });
     </script>
 }

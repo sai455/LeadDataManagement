@@ -26,6 +26,7 @@ namespace LeadDataManagement.Models.ViewModels
         public string CreatedAt { get; set; }
         public bool IsActive { get; set; }
         public string EditBtn { get; set; }
+        public long PhoneCount { get; set; }
     }
     public class UserScrubsGridModel
     {
@@ -40,7 +41,8 @@ namespace LeadDataManagement.Models.ViewModels
     }
     public class DropDownModel
     {
-        public int Id { get; set; }
+        public Int32 Id { get; set; }
         public string Name { get; set; }
+        public Int64 Count { get; set; }
     }
 }

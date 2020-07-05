@@ -57,10 +57,10 @@ namespace LeadDataManagement.Controllers
                     Sno = iCount,
                     LeadTypeId = u.LeadTypeId,
                     LeadType = Leads.Where(x => x.Id == u.LeadTypeId).FirstOrDefault().Name,
-                    Matched = "Matched- " + u.MatchedCount + " <a href='"+u.MatchedPath+ ".csv' style='cursor:pointer' download='" + u.MatchedPath+ ".csv'><i class='fa fa-download' ></i></a>",
-                    UnMatched = "Un-Matched- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='" + u.UnMatchedPath + ".csv'><i class='fa fa-download' ></i></a>",
+                    Matched = "Matched- " + u.MatchedCount + " <a href='"+u.MatchedPath+ ".csv' style='cursor:pointer' download='Matched-"+u.Id+".csv'><i class='fa fa-download' ></i></a>",
+                    UnMatched = "Un-Matched- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='UnMatched-"+u.Id+".csv'><i class='fa fa-download' ></i></a>",
                     Duration = u.Duration,
-                    InputFile = "Download Input File  <a href='" + u.InputFilePath + ".csv' style='cursor:pointer' download='" + u.InputFilePath + ".csv'><i class='fa fa-download' ></i></a>",
+                    InputFile = "Download Input File  <a href='" + u.InputFilePath + ".csv' style='cursor:pointer' download='InputFile-"+u.Id+".csv'><i class='fa fa-download' ></i></a>",
                 }); ;
             }
             var jsonData = new { data = from emp in retData select emp };

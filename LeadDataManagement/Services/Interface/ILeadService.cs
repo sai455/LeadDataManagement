@@ -1,4 +1,5 @@
 ﻿using LeadDataManagement.Models.Context;
+using LeadDataManagement.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace LeadDataManagement.Services.Interface
         void AddEditLeadTypes(int id, string leadType);
         IQueryable<LeadMasterData> GetAllLeadMasterData();
         void SaveMasterData(List<long> PhoneNo, int leadTypeId);
+        List<DropDownModel> GetLeadMasterdataGridList(int? leadTypeId);
     }
 }
