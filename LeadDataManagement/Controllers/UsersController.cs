@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
-
+using Excel = Microsoft.Office.Interop.Excel;
 namespace LeadDataManagement.Controllers
 {
     public class UsersController : BaseController
@@ -94,8 +95,37 @@ namespace LeadDataManagement.Controllers
                         myFile.Close();
                         string[] lines = myString.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
                         inputList = lines.Skip(1).ToList();
-                    }else if(ext.ToLower() == ".xlsx")
+                    }else if(ext.ToLower() == ".xl")
                     {
+                        Excel.Application xlApp;
+                        Excel.Workbook xlWorkBook;
+                        Excel.Worksheet xlWorkSheet;
+                        Excel.Range range;
+
+                        string str;
+                        int rCnt;
+                        int cCnt;
+                        int rw = 0;
+                        int cl = 0;
+
+                        xlApp = new Excel.Application();
+                        xlWorkBook = xlApp.Workbooks.Open(path, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+                        xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+                        range = xlWorkSheet.UsedRange;
+                        rw = range.Rows.Count;
+                        cl = range.Columns.Count;
+                       
+                        for (rCnt = 1; rCnt <= rw; rCnt++)
+                        {
+                            
+                        }
+                         xlWorkBook.Close(true, null, null);
+                        xlApp.Quit();
+
+                        Marshal.ReleaseComObject(xlWorkSheet);
+                        Marshal.ReleaseComObject(xlWorkBook);
+                        Marshal.ReleaseComObject(xlApp);
 
                     }
 
