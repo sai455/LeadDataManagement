@@ -20,12 +20,12 @@ namespace LeadDataManagement.Services
         {
             return _userScrubRepository.FindAll(x => x.UserId == userId).ToList();
         }
-        public void SaveUserScrub(int userId, int leadTypeId, long matchedCount, long unmatchedCount, string matchedPath, string unMatchedPath, string fileName, int duration)
+        public void SaveUserScrub(int userId, string leadTypeIds, long matchedCount, long unmatchedCount, string matchedPath, string unMatchedPath, string fileName, int duration)
         {
             _userScrubRepository.Add(new UserScrub()
             {
                 UserId = userId,
-                LeadTypeId = leadTypeId,
+                LeadTypeIds = leadTypeIds,
                 CreatedDate = DateTime.Now,
                 Duration = duration,
                 MatchedCount = matchedCount,

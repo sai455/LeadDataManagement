@@ -22,6 +22,10 @@ namespace LeadDataManagement.Repository
         {
             return _context.Set<LeadMasterData>().Where(x => x.LeadTypeId == leadTypeId);
         }
+        public IQueryable<LeadMasterData> GetAllLeadMasterDataByLeadTypes(List<int> leadTypes)
+        {
+            return _context.Set<LeadMasterData>().Where(x => leadTypes.Contains(x.LeadTypeId));
+        }
         public void USPLoadMasterData(List<long> phonesList, int leadTypeId)
         {
             var dt = PrepareUDT(phonesList);

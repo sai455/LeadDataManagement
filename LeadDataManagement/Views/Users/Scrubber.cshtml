@@ -8,8 +8,20 @@
     table.dataTable {
         border-collapse: collapse !important;
     }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: #4099ff !important;
+        border: 1px solid #4099ff !important;
+        padding: 5px 15px !important;
+        color: #fff !important;
+    }
+
+    .select2-container {
+        width: 100% !important;
+    }
 </style>
 
+<link rel="stylesheet" href="~/Content/lead-app-content/css/select2.min.css" />
 
 <div class="page-header card">
     <div class="row align-items-end">
@@ -44,24 +56,22 @@
 
     <div class="main-body">
         <div class="page-wrapper">
-
+            @if (Convert.ToBoolean(ViewBag.IsFileError) == true)
+            {
+            <div class="alert alert-danger background-danger">
+                <button type="button" class="close"
+                        data-dismiss="alert" aria-label="Close">
+                    <i class="icofont icofont-close-line-circled text-white"></i>
+                </button>
+                <strong>File Upload Error!</strong>  Please verify Phone column in uploded sheet.
+            </div>
+            }
             <div class="page-body">
                 <div class="card">
                     <div class="card-header">
                         <div class="col-xl-3 m-b-30">
                             <button class="btn btn-primary waves-effect waves-light btn-sm newScrub" data-toggle="modal" data-target="#large-Modal"><i class="fa fa-hourglass-2"></i> New Scrub</button>
                         </div>
-                        <div class="col-xl-3 m-b-30">
-                            <h4 class="sub-title">Lead Type</h4>
-                            <select name="select" class="form-control form-control-primary fill" id="leadTypeddl">
-                                <option value="">Select</option>
-                                @foreach (var item in ViewBag.LeadTypesList)
-                                {
-                                    <option value="@item.Id">@item.Name</option>
-                                }
-                            </select>
-                        </div>
-
                         <div class="card-header-right">
                             <ul class="list-unstyled card-option">
                                 @*<li class="first-opt">*@
@@ -127,39 +137,39 @@
             <div class="modal-body">
                 @using (Html.BeginForm("PerformUserScrub", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
-                <div class="row">
-                    <div class="col-xl-12 m-b-30">
-                        <h4 class="sub-title">Lead Type</h4>
-                        <select class="form-control form-control-primary fill" name="LeadTypeId" required>
-                            <option value="">Select</option>
-                            @foreach (var item in ViewBag.LeadTypesList)
-                            {
-                                <option value="@item.Id">@item.Name</option>
-                            }
-                        </select>
-                    </div>
-
-                    <div class="col-xl-12 m-b-30">
-                        <h4 class="sub-title">Scrub Numbers From File (.xlsx or .csv)</h4>
-                        <div class="fallback">
-                            <input name="ScrubFile" type="file" />
+                    <div class="row">
+                        <div class="col-xl-12 m-b-30">
+                            <h4 class="sub-title">Lead Type</h4>
+                            <input type="hidden" name="SelectedLeads" id="SelectedLeads" />
+                            <select class="js-example-basic-multiple col-sm-12" required multiple="multiple">
+                                @foreach (var item in ViewBag.LeadTypesList)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
                         </div>
-                    </div>
-                    <div class="col-xl-12 m-b-30 text-center">
-                        <h4 class="sub-title" style="font-weight:bold">OR Quick Scrub</h4>
-                    </div>
-                    <div class="col-xl-12 m-b-30">
-                        <h4 class="sub-title">Enter numbers (separated with comma or each number on new line)</h4>
-                        <textarea id="phone-numbers" class="form-control" type="text" name="PhoneNos" placeholder=" 0073493325, 0073493326, 0073493327
+
+                        <div class="col-xl-12 m-b-30">
+                            <h4 class="sub-title">Scrub Numbers From File (.xlsx or .csv)</h4>
+                            <div class="fallback">
+                                <input name="ScrubFile" type="file" />
+                            </div>
+                        </div>
+                        <div class="col-xl-12 m-b-30 text-center">
+                            <h4 class="sub-title" style="font-weight:bold">OR Quick Scrub</h4>
+                        </div>
+                        <div class="col-xl-12 m-b-30">
+                            <h4 class="sub-title">Enter numbers (separated with comma or each number on new line)</h4>
+                            <textarea id="phone-numbers" class="form-control" type="text" name="PhoneNos" placeholder=" 0073493325, 0073493326, 0073493327
  OR
  0073493328
  0073493329
  ..." rows="7" maxlength="110000"></textarea>
+                        </div>
+                        <div class="col-md-12 text-center m-t-20">
+                            <button type="submit" class="btn btn-primary">Scrub It</button>
+                        </div>
                     </div>
-                    <div class="col-md-12 text-center m-t-20">
-                        <button type="submit" class="btn btn-primary">Scrub It</button>
-                    </div>
-                </div>
 
                 }
             </div>
@@ -168,29 +178,38 @@
         </div>
     </div>
 </div>
-@section Scripts {
 
+
+@section Scripts {
+    <script type="text/javascript" src="~/Content/lead-app-content/js/select2.full.min.js"></script>
+    @*<script type="text/javascript" src="~/Content/lead-app-content/js/select2-custom.js"></script>*@
     <script type="text/javascript">
+        var selectedLeads = [];
         $(document).ready(function (e) {
+            $(".js-example-basic-multiple").select2({ placeholder: "Select" });
             loadDataTable();
+        });
+        $(".js-example-basic-multiple").on("select2:select", function (e) {
+            selectedLeads.push({ Name: e.params.data.text, Id: e.params.data.id });
+            var stringVal = JSON.stringify(selectedLeads);
+            $('#SelectedLeads').val(stringVal);
+        });
+        $(".js-example-basic-multiple").on("select2:unselect", function (e) {
+            selectedLeads = selectedLeads.filter(el => el.Id != e.params.data.id);
+            var stringVal = JSON.stringify(selectedLeads);
+            $('#SelectedLeads').val(stringVal);
         });
         $('#tblrefresh').click(function (e) {
             loadDataTable();
         });
-        $('#leadTypeddl').change(function (e) {
-            loadDataTable();
-        });
         function loadDataTable() {
-            var leadTypeId = $('#leadTypeddl').val();
-            if (leadTypeId == "") {
-                leadTypeId = null;
-            }
+
             $('#tblUserScrub').DataTable({
                 'responsive': false,
                 'autoWidth': true,
                 "bDestroy": true,
                 "iDisplayLength": 10,
-                "ajax": "/Users/UserScrubsGrid?leadTypeId=" + leadTypeId,
+                "ajax": "/Users/UserScrubsGrid",
                 "columns": [
                     { "data": "Sno" },
                     { "data": "InputFile" },

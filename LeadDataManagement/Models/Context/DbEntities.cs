@@ -44,7 +44,7 @@ namespace LeadDataManagement.Models.Context
         [Key]
         public int Id { get; set; }
         public int UserId { get; set; }
-        public int LeadTypeId { get; set; }
+        public string LeadTypeIds { get; set; }
         public DateTime CreatedDate { get; set; }
         public int Duration { get; set; }
         public string InputFilePath { get; set; }

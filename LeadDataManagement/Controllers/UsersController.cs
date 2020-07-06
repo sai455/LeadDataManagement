@@ -1,7 +1,9 @@
 ﻿using LeadDataManagement.Models.ViewModels;
 using LeadDataManagement.Services.Interface;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -30,6 +32,7 @@ namespace LeadDataManagement.Controllers
 
         public ActionResult Scrubber()
         {
+            ViewBag.IsFileError = "false";
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
             ViewBag.LeadTypesList = leadService.GetLeadTypes().ToList().Select(x => new DropDownModel()
             {
@@ -39,31 +42,26 @@ namespace LeadDataManagement.Controllers
             return View();
         }
 
-        public ActionResult UserScrubsGrid(int? leadTypeId)
+        public ActionResult UserScrubsGrid()
         {
             var Leads = leadService.GetLeadTypes().ToList();
             List<UserScrubsGridModel> retData = new List<UserScrubsGridModel>();
             var userScrubs = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id);
-            if(leadTypeId.HasValue)
-            {
-                userScrubs = userScrubs.Where(x => x.LeadTypeId == leadTypeId.Value).ToList();
-            }
             int iCount = 0;
             foreach(var u in userScrubs)
             {
                 iCount += 1;
-                var matchedPath = Path.Combine(Server.MapPath("~/Content/DataLoads/"), u.MatchedPath);
+                List<int>leadTypes = JsonConvert.DeserializeObject<List<DropDownModel>>(u.LeadTypeIds).Select(x=>x.Id).ToList();
                 retData.Add(new UserScrubsGridModel()
                 {
                     Sno = iCount,
                     CreatedAt=u.CreatedDate.ToString("dd-MMM-yyyy hh:mm:ss tt"),
-                    LeadTypeId = u.LeadTypeId,
-                    LeadType = Leads.Where(x => x.Id == u.LeadTypeId).FirstOrDefault().Name,
+                    LeadType = String.Join(",",Leads.Where(x => leadTypes.Contains(x.Id)).Select(x=>x.Name).ToList()),
                     Matched = "Matched- " + u.MatchedCount + " <a href='"+u.MatchedPath+ ".csv' style='cursor:pointer' download='Matched-"+u.Id+".csv'><i class='fa fa-download' ></i></a>",
                     UnMatched = "Un-Matched- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='UnMatched-"+u.Id+".csv'><i class='fa fa-download' ></i></a>",
                     Duration = u.Duration,
-                    InputFile = "Download Input File  <a href='" + u.InputFilePath + ".csv' style='cursor:pointer' download='InputFile-"+u.Id+".csv'><i class='fa fa-download' ></i></a>",
-                }); ;
+                    InputFile = "Download Input File  <a href='" + u.InputFilePath + "' style='cursor:pointer' download='InputFile-"+u.Id+".csv'><i class='fa fa-download' ></i></a>",
+                });
             }
             var jsonData = new { data = from emp in retData select emp };
             return new JsonResult()
@@ -74,132 +72,196 @@ namespace LeadDataManagement.Controllers
             };
         }
 
-        public ActionResult PerformUserScrub(FormCollection formCollection, int LeadTypeId,string PhoneNos)
+        public ActionResult PerformUserScrub(FormCollection formCollection,string PhoneNos,string SelectedLeads)
         {
-            Stopwatch sw = Stopwatch.StartNew();
-           
-            if (string.IsNullOrEmpty(PhoneNos))
+            bool isError = false;
+            try
             {
-                HttpPostedFileBase file = Request.Files["ScrubFile"];
-                if ((file != null) && (file.ContentLength > 0) && !string.IsNullOrEmpty(file.FileName))
+
+                Stopwatch sw = Stopwatch.StartNew();
+                List<int> selectedLeads = JsonConvert.DeserializeObject<List<DropDownModel>>(SelectedLeads).Select(x=>x.Id).ToList();
+                if (string.IsNullOrEmpty(PhoneNos))
                 {
-                    string ext = Path.GetExtension(file.FileName);
-                    string newFileName = Guid.NewGuid().ToString();
-                    string path = Path.Combine(Server.MapPath("~/Content/DataLoads/"), newFileName + ext);
-                    file.SaveAs(path);
-                    List<string> inputList = new List<string>();
-                    if (ext.ToLower() == ".csv")
+                    HttpPostedFileBase file = Request.Files["ScrubFile"];
+                    if ((file != null) && (file.ContentLength > 0) && !string.IsNullOrEmpty(file.FileName))
                     {
-                        StreamReader myFile = new StreamReader(path);
-                        string myString = myFile.ReadToEnd();
-                        myFile.Close();
-                        string[] lines = myString.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-                        inputList = lines.Skip(1).ToList();
-                    }else if(ext.ToLower() == ".xl")
-                    {
-                        Excel.Application xlApp;
-                        Excel.Workbook xlWorkBook;
-                        Excel.Worksheet xlWorkSheet;
-                        Excel.Range range;
-
-                        string str;
-                        int rCnt;
-                        int cCnt;
-                        int rw = 0;
-                        int cl = 0;
-
-                        xlApp = new Excel.Application();
-                        xlWorkBook = xlApp.Workbooks.Open(path, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
-                        xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-
-                        range = xlWorkSheet.UsedRange;
-                        rw = range.Rows.Count;
-                        cl = range.Columns.Count;
-                       
-                        for (rCnt = 1; rCnt <= rw; rCnt++)
-                        {
-                            
-                        }
-                         xlWorkBook.Close(true, null, null);
-                        xlApp.Quit();
-
-                        Marshal.ReleaseComObject(xlWorkSheet);
-                        Marshal.ReleaseComObject(xlWorkBook);
-                        Marshal.ReleaseComObject(xlApp);
-
-                    }
-
-                    if (inputList.Count > 0)
-                    {
+                        string ext = Path.GetExtension(file.FileName);
+                        string newFileName = Guid.NewGuid().ToString();
+                        string path = Path.Combine(Server.MapPath("~/Content/DataLoads/"), newFileName + ext);
+                        file.SaveAs(path);
                         List<long> UserScrubPhonesList = new List<long>();
-                        foreach (var i in inputList)
+                        if (ext.ToLower() == ".csv")
                         {
-                            long number;
-                            bool isSuccess = Int64.TryParse(i, out number);
-                            if (isSuccess)
+                            var csvDt=ReadCsvFile(path);
+                            DataTable dt = FilterDatatableColoumn(csvDt, "phone");
+                            foreach (DataRow dr in dt.Rows)
                             {
-                                UserScrubPhonesList.Add(number);
+                                foreach(var r in dr.ItemArray)
+                                {
+                                    long number;
+                                    bool isSuccess = Int64.TryParse(r.ToString(), out number);
+                                    if (isSuccess)
+                                    {
+                                        UserScrubPhonesList.Add(number);
+                                    }
+                                }
                             }
                         }
-                        var matchedList = leadService.GetAllLeadMasterDataByLeadType(LeadTypeId).Select(x => x.Phone).Where(x => UserScrubPhonesList.Contains(x)).ToList();
-                        var unmatchedCount = UserScrubPhonesList.Except(matchedList).ToList();
+                        else if(ext.ToLower() == ".xl")
+                        {
+                            Excel.Application xlApp;
+                            Excel.Workbook xlWorkBook;
+                            Excel.Worksheet xlWorkSheet;
+                            Excel.Range range;
 
-                        sw.Stop();
-                        //Matched File Create
-                        string matchedFileName = Guid.NewGuid().ToString();
-                        CreateSaveCsvFile(matchedFileName, matchedList);
+                            string str;
+                            int rCnt;
+                            int cCnt;
+                            int rw = 0;
+                            int cl = 0;
 
-                        // UnMatched File Create
-                        string unMatchedFileName = Guid.NewGuid().ToString();
-                        CreateSaveCsvFile(unMatchedFileName, unmatchedCount);
+                            xlApp = new Excel.Application();
+                            xlWorkBook = xlApp.Workbooks.Open(path, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+                            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
 
-                        userScrubService.SaveUserScrub(this.CurrentLoggedInUser.Id, LeadTypeId, matchedList.Count(), unmatchedCount.Count(), matchedFileName, unMatchedFileName, newFileName+".csv", sw.Elapsed.Seconds);
-                    }
+                            range = xlWorkSheet.UsedRange;
+                            rw = range.Rows.Count;
+                            cl = range.Columns.Count;
+                       
+                            for (rCnt = 1; rCnt <= rw; rCnt++)
+                            {
+                            
+                            }
+                             xlWorkBook.Close(true, null, null);
+                            xlApp.Quit();
+
+                            Marshal.ReleaseComObject(xlWorkSheet);
+                            Marshal.ReleaseComObject(xlWorkBook);
+                            Marshal.ReleaseComObject(xlApp);
+
+                        }
+
+                        if (UserScrubPhonesList.Count > 0)
+                        {
+                           
+                            var matchedList = leadService.GetAllLeadMasterDataByLeadTypes(selectedLeads).Select(x => x.Phone).Where(x => UserScrubPhonesList.Contains(x)).Distinct().ToList();
+                            var unmatchedCount = UserScrubPhonesList.Except(matchedList).ToList();
+
+                            sw.Stop();
+                            //Matched File Create
+                            string matchedFileName = Guid.NewGuid().ToString();
+                            CreateSaveCsvFile(matchedFileName, matchedList);
+
+                            // UnMatched File Create
+                            string unMatchedFileName = Guid.NewGuid().ToString();
+                            CreateSaveCsvFile(unMatchedFileName, unmatchedCount);
+
+                            userScrubService.SaveUserScrub(this.CurrentLoggedInUser.Id, SelectedLeads, matchedList.Count(), unmatchedCount.Count(), matchedFileName, unMatchedFileName, newFileName+ ext, sw.Elapsed.Seconds);
+                        }
                   
-                }
-            }
-            else
-            {
-                List<string> inputList = PhoneNos.Split(',').ToList();
-
-                List<long> UserScrubPhonesList = new List<long>();
-                foreach (var i in inputList)
-                {
-                    long number;
-                    bool isSuccess = Int64.TryParse(i, out number);
-                    if (isSuccess)
-                    {
-                        UserScrubPhonesList.Add(number);
                     }
                 }
-                var matchedList = leadService.GetAllLeadMasterData().Where(x => x.LeadTypeId == LeadTypeId && UserScrubPhonesList.Contains(x.Phone)).Select(x => x.Phone).ToList();
-                var unmatchedCount = UserScrubPhonesList.Except(matchedList).ToList();
+                else
+                {
+                    List<string> inputList = PhoneNos.Split(',').ToList();
+
+                    List<long> UserScrubPhonesList = new List<long>();
+                    foreach (var i in inputList)
+                    {
+                        long number;
+                        bool isSuccess = Int64.TryParse(i, out number);
+                        if (isSuccess)
+                        {
+                            UserScrubPhonesList.Add(number);
+                        }
+                    }
+                    var matchedList = leadService.GetAllLeadMasterDataByLeadTypes(selectedLeads).Select(x => x.Phone).Where(x =>UserScrubPhonesList.Contains(x)).Distinct().ToList();
+                    var unmatchedCount = UserScrubPhonesList.Except(matchedList).ToList();
                 
-                sw.Stop();
+                    sw.Stop();
 
-                //InputFile Create
-                string inputFileName = Guid.NewGuid().ToString();
-                CreateSaveCsvFile(inputFileName, UserScrubPhonesList);
+                    //InputFile Create
+                    string inputFileName = Guid.NewGuid().ToString();
+                    CreateSaveCsvFile(inputFileName, UserScrubPhonesList);
 
-                //Matched File Create
-                string matchedFileName = Guid.NewGuid().ToString();
-                CreateSaveCsvFile(matchedFileName, matchedList);
+                    //Matched File Create
+                    string matchedFileName = Guid.NewGuid().ToString();
+                    CreateSaveCsvFile(matchedFileName, matchedList);
 
-                // UnMatched File Create
-                string unMatchedFileName = Guid.NewGuid().ToString();
-                CreateSaveCsvFile(unMatchedFileName, unmatchedCount);
+                    // UnMatched File Create
+                    string unMatchedFileName = Guid.NewGuid().ToString();
+                    CreateSaveCsvFile(unMatchedFileName, unmatchedCount);
 
-                userScrubService.SaveUserScrub(this.CurrentLoggedInUser.Id, LeadTypeId, matchedList.Count(), unmatchedCount.Count(), matchedFileName, unMatchedFileName, inputFileName, sw.Elapsed.Seconds);
+                    userScrubService.SaveUserScrub(this.CurrentLoggedInUser.Id, SelectedLeads, matchedList.Count(), unmatchedCount.Count(), matchedFileName, unMatchedFileName, inputFileName+".csv", sw.Elapsed.Seconds);
+                }
+
             }
+            catch (Exception ex)
+            {
+                isError = true;
+            }
+            ViewBag.IsFileError = isError;
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
             ViewBag.LeadTypesList = leadService.GetLeadTypes().ToList().Select(x => new DropDownModel()
             {
                 Name = x.Name,
                 Id = x.Id
             }).OrderBy(x => x.Name).ToList();
-            return RedirectToAction("Scrubber");
+            return View("Scrubber");
         }
 
+        private DataTable FilterDatatableColoumn(DataTable RecordDT_, string col)
+        {
+            try
+            {
+                DataTable TempTable = RecordDT_;
+                DataView view = new DataView(TempTable);
+                DataTable selected = view.ToTable("Selected", false, col);
+                return selected;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+           
+        }
+
+        private DataTable ReadCsvFile(string path)
+        {
+            DataTable dtCsv = new DataTable();
+            string Fulltext;
+            using (StreamReader sr = new StreamReader(path))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        Fulltext = sr.ReadToEnd().ToString(); //read full file text  
+                        string[] rows = Fulltext.Split('\n'); //split full file text into rows  
+                        for (int i = 0; i < rows.Count() - 1; i++)
+                        {
+                            string[] rowValues = rows[i].Split(','); //split each row with comma to get individual values  
+                            {
+                                if (i == 0)
+                                {
+                                    for (int j = 0; j < rowValues.Count(); j++)
+                                    {
+                                        dtCsv.Columns.Add(rowValues[j]); //add headers  
+                                    }
+                                }
+                                else
+                                {
+                                    DataRow dr = dtCsv.NewRow();
+                                    for (int k = 0; k < rowValues.Count(); k++)
+                                    {
+                                        dr[k] = rowValues[k].ToString();
+                                    }
+                                    dtCsv.Rows.Add(dr); //add other rows  
+                                }
+                            }
+                        }
+                    }
+                }
+            return dtCsv;
+        }
         private void CreateSaveCsvFile(string newFileName, List<long> UserScrubPhonesList)
         {
             var file = Path.Combine(Server.MapPath("~/Content/DataLoads/"), newFileName + ".csv");
