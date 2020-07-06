@@ -15,7 +15,10 @@ namespace LeadDataManagement.Services
         {
             _userScrubRepository = userScrubRepository;
         }
-
+        public IQueryable<UserScrub> GetAllUserScrubs()
+        {
+            return _userScrubRepository.GetAll();
+        }
         public IList<UserScrub> GetScrubsByUserId(int userId)
         {
             return _userScrubRepository.FindAll(x => x.UserId == userId).OrderByDescending(x=>x.Id).ToList();

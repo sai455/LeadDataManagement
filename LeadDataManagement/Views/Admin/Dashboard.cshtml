@@ -41,7 +41,10 @@
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Dashboard card</h5>
+                                <h5>Scrubs </h5>
+                                <div class="col-sm-12 col-xl-4 m-b-30">
+                                    <input type="date" class="form-control" id="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                </div>
                                 <div class="card-header-right">
                                     <ul class="list-unstyled card-option">
                                         <li class="first-opt"><i class="feather icon-chevron-left open-card-option"></i></li>
@@ -54,10 +57,32 @@
                                 </div>
                             </div>
                             <div class="card-block">
-                                <p>
-                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                                    in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                                </p>
+                                <div class="table-responsive">
+                                    <table id="tblUserScrub" class="table table-hover m-b-0">
+                                        <thead>
+                                            <tr>
+                                                <th>SNo.</th>
+                                                <th>User</th>
+                                                <th>File</th>
+                                                <th>Lead Type</th>
+                                                <th>Credits</th>
+                                                <th>Created At</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>SNo.</th>
+                                                <th>User</th>
+                                                <th>File</th>
+                                                <th>Lead Type</th>
+                                                <th>Credits</th>
+                                                <th>Created At</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -72,3 +97,34 @@
 <div id="styleSelector">
 </div>
 
+@section Scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            loadDataTable();
+        });
+        $('#date').change(function (e) {
+            loadDataTable();
+
+        });
+        function loadDataTable() {
+            var date = $('#date').val();
+            
+            $('#tblUserScrub').DataTable({
+                'responsive': false,
+                'autoWidth': true,
+                "bDestroy": true,
+                "iDisplayLength": 10,
+                "ajax": "/Admin/UserScrubsGrid/?date=" + date,
+                "columns": [
+                    { "data": "Sno" },
+                    { "data": "UserName" },
+                    { "data": "Matched" },
+                    { "data": "LeadType" },
+                    { "data": "ScrubCredits" },
+                    { "data": "CreatedAt" }
+                ]
+            });
+        }
+    </script>
+}

@@ -28,6 +28,14 @@ namespace LeadDataManagement.Controllers
         public ActionResult Dashboard()
         {
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
+
+            var usedCredits = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
+            var userTotalCredits = this.CurrentLoggedInUser.CreditScore;
+            var percentage = Math.Round((usedCredits / (decimal)userTotalCredits) * 100, 2);
+            ViewBag.remainingCredits = userTotalCredits-usedCredits;
+            ViewBag.totalCredits = userTotalCredits;
+            ViewBag.usedPercentage = percentage;
+            ViewBag.remainingPercentage = 100 - percentage;
             return View();
         }
 
@@ -40,6 +48,13 @@ namespace LeadDataManagement.Controllers
                 Name = x.Name,
                 Id = x.Id
             }).OrderBy(x => x.Name).ToList();
+            var usedCredits = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
+            var userTotalCredits = this.CurrentLoggedInUser.CreditScore;
+            var percentage = Math.Round((usedCredits / (decimal)userTotalCredits) * 100, 2);
+            ViewBag.remainingCredits = userTotalCredits - usedCredits;
+            ViewBag.totalCredits = userTotalCredits;
+            ViewBag.usedPercentage = percentage;
+            ViewBag.remainingPercentage = 100 - percentage;
             return View();
         }
 
@@ -60,10 +75,9 @@ namespace LeadDataManagement.Controllers
                     ScrubCredits=u.ScrubCredits,
                     CreatedAt =u.CreatedDate.ToString("dd-MMM-yyyy hh:mm:ss tt"),
                     LeadType = String.Join(",",Leads.Where(x => leadTypes.Contains(x.Id)).Select(x=>x.Name).ToList()),
-                    Matched = "Matched- " + u.MatchedCount + " <a href='"+u.MatchedPath+ ".csv' style='cursor:pointer' download='Matched-"+u.Id+".csv'><i class='fa fa-download' ></i></a>",
-                    UnMatched = "Un-Matched- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='UnMatched-"+u.Id+".csv'><i class='fa fa-download' ></i></a>",
+                    Matched = "Matched- " + u.MatchedCount + " <a href='"+u.MatchedPath+ ".csv' style='cursor:pointer' download='Matched-"+u.Id+".csv'><i class='fa fa-download' ></i></a><br>"+ "Un-Matched- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='UnMatched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a>",
                     Duration = u.Duration,
-                    InputFile = "Download Input File  <a href='" + u.InputFilePath + "' style='cursor:pointer' download='InputFile-"+u.Id+"."+ InputExtensions + "'><i class='fa fa-download' ></i></a>",
+                    InputFile = "Input File  <a href='" + u.InputFilePath + "' style='cursor:pointer' download='InputFile-"+u.Id+"."+ InputExtensions + "'><i class='fa fa-download' ></i></a>",
                 });
             }
             var jsonData = new { data = from emp in retData select emp };
@@ -222,6 +236,13 @@ namespace LeadDataManagement.Controllers
                 Name = x.Name,
                 Id = x.Id
             }).OrderBy(x => x.Name).ToList();
+            var usedCredits = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
+            var userTotalCredits = this.CurrentLoggedInUser.CreditScore;
+            var percentage = Math.Round((usedCredits / (decimal)userTotalCredits) * 100, 2);
+            ViewBag.remainingCredits = userTotalCredits - usedCredits;
+            ViewBag.totalCredits = userTotalCredits;
+            ViewBag.usedPercentage = percentage;
+            ViewBag.remainingPercentage = 100 - percentage;
             return View("Scrubber");
         }
 

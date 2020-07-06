@@ -1,5 +1,6 @@
 ﻿using LeadDataManagement.Models.ViewModels;
 using LeadDataManagement.Services.Interface;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,12 @@ namespace LeadDataManagement.Controllers
     {
         private IUserService userService;
         private ILeadService leadService;
-        public AdminController(IUserService _userService, ILeadService _leadService)
+        private IUserScrubService userScrubService;
+        public AdminController(IUserService _userService, ILeadService _leadService, IUserScrubService userScrubService)
         {
             this.userService = _userService;
             this.leadService = _leadService;
+            this.userScrubService = userScrubService;
         }
 
         #region Dashboard
@@ -26,7 +29,37 @@ namespace LeadDataManagement.Controllers
 
             return View();
         }
-       
+        public ActionResult UserScrubsGrid(DateTime date)
+        {
+
+            var usersList = userService.GetUsers().ToList();
+            var Leads = leadService.GetLeadTypes().ToList();
+            List<UserScrubsGridModel> retData = new List<UserScrubsGridModel>();
+            var userScrubs = userScrubService.GetAllUserScrubs().OrderByDescending(x=>x.CreatedDate).ToList().Where(x=>x.CreatedDate.Date==date.Date);
+            int iCount = 0;
+            foreach (var u in userScrubs)
+            {
+                iCount += 1;
+                List<int> leadTypes = JsonConvert.DeserializeObject<List<DropDownModel>>(u.LeadTypeIds).Select(x => x.Id).ToList();
+                string InputExtensions = u.InputFilePath.Split('.')[1];
+                retData.Add(new UserScrubsGridModel()
+                {
+                    Sno = iCount,
+                    UserName= usersList.Where(x=>x.Id==u.UserId).FirstOrDefault().Name,
+                    ScrubCredits = u.ScrubCredits,
+                    CreatedAt = u.CreatedDate.ToString("dd-MMM-yyyy hh:mm:ss tt"),
+                    LeadType = String.Join(",", Leads.Where(x => leadTypes.Contains(x.Id)).Select(x => x.Name).ToList()),
+                    Matched = "Input File  <a href='" + u.InputFilePath + "' style='cursor:pointer' download='InputFile-" + u.Id + "." + InputExtensions + "'><i class='fa fa-download' ></i></a><br>"+"Matched- " + u.MatchedCount + " <a href='" + u.MatchedPath + ".csv' style='cursor:pointer' download='Matched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a><br>"+ "Un-Matched- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='UnMatched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a>",
+                });
+            }
+            var jsonData = new { data = from emp in retData select emp };
+            return new JsonResult()
+            {
+                Data = jsonData,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
         #endregion
 
         #region Users
@@ -202,5 +235,8 @@ namespace LeadDataManagement.Controllers
             return View("LeadMasterData");
         }
         #endregion
+
+
+       
     }
 }
