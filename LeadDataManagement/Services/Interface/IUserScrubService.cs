@@ -9,6 +9,6 @@ namespace LeadDataManagement.Services.Interface
     public interface IUserScrubService
     {
         IList<UserScrub> GetScrubsByUserId(int userId);
-        void SaveUserScrub(int userId, string leadTypeIds, long matchedCount, long unmatchedCount, string matchedPath, string unMatchedPath, string fileName, int duration);
+        void SaveUserScrub(long scrubInputRecords,int userId, string leadTypeIds, long matchedCount, long unmatchedCount, string matchedPath, string unMatchedPath, string fileName, int duration);
     }
 }

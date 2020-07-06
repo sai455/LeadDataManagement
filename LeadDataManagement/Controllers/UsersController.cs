@@ -1,4 +1,5 @@
-﻿using LeadDataManagement.Models.ViewModels;
+﻿using ExcelDataReader;
+using LeadDataManagement.Models.ViewModels;
 using LeadDataManagement.Services.Interface;
 using Newtonsoft.Json;
 using System;
@@ -7,10 +8,10 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
-using Excel = Microsoft.Office.Interop.Excel;
+using System.Web.Mvc.Html;
+
 namespace LeadDataManagement.Controllers
 {
     public class UsersController : BaseController
@@ -52,15 +53,17 @@ namespace LeadDataManagement.Controllers
             {
                 iCount += 1;
                 List<int>leadTypes = JsonConvert.DeserializeObject<List<DropDownModel>>(u.LeadTypeIds).Select(x=>x.Id).ToList();
+                string InputExtensions = u.InputFilePath.Split('.')[1];
                 retData.Add(new UserScrubsGridModel()
                 {
                     Sno = iCount,
-                    CreatedAt=u.CreatedDate.ToString("dd-MMM-yyyy hh:mm:ss tt"),
+                    ScrubCredits=u.ScrubCredits,
+                    CreatedAt =u.CreatedDate.ToString("dd-MMM-yyyy hh:mm:ss tt"),
                     LeadType = String.Join(",",Leads.Where(x => leadTypes.Contains(x.Id)).Select(x=>x.Name).ToList()),
                     Matched = "Matched- " + u.MatchedCount + " <a href='"+u.MatchedPath+ ".csv' style='cursor:pointer' download='Matched-"+u.Id+".csv'><i class='fa fa-download' ></i></a>",
                     UnMatched = "Un-Matched- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='UnMatched-"+u.Id+".csv'><i class='fa fa-download' ></i></a>",
                     Duration = u.Duration,
-                    InputFile = "Download Input File  <a href='" + u.InputFilePath + "' style='cursor:pointer' download='InputFile-"+u.Id+".csv'><i class='fa fa-download' ></i></a>",
+                    InputFile = "Download Input File  <a href='" + u.InputFilePath + "' style='cursor:pointer' download='InputFile-"+u.Id+"."+ InputExtensions + "'><i class='fa fa-download' ></i></a>",
                 });
             }
             var jsonData = new { data = from emp in retData select emp };
@@ -107,40 +110,53 @@ namespace LeadDataManagement.Controllers
                                 }
                             }
                         }
-                        else if(ext.ToLower() == ".xl")
+                        else
                         {
-                            Excel.Application xlApp;
-                            Excel.Workbook xlWorkBook;
-                            Excel.Worksheet xlWorkSheet;
-                            Excel.Range range;
+                            FileStream stream = System.IO.File.Open(path, FileMode.Open, FileAccess.Read);
+                            IExcelDataReader excelReader=null;
+                            if(ext==".xls")
+                             excelReader = ExcelReaderFactory.CreateBinaryReader(stream);
+                            else 
+                             excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
 
-                            string str;
-                            int rCnt;
-                            int cCnt;
-                            int rw = 0;
-                            int cl = 0;
-
-                            xlApp = new Excel.Application();
-                            xlWorkBook = xlApp.Workbooks.Open(path, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
-                            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-
-                            range = xlWorkSheet.UsedRange;
-                            rw = range.Rows.Count;
-                            cl = range.Columns.Count;
-                       
-                            for (rCnt = 1; rCnt <= rw; rCnt++)
+                            int fieldcount = excelReader.FieldCount;
+                            int rowcount = excelReader.RowCount;
+                            DataTable dt = new DataTable();
+                            DataRow row;
+                            DataTable dt_ = new DataTable();
+                            dt_ = excelReader.AsDataSet().Tables[0];
+                            for (int i = 0; i < dt_.Columns.Count; i++)
                             {
-                            
+                                dt.Columns.Add(dt_.Rows[0][i].ToString());
                             }
-                             xlWorkBook.Close(true, null, null);
-                            xlApp.Quit();
-
-                            Marshal.ReleaseComObject(xlWorkSheet);
-                            Marshal.ReleaseComObject(xlWorkBook);
-                            Marshal.ReleaseComObject(xlApp);
-
+                            int rowcounter = 0;
+                            for (int row_ = 1; row_ < dt_.Rows.Count; row_++)
+                            {
+                                row = dt.NewRow();
+                                for (int col = 0; col < dt_.Columns.Count; col++)
+                                {
+                                    row[col] = dt_.Rows[row_][col].ToString();
+                                    rowcounter++;
+                                }
+                                dt.Rows.Add(row);
+                            }
+                            excelReader.Close();
+                            excelReader.Dispose();
+                            DataTable fDt = FilterDatatableColoumn(dt, "phone");
+                            foreach (DataRow dr in fDt.Rows)
+                            {
+                                foreach (var r in dr.ItemArray)
+                                {
+                                    long number;
+                                    bool isSuccess = Int64.TryParse(r.ToString(), out number);
+                                    if (isSuccess)
+                                    {
+                                        UserScrubPhonesList.Add(number);
+                                    }
+                                }
+                            }
                         }
-
+                        
                         if (UserScrubPhonesList.Count > 0)
                         {
                            
@@ -156,9 +172,8 @@ namespace LeadDataManagement.Controllers
                             string unMatchedFileName = Guid.NewGuid().ToString();
                             CreateSaveCsvFile(unMatchedFileName, unmatchedCount);
 
-                            userScrubService.SaveUserScrub(this.CurrentLoggedInUser.Id, SelectedLeads, matchedList.Count(), unmatchedCount.Count(), matchedFileName, unMatchedFileName, newFileName+ ext, sw.Elapsed.Seconds);
+                            userScrubService.SaveUserScrub(UserScrubPhonesList.Count(),this.CurrentLoggedInUser.Id, SelectedLeads, matchedList.Count(), unmatchedCount.Count(), matchedFileName, unMatchedFileName, newFileName+ ext, sw.Elapsed.Seconds);
                         }
-                  
                     }
                 }
                 else
@@ -192,7 +207,7 @@ namespace LeadDataManagement.Controllers
                     string unMatchedFileName = Guid.NewGuid().ToString();
                     CreateSaveCsvFile(unMatchedFileName, unmatchedCount);
 
-                    userScrubService.SaveUserScrub(this.CurrentLoggedInUser.Id, SelectedLeads, matchedList.Count(), unmatchedCount.Count(), matchedFileName, unMatchedFileName, inputFileName+".csv", sw.Elapsed.Seconds);
+                    userScrubService.SaveUserScrub(UserScrubPhonesList.Count(), this.CurrentLoggedInUser.Id, SelectedLeads, matchedList.Count(), unmatchedCount.Count(), matchedFileName, unMatchedFileName, inputFileName+".csv", sw.Elapsed.Seconds);
                 }
 
             }

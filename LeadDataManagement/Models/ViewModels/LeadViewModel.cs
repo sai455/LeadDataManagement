@@ -38,6 +38,7 @@ namespace LeadDataManagement.Models.ViewModels
         public string UnMatched { get; set; }
         public int Duration { get; set; }
         public string InputFile { get; set; }
+        public long ScrubCredits { get; set; }
     }
     public class DropDownModel
     {

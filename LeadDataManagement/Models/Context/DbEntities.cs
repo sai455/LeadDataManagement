@@ -52,5 +52,6 @@ namespace LeadDataManagement.Models.Context
         public long UnMatchedCount { get; set; }
         public string MatchedPath { get; set; }
         public string UnMatchedPath { get; set; }
+        public long ScrubCredits { get; set; }
     }
 }

@@ -18,9 +18,9 @@ namespace LeadDataManagement.Services
 
         public IList<UserScrub> GetScrubsByUserId(int userId)
         {
-            return _userScrubRepository.FindAll(x => x.UserId == userId).ToList();
+            return _userScrubRepository.FindAll(x => x.UserId == userId).OrderByDescending(x=>x.Id).ToList();
         }
-        public void SaveUserScrub(int userId, string leadTypeIds, long matchedCount, long unmatchedCount, string matchedPath, string unMatchedPath, string fileName, int duration)
+        public void SaveUserScrub(long scrubInputRecords,int userId, string leadTypeIds, long matchedCount, long unmatchedCount, string matchedPath, string unMatchedPath, string fileName, int duration)
         {
             _userScrubRepository.Add(new UserScrub()
             {
@@ -32,7 +32,8 @@ namespace LeadDataManagement.Services
                 UnMatchedCount = unmatchedCount,
                 InputFilePath = "/Content/DataLoads/"+fileName,
                 MatchedPath = "/Content/DataLoads/" + matchedPath,
-                UnMatchedPath = "/Content/DataLoads/" + unMatchedPath
+                UnMatchedPath = "/Content/DataLoads/" + unMatchedPath,
+                ScrubCredits= scrubInputRecords
             });
         }
     }
