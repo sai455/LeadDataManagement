@@ -75,7 +75,7 @@ namespace LeadDataManagement.Controllers
                     ScrubCredits=u.ScrubCredits,
                     CreatedAt =u.CreatedDate.ToString("dd-MMM-yyyy hh:mm:ss tt"),
                     LeadType = String.Join(",",Leads.Where(x => leadTypes.Contains(x.Id)).Select(x=>x.Name).ToList()),
-                    Matched = "Matched- " + u.MatchedCount + " <a href='"+u.MatchedPath+ ".csv' style='cursor:pointer' download='Matched-"+u.Id+".csv'><i class='fa fa-download' ></i></a><br>"+ "Un-Matched- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='UnMatched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a>",
+                    Matched = "Matched- " + u.MatchedCount + " <a href='"+u.MatchedPath+ ".csv' style='cursor:pointer' download='Matched-"+u.Id+".csv'><i class='fa fa-download' ></i></a><br>"+ "Clean- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='UnMatched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a>",
                     Duration = u.Duration,
                     InputFile = "Input File  <a href='" + u.InputFilePath + "' style='cursor:pointer' download='InputFile-"+u.Id+"."+ InputExtensions + "'><i class='fa fa-download' ></i></a>",
                 });

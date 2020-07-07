@@ -1,4 +1,5 @@
-﻿using LeadDataManagement.Models.Context;
+﻿using LeadDataManagement.Helpers;
+using LeadDataManagement.Models.Context;
 using LeadDataManagement.Models.ViewModels;
 using LeadDataManagement.Repository.Interface;
 using LeadDataManagement.Services.Interface;
@@ -14,6 +15,8 @@ namespace LeadDataManagement.Services
     {
         private ILeadRepository _leadRepository;
         private ILeadMasterDataRepository _leadMasterDataRepository;
+        private readonly DateTime currentPstTime = DateTimeHelper.GetDateTimeNowByTimeZone(DateTimeHelper.TimeZoneList.PacificStandardTime);
+
         public LeadService(ILeadRepository leadRepository, ILeadMasterDataRepository leadMasterDataRepository)
         {
             _leadRepository = leadRepository;
@@ -33,13 +36,13 @@ namespace LeadDataManagement.Services
                 {
                     Name = leadType,
                     IsActive = true,
-                    CreatedAt = DateTime.Now,
+                    CreatedAt = currentPstTime,
                 });
             }
             else
             {
                 leadTypeData.Name = leadType;
-                leadTypeData.ModifiedAt = DateTime.Now;
+                leadTypeData.ModifiedAt = currentPstTime;
                 _leadRepository.Update(leadTypeData, leadTypeData.Id);
             }
         }

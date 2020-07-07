@@ -1,4 +1,5 @@
-﻿using LeadDataManagement.Models.ViewModels;
+﻿using LeadDataManagement.Helpers;
+using LeadDataManagement.Models.ViewModels;
 using LeadDataManagement.Services.Interface;
 using Newtonsoft.Json;
 using System;
@@ -25,7 +26,7 @@ namespace LeadDataManagement.Controllers
         public ActionResult Dashboard()
         {
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
-
+            ViewBag.PstTime = DateTimeHelper.GetDateTimeNowByTimeZone(DateTimeHelper.TimeZoneList.PacificStandardTime).ToString("yyyy-MM-dd");
 
             return View();
         }
@@ -49,7 +50,7 @@ namespace LeadDataManagement.Controllers
                     ScrubCredits = u.ScrubCredits,
                     CreatedAt = u.CreatedDate.ToString("dd-MMM-yyyy hh:mm:ss tt"),
                     LeadType = String.Join(",", Leads.Where(x => leadTypes.Contains(x.Id)).Select(x => x.Name).ToList()),
-                    Matched = "Input File  <a href='" + u.InputFilePath + "' style='cursor:pointer' download='InputFile-" + u.Id + "." + InputExtensions + "'><i class='fa fa-download' ></i></a><br>"+"Matched- " + u.MatchedCount + " <a href='" + u.MatchedPath + ".csv' style='cursor:pointer' download='Matched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a><br>"+ "Un-Matched- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='UnMatched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a>",
+                    Matched = "Input File  <a href='" + u.InputFilePath + "' style='cursor:pointer' download='InputFile-" + u.Id + "." + InputExtensions + "'><i class='fa fa-download' ></i></a><br>"+"Matched- " + u.MatchedCount + " <a href='" + u.MatchedPath + ".csv' style='cursor:pointer' download='Matched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a><br>"+ "Clean- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='UnMatched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a>",
                 });
             }
             var jsonData = new { data = from emp in retData select emp };

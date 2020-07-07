@@ -1,4 +1,5 @@
-﻿using LeadDataManagement.Models.Context;
+﻿using LeadDataManagement.Helpers;
+using LeadDataManagement.Models.Context;
 using LeadDataManagement.Models.ViewModels;
 using LeadDataManagement.Repository.Interface;
 using LeadDataManagement.Services.Interface;
@@ -12,6 +13,8 @@ namespace LeadDataManagement.Services
     public class UserService : IUserService
     {
         private IUserRepository _userRepository;
+        private readonly DateTime currentPstTime = DateTimeHelper.GetDateTimeNowByTimeZone(DateTimeHelper.TimeZoneList.PacificStandardTime);
+
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
@@ -37,7 +40,7 @@ namespace LeadDataManagement.Services
                 Phone = user.Phone,
                 CreditScore = 100000,
                 StatusId = 1,
-                CreatedAt = DateTime.Now,
+                CreatedAt = currentPstTime,
             });
         }
 
@@ -69,7 +72,7 @@ namespace LeadDataManagement.Services
             {
                 userData.CreditScore = CreditScore;
                 userData.StatusId = statusId;
-                userData.ModifiedAt = DateTime.Now;
+                userData.ModifiedAt = currentPstTime;
                 _userRepository.Update(userData, userData.Id);
             }
         }

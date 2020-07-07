@@ -1,4 +1,5 @@
-﻿using LeadDataManagement.Models.Context;
+﻿using LeadDataManagement.Helpers;
+using LeadDataManagement.Models.Context;
 using LeadDataManagement.Repository.Interface;
 using LeadDataManagement.Services.Interface;
 using System;
@@ -11,6 +12,8 @@ namespace LeadDataManagement.Services
     public class UserScrubService:IUserScrubService
     {
         private IUserScrubRepository _userScrubRepository;
+        private readonly DateTime currentPstTime = DateTimeHelper.GetDateTimeNowByTimeZone(DateTimeHelper.TimeZoneList.PacificStandardTime);
+
         public UserScrubService(IUserScrubRepository userScrubRepository)
         {
             _userScrubRepository = userScrubRepository;
@@ -29,7 +32,7 @@ namespace LeadDataManagement.Services
             {
                 UserId = userId,
                 LeadTypeIds = leadTypeIds,
-                CreatedDate = DateTime.Now,
+                CreatedDate = currentPstTime,
                 Duration = duration,
                 MatchedCount = matchedCount,
                 UnMatchedCount = unmatchedCount,
