@@ -95,11 +95,13 @@ namespace LeadDataManagement.Controllers
                     r.EditBtn = "<button type='button' class='btn btn-success m-b-10 btnapprove btn-sm' data-id='" + r.Id+"' data-score='"+r.CreditScore+"'>Approve</button>";
                 }else if(r.StatusId==2)
                 {
-                    r.EditBtn = "<button type='button' class='btn btn-danger m-b-10 btninactivate btn-sm' data-id='" + r.Id + "' data-score='" + r.CreditScore + "'>In-Activate</button>";
+                    r.EditBtn = "<button type='button' class='btn btn-danger m-b-10 btninactivate btn-sm' data-id='" + r.Id + "' data-score='" + r.CreditScore + "'>In-Activate</button> &nbsp;&nbsp;"+ 
+                        "<button type = 'button' class='btn btn-success m-b-10 btnedit btn-sm' data-id='" + r.Id+"' data-status='"+r.StatusId+"' data-score='"+r.CreditScore+"'>Edit</button>";
                 }
                 else
                 {
-                    r.EditBtn = "<button type='button' class='btn btn-primary m-b-10 btnactivate btn-sm' data-id='" + r.Id + "' data-score='" + r.CreditScore + "'>Activate</button>";
+                    r.EditBtn = "<button type='button' class='btn btn-primary m-b-10 btnactivate btn-sm' data-id='" + r.Id + "' data-score='" + r.CreditScore + "'>Activate</button>&nbsp;&nbsp;"
+                        + "<button type = 'button' class='btn btn-success m-b-10 btnedit btn-sm' data-id='" + r.Id + "' data-status='" + r.StatusId + "' data-score='" + r.CreditScore + "'>Edit</button>";
                 }
             }
             var jsonData = new { data = from emp in retData select emp };

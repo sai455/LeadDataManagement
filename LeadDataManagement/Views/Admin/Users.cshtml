@@ -108,6 +108,30 @@
         $(document).ready(function (e) {
             loadDataTable();
         });
+        //Edit a User
+        $(document).on("click", "#tblUsers tbody tr td button.btnedit", function () {
+            var id = $(this).data('id');
+            var score = $(this).data('score');
+            var statusId = $(this).data('status');
+            swal({
+                title: "Edit",
+                text: "Credits",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true,
+                inputPlaceholder: "Credits",
+                inputValue: parseInt(score)
+            }, function (inputValue) {
+                if (inputValue === false)
+                    return false;
+                if (inputValue === "" || parseInt(inputValue) === 0) {
+                    swal.showInputError("Credits is required");
+                    return false;
+                }
+                    updateUserStatus(id, parseInt(inputValue), statusId)
+            });
+        });
 
         //Approves a User
         $(document).on("click", "#tblUsers tbody tr td button.btnapprove", function () {
