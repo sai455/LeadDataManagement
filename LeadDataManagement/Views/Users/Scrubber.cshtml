@@ -40,7 +40,7 @@
             <div class="page-header-breadcrumb">
                 <ul class=" breadcrumb breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="@Url.Action("Users","Dashboard")"><i class="feather icon-home"></i></a>
+                        <a href="@Url.Action("Dashboard","Users")"><i class="feather icon-home"></i></a>
                     </li>
                     <li class="breadcrumb-item">
                         <a href="#!">User Module</a>
@@ -86,7 +86,17 @@
                             data-dismiss="alert" aria-label="Close">
                         <i class="icofont icofont-close-line-circled text-white"></i>
                     </button>
-                    <strong>File Upload Error!</strong>  Please verify Phone column in uploded sheet.
+                    <strong>File Upload Error!</strong>  Please verify the Phone column is the first column in the uploaded sheet.
+                </div>
+            }
+            @if (Convert.ToBoolean(ViewBag.NoCredits) == true)
+            {
+                <div class="alert alert-danger background-danger">
+                    <button type="button" class="close"
+                            data-dismiss="alert" aria-label="Close">
+                        <i class="icofont icofont-close-line-circled text-white"></i>
+                    </button>
+                    <strong>Insufficient Credit Balance!</strong> File row count exceeds your current credit balance. Add more credits or reduce your file size to continue.
                 </div>
             }
             <div class="page-body">
@@ -211,7 +221,7 @@
         var selectedLeads = [];
         $(document).ready(function (e) {
                var chart = new Chartist.Pie('#status-round-1',
-                { series: [@ViewBag.remainingPercentage,@ViewBag.usedPercentage] },
+                { series: [@ViewBag.usedPercentage,@ViewBag.remainingPercentage] },
                 { donut: true, donutWidth: 8, showLabel: false });
             $(".js-example-basic-multiple").select2({ placeholder: "Select" });
             loadDataTable();

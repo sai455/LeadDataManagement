@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI.WebControls;
 
@@ -28,17 +29,26 @@ namespace LeadDataManagement.Repository
         }
         public void USPLoadMasterData(List<long> phonesList, int leadTypeId)
         {
-            var dt = PrepareUDT(phonesList);
-            var parameter1 = new SqlParameter("@LeadTypeId", SqlDbType.Int);
-            parameter1.Value = leadTypeId;
-            var parameter2 = new SqlParameter("@PhoneList", SqlDbType.Structured);
-            parameter2.Value = dt;
-            parameter2.TypeName = "MasterDataLoadType";
-
-          
-            var data =ExecuteSqlCommand("EXEC usp_LoadMasterData @LeadTypeId, @PhoneList",parameter1, parameter2);
+            var chunked = ChunkBy(phonesList, 400000);
+            for (int i = 0; i < chunked.Count; i += 1)
+            {
+                var dt = PrepareUDT(chunked[i]);
+                var parameter1 = new SqlParameter("@LeadTypeId", SqlDbType.Int);
+                parameter1.Value = leadTypeId;
+                var parameter2 = new SqlParameter("@PhoneList", SqlDbType.Structured);
+                parameter2.Value = dt;
+                parameter2.TypeName = "MasterDataLoadType";
+                var data = ExecuteSqlCommand("EXEC usp_LoadMasterData @LeadTypeId, @PhoneList", parameter1, parameter2);
+            }
         }
-
+        private List<List<long>> ChunkBy(List<long> source, int chunkSize)
+        {
+            return source
+                .Select((x, i) => new { Index = i, Value = x })
+                .GroupBy(x => x.Index / chunkSize)
+                .Select(x => x.Select(v => v.Value).ToList())
+                .ToList();
+        }
         public List<DropDownModel> UspGetLeadMasterDataGrid(int? leadTypeId)
         {
             var retData = SQLQuery<DropDownModel>(string.Format("Exec usp_GetLeadMasterDataGrid {0}",leadTypeId)).ToList();
@@ -48,10 +58,10 @@ namespace LeadDataManagement.Repository
         {
             var retdt = new DataTable();
             retdt.Columns.Add("Phone", typeof(long));
-            foreach(var  p in Phones)
+            Parallel.ForEach(Phones, (p) =>
             {
                 retdt.Rows.Add(p);
-            }
+            });
             return retdt;
         }
     }
