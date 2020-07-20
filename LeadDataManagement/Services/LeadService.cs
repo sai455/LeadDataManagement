@@ -69,5 +69,15 @@ namespace LeadDataManagement.Services
         {
             return _leadMasterDataRepository.UspGetLeadMasterDataGrid(leadTypeId);
         }
+
+        public void UpdateLeadTypeStatus(int id)
+        {
+            var data = _leadRepository.FindBy(x => x.Id == id).FirstOrDefault();
+            if(data!=null)
+            {
+                data.IsActive = !data.IsActive;
+                _leadRepository.Update(data, data.Id);
+            }
+        }
     }
 }

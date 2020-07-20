@@ -52,7 +52,8 @@ namespace LeadDataManagement.Controllers
 
         public ActionResult Signup()
         {
-            return View();
+            UserViewModel userViewModel = new UserViewModel();
+            return View(userViewModel);
         }
 
         [HttpPost]
@@ -60,10 +61,15 @@ namespace LeadDataManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(_userService.GetUsers().Where(x=>x.Email== user.Email).Any())
+                if (_userService.GetUsers().Where(x => x.Email == user.Email).Any())
                 {
                     ModelState.AddModelError("Email", "Email already in use.");
-                    return View();
+                    return View(user);
+                }
+                else if (!string.IsNullOrEmpty(user.ReferedByCode) && !_userService.GetUsers().Where(x => x.ReferalCode.ToLower() == user.ReferedByCode.ToLower()).Any())
+                {
+                    ModelState.AddModelError("ReferedByCode", "Referral code does not exist's");
+                    return View(user);
                 }
                 else
                 {
@@ -71,7 +77,7 @@ namespace LeadDataManagement.Controllers
                     return RedirectToAction("SignUpCompleted", "Login");
                 }
             }
-            return View();
+            return View(user);
         }
 
 

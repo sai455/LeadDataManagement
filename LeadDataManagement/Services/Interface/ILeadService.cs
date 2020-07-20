@@ -15,6 +15,7 @@ namespace LeadDataManagement.Services.Interface
         IQueryable<LeadMasterData> GetAllLeadMasterDataByLeadType(int leadTypeId);
         IQueryable<LeadMasterData> GetAllLeadMasterDataByLeadTypes(List<int> leadTypes);
         void SaveMasterData(List<long> PhoneNo, int leadTypeId);
+        void UpdateLeadTypeStatus(int id);
         List<DropDownModel> GetLeadMasterdataGridList(int? leadTypeId);
     }
 }

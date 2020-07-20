@@ -20,10 +20,13 @@ namespace LeadDataManagement.Models.ViewModels
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Confirm Password and Password do not match")]
         public string ConfirmPassword { get; set; }
+
+        public string ReferedByCode { get; set; }
     }
 
     public class UserGridViewModel
     {
+       
         public int SNo { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -36,5 +39,10 @@ namespace LeadDataManagement.Models.ViewModels
         public string ModifiedAt { get; set; }
         public string EditBtn { get; set; }
         public int StatusId { get; set; }
+        public int? DiscountPercentage { get; set; }
+        public string ReferalCode { get; set; }
+        public int ReferedById { get; set; }
+        public string RefedByUserName { get; set; }
+        
     }
 }

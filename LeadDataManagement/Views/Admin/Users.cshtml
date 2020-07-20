@@ -69,7 +69,11 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
+                                        <th>Discaount(%)</th>
+                                        <th>Referral Code</th>
+                                        <th>Referred By</th>
                                         <th>Credits</th>
+
                                         <th>Signup Date</th>
                                         <th>Status</th>
                                         <th></th>
@@ -83,6 +87,9 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
+                                        <th>Discaount(%)</th>
+                                        <th>Referral Code</th>
+                                        <th>Referred By</th>
                                         <th>Credits</th>
                                         <th>Signup Date</th>
                                         <th>Status</th>
@@ -101,6 +108,60 @@
     <div id="styleSelector">
     </div>
 </div>
+
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit User Details</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                            <input type="hidden" value="" name="Userid" id="Userid" />
+                            <input type="hidden" value="" name="StatusId" id="statusId" />
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Credits</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" 
+                                           readonly="readonly" 
+                                           required="required"
+                                           name="CreditScore"
+                                           id="CreditScore"
+                                            onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Discount <b>(%)</b></label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control"
+                                           required="required" 
+                                           name="DiscountPercentage"
+                                           id="discountPercentage"
+                                           maxlength="3"
+                                           onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')"/>
+                                </div>
+                            </div>
+                            <div class="">
+                                <div class="alert alert-danger background-danger" id="errorDiv" style="display:none">
+                                    <strong>Error! </strong><span id="errorText"></span>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type='button' class='btn btn-primary m-b-10 btn-sm' onclick="updateUserDetails()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <script type="text/javascript" src="~/Content/lead-app-content/js/sweetalert.min.js"></script>
 @section Scripts {
 
@@ -108,59 +169,67 @@
         $(document).ready(function (e) {
             loadDataTable();
         });
+        function updateUserDetails() {
+            var discountVal = $('#discountPercentage').val();
+            var creditScore = parseInt($('#CreditScore').val());
+            if ($('#CreditScore').val().length == 0) {
+                $('#errorText').html("Credit Score is required.")
+                $('#errorDiv').show();
+                return false;
+            }
+            if ($('#CreditScore').is('[readonly]') == false &&  creditScore == 0) {
+                $('#errorText').html("Credit Score should be greater than 0")
+                $('#errorDiv').show();
+                return false;
+            }
+            if (discountVal.length == 0) {
+                $('#errorText').html("Discount (%) is required.")
+                $('#errorDiv').show();
+                return false;
+            }
+            if (parseInt(discountVal) > 100) {
+                $('#errorText').html("Discount (%) cannot be more than 100%.")
+                $('#errorDiv').show();
+                return false;
+            }
+            updateUserStatus($('#Userid').val(), parseInt($('#CreditScore').val()), $('#statusId').val(), parseInt(discountVal))
+           
+        }
         //Edit a User
         $(document).on("click", "#tblUsers tbody tr td button.btnedit", function () {
             var id = $(this).data('id');
             var score = $(this).data('score');
             var statusId = $(this).data('status');
-            swal({
-                title: "Edit",
-                text: "Credits",
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                showLoaderOnConfirm: true,
-                inputPlaceholder: "Credits",
-                inputValue: parseInt(score)
-            }, function (inputValue) {
-                if (inputValue === false)
-                    return false;
-                if (inputValue === "" || parseInt(inputValue) === 0) {
-                    swal.showInputError("Credits is required");
-                    return false;
-                }
-                    updateUserStatus(id, parseInt(inputValue), statusId)
-            });
+            var discountPercentage = $(this).data('discountpercentage');
+            $('#CreditScore').val(score);
+            $('#Userid').val(id);
+            $('#statusId').val(statusId);
+            $('#discountPercentage').val(discountPercentage);
+            $('.modal-title').html("Edit User Details");
+            $('#CreditScore').attr('readonly', true);
+            $('#Modal').modal('show');
         });
-
+      
         //Approves a User
         $(document).on("click", "#tblUsers tbody tr td button.btnapprove", function () {
             var id = $(this).data('id');
             var score = $(this).data('score');
-            swal({
-                title: "Approve!",
-                text: "Credits",
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                showLoaderOnConfirm: true,
-                inputPlaceholder: "Credit Score",
-                inputValue: parseInt(score)
-            }, function (inputValue) {
-                    if (inputValue === false)
-                        return false;
-                    if (inputValue === "" || parseInt(inputValue) === 0) {
-                        swal.showInputError("Credits is required");
-                        return false;
-                    }
-                    updateUserStatus(id, parseInt(inputValue),2)
-            });
+            var statusId = 2;
+            var discountPercentage = $(this).data('discountpercentage');
+            $('#CreditScore').val(score);
+            $('#Userid').val(id);
+            $('#statusId').val(statusId);
+            $('#discountPercentage').val(discountPercentage);
+            $('.modal-title').html("Approve User");
+            $('#CreditScore').attr('readonly', false);
+            $('#Modal').modal('show');
         });
 
         //Makes User Inactive
         $(document).on("click", "#tblUsers tbody tr td button.btninactivate", function () {
             var id = $(this).data('id');
             var score = $(this).data('score');
+            var discountPercentage = $(this).data('discountpercentage');
             swal({
                 title: "Are you sure?", text: "You want to Inactivate this user",
                 type: "warning",
@@ -170,7 +239,7 @@
                 closeOnConfirm: false,
                 showLoaderOnConfirm: true
             }, function () {
-                    updateUserStatus(id, score, 3);
+                updateUserStatus(id, score, 3, discountPercentage);
             })
 
         });
@@ -179,6 +248,7 @@
         $(document).on("click", "#tblUsers tbody tr td button.btnactivate", function () {
             var id = $(this).data('id');
             var score = $(this).data('score');
+            var discountPercentage = $(this).data('discountpercentage');
             swal({
                 title: "Are you sure?", text: "You want to Activate this user",
                 type: "warning",
@@ -188,11 +258,11 @@
                 closeOnConfirm: false,
                 showLoaderOnConfirm: true
             }, function () {
-                    updateUserStatus(id, score, 2);
+                updateUserStatus(id, score, 2, discountPercentage);
             })
 
         });
-        function updateUserStatus(id, score, statusId) {
+        function updateUserStatus(id, score, statusId, discountPercentage) {
             $.ajax({
                 url: '@Url.Action("UpdateUserStatus", "Admin")',
                 type: 'post',
@@ -200,10 +270,12 @@
                 data: {
                     userId: id,
                     creditScore: score,
-                    statusId: statusId
+                    statusId: statusId,
+                    discountPercentage: discountPercentage
                 },
                 success: function (data) {
                     loadDataTable();
+                    $('#Modal').modal('hide');
                     swal("Done!", "User Details Updated Successfully.", "success");
                 },
                 error: function (jqXhr, textStatus, errorThrown) {
@@ -227,6 +299,9 @@
                     { "data": "Name" },
                     { "data": "Email" },
                     { "data": "Phone" },
+                    { "data": "DiscountPercentage" },
+                    { "data":"ReferalCode"},
+                    { "data":"RefedByUserName"},
                     { "data": "CreditScore" },
                     { "data": "CreatedAt" },
                     { "data": "Status" },

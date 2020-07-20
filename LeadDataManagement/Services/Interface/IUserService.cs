@@ -14,6 +14,6 @@ namespace LeadDataManagement.Services.Interface
         void SaveUser(UserViewModel u);
         string GetStatusById(int statusId);
         void UpdateUserPassword(string email, string password);
-        void UpdateUserStatus(int userId,long CreditScore,int statusId);
+        void UpdateUserStatus(int userId,long CreditScore,int statusId, int discountPercentage);
     }
 }

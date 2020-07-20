@@ -15,11 +15,13 @@ namespace LeadDataManagement.Controllers
         private IUserService userService;
         private ILeadService leadService;
         private IUserScrubService userScrubService;
-        public AdminController(IUserService _userService, ILeadService _leadService, IUserScrubService userScrubService)
+        private ICreditPackageService creditPackageService;
+        public AdminController(IUserService _userService, ILeadService _leadService, IUserScrubService userScrubService, ICreditPackageService creditPackageService)
         {
             this.userService = _userService;
             this.leadService = _leadService;
             this.userScrubService = userScrubService;
+            this.creditPackageService = creditPackageService;
         }
 
         #region Dashboard
@@ -83,7 +85,10 @@ namespace LeadDataManagement.Controllers
                 CreditScore=x.CreditScore,
                 Status= userService.GetStatusById(x.StatusId),
                 ModifiedAt=x.ModifiedAt.HasValue?x.ModifiedAt.Value.ToString("dd-MMM-yyyy hh:mm:ss tt"):string.Empty,
-                StatusId=x.StatusId
+                StatusId=x.StatusId,
+                ReferalCode=x.ReferalCode,
+                ReferedById = x.ReferedUserId.HasValue ? x.ReferedUserId.Value : 0,
+                DiscountPercentage=x.DiscountPercentage.HasValue?x.DiscountPercentage.Value:0
             }).ToList();
             int iCount = 0;
             foreach(var r in retData)
@@ -92,27 +97,31 @@ namespace LeadDataManagement.Controllers
                 r.SNo = iCount;
                 if(r.StatusId==1)
                 {
-                    r.EditBtn = "<button type='button' class='btn btn-success m-b-10 btnapprove btn-sm' data-id='" + r.Id+"' data-score='"+r.CreditScore+"'>Approve</button>";
+                    r.EditBtn = "<button type='button' class='btn btn-success m-b-10 btnapprove btn-sm' data-id='" + r.Id+ "'data-discountPercentage='"+ r.DiscountPercentage +"' data-score='" + r.CreditScore+"'>Approve</button>";
                 }else if(r.StatusId==2)
                 {
-                    r.EditBtn = "<button type='button' class='btn btn-danger m-b-10 btninactivate btn-sm' data-id='" + r.Id + "' data-score='" + r.CreditScore + "'>In-Activate</button> &nbsp;&nbsp;"+ 
-                        "<button type = 'button' class='btn btn-success m-b-10 btnedit btn-sm' data-id='" + r.Id+"' data-status='"+r.StatusId+"' data-score='"+r.CreditScore+"'>Edit</button>";
+                    r.EditBtn = "<button type='button' class='btn btn-danger m-b-10 btninactivate btn-sm' data-id='" + r.Id + "' data-discountPercentage='"+ r.DiscountPercentage +"' data-score='" + r.CreditScore + "'>In-Activate</button> &nbsp;&nbsp;"+ 
+                        "<button type = 'button' class='btn btn-success m-b-10 btnedit btn-sm' data-id='" + r.Id+ "' data-discountPercentage='" + r.DiscountPercentage + "' data-status='" + r.StatusId+"' data-score='"+r.CreditScore+"'>Edit</button>";
                 }
                 else
                 {
-                    r.EditBtn = "<button type='button' class='btn btn-primary m-b-10 btnactivate btn-sm' data-id='" + r.Id + "' data-score='" + r.CreditScore + "'>Activate</button>&nbsp;&nbsp;"
-                        + "<button type = 'button' class='btn btn-success m-b-10 btnedit btn-sm' data-id='" + r.Id + "' data-status='" + r.StatusId + "' data-score='" + r.CreditScore + "'>Edit</button>";
+                    r.EditBtn = "<button type='button' class='btn btn-primary m-b-10 btnactivate btn-sm' data-id='" + r.Id + "' data-discountPercentage='" + r.DiscountPercentage + "' data-score='" + r.CreditScore + "'>Activate</button>&nbsp;&nbsp;"
+                        + "<button type = 'button' class='btn btn-success m-b-10 btnedit btn-sm' data-id='" + r.Id + "' data-discountPercentage='" + r.DiscountPercentage + "' data-status='" + r.StatusId + "' data-score='" + r.CreditScore + "'>Edit</button>";
+                }
+                if(r.ReferedById!=0)
+                {
+                    r.RefedByUserName = userService.GetUsers().FirstOrDefault(x => x.Id == r.ReferedById).Name;
                 }
             }
             var jsonData = new { data = from emp in retData select emp };
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult UpdateUserStatus(int userId,long creditScore,int statusId)
+        public ActionResult UpdateUserStatus(int userId,long creditScore,int statusId,int discountPercentage)
         {
             try
             {
-                userService.UpdateUserStatus(userId, creditScore, statusId);
+                userService.UpdateUserStatus(userId, creditScore, statusId, discountPercentage);
                 
             }catch(Exception ex)
             {
@@ -132,27 +141,38 @@ namespace LeadDataManagement.Controllers
         }
         public ActionResult LeadTypeGrid()
         {
-            List<LeadTypeGridViewModel> retData = new List<LeadTypeGridViewModel>();
+            List<LeadTypeGridViewModel> ret = new List<LeadTypeGridViewModel>();
             var leadTypesList = leadService.GetLeadTypes().OrderBy(x => x.Name).ToList();
             int iCount = 0;
             foreach (var l in leadTypesList)
             {
                 iCount += 1;
-                retData.Add(new LeadTypeGridViewModel()
+                LeadTypeGridViewModel retData = new LeadTypeGridViewModel();
+                retData.LeadType = l.Name;
+                retData.SNo = iCount;
+                retData.Status = l.IsActive == true ? "Active" : "InActive";
+                retData.Id = l.Id;
+                retData.CreatedAt = l.CreatedAt.ToString("dd-MMM-yyyy hh:mm:ss tt");
+                retData.IsActive = l.IsActive;
+                retData.EditBtn = "<button type='button' class='btn btn-primary m-b-10 btnedit btn-sm' data-lead='" + l.Name + "' data-id='" + l.Id + "'><i class='fa fa-pencil-square-o'></i> Edit</button>";
+                if(l.IsActive)
                 {
-                    LeadType=l.Name,
-                    SNo=iCount,
-                    Status=l.IsActive==true?"Active":"InActive",
-                    Id=l.Id,
-                    CreatedAt=l.CreatedAt.ToString("dd-MMM-yyyy hh:mm:ss tt"),
-                    IsActive=l.IsActive,
-                    EditBtn = "<button type='button' class='btn btn-primary m-b-10 btnedit btn-sm' data-lead='"+l.Name+"' data-id='" + l.Id + "'><i class='fa fa-pencil-square-o'></i> Edit</button>"
-                });
+                    retData.EditBtn+= "&nbsp;&nbsp;<button type='button' class='btn btn-danger m-b-10 btnenabledisable btn-sm' data-id='" + l.Id + "'>Disable</button>";
+                }
+                else
+                {
+                    retData.EditBtn += "&nbsp;&nbsp;<button type='button' class='btn btn-success m-b-10 btnenabledisable btn-sm' data-id='" + l.Id + "'>Enable</button>";
+                }
+                ret.Add(retData);
             }
-            var jsonData = new { data = from emp in retData select emp };
+            var jsonData = new { data = from emp in ret select emp };
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
-
+        public ActionResult UpdateLeadTypeStatus(int id)
+        {
+            leadService.UpdateLeadTypeStatus(id);
+            return Json("", JsonRequestBehavior.AllowGet); 
+        }
         public ActionResult AddEditLeadType(int id,string leadType)
         {
             if(leadService.GetLeadTypes().Any(x=>x.Name.ToLower()==leadType.ToLower() && x.Id!=id))
@@ -169,7 +189,7 @@ namespace LeadDataManagement.Controllers
         public ActionResult LeadMasterData()
         {
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
-            ViewBag.LeadTypesList = leadService.GetLeadTypes().ToList().Select(x => new DropDownModel()
+            ViewBag.LeadTypesList = leadService.GetLeadTypes().Where(x=>x.IsActive).ToList().Select(x => new DropDownModel()
             {
                 Name=x.Name,
                 Id=x.Id
@@ -225,12 +245,12 @@ namespace LeadDataManagement.Controllers
                     file.SaveAs(path);
                     
                     string[] lines = System.IO.File.ReadAllLines(path);
-                    List<long> PhoneNo = lines.Select(x => Convert.ToInt64(x.Replace(",","").Trim())).Skip(0).Take(10000000).ToList();
+                    List<long> PhoneNo = lines.Select(x => Convert.ToInt64(x.Replace(",","").Trim())).Skip(0).Take(30000).ToList();
                     leadService.SaveMasterData(PhoneNo, LeadTypeId);
                 }
             }
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
-            ViewBag.LeadTypesList = leadService.GetLeadTypes().ToList().Select(x => new DropDownModel()
+            ViewBag.LeadTypesList = leadService.GetLeadTypes().Where(x => x.IsActive).ToList().Select(x => new DropDownModel()
             {
                 Name = x.Name,
                 Id = x.Id
@@ -239,7 +259,50 @@ namespace LeadDataManagement.Controllers
         }
         #endregion
 
+        #region Packages
+        public ActionResult Packages()
+        {
+            ViewBag.CurrentUser = this.CurrentLoggedInUser;
+            return View();
+        }
+        public ActionResult CreditPackageGrid()
+        {
+            List<CreditPackageViewModel> retData = new List<CreditPackageViewModel>();
+            var leadTypesList = creditPackageService.GetAllCreditPackages().OrderBy(x => x.PackageName).ToList();
+            int iCount = 0;
+            foreach (var l in leadTypesList)
+            {
+                iCount += 1;
+                retData.Add(new CreditPackageViewModel()
+                {
+                    Id = l.Id,
+                    SNo = iCount,
+                    Status = l.IsActive == true ? "Active" : "InActive",
+                    CreatedDate = l.CreatedAt.ToString("dd-MMM-yyyy hh:mm:ss tt"),
+                    IsActive = l.IsActive,
+                    PackageName=l.PackageName,
+                    Credits=l.Credits,
+                    Price=l.Price,
+                    EditBtn = "<button type='button' class='btn btn-primary m-b-10 btnedit btn-sm' data-id='" + l.Id + "' data-packagename='" + l.PackageName + "' data-credits='" + l.Credits + "' data-price='" + l.Price + "' data-status='" + l.IsActive + "' data-id='" + l.Id + "'><i class='fa fa-pencil-square-o'></i> Edit</button>"
+                });
+            }
+            var jsonData = new { data = from emp in retData select emp };
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
 
-       
+        public ActionResult AddUpdatePackage(int id,string packageName,long credits,long price, bool status)
+        {
+            bool isExists = creditPackageService.GetAllCreditPackages().Any(x => x.Id != id && x.PackageName.ToLower() == packageName.ToLower());
+            if(isExists)
+            {
+                return Json("Duplicate package not allowed", JsonRequestBehavior.AllowGet);
+            }
+            creditPackageService.SavePackage(id, packageName, credits, price, status);
+
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+
     }
 }

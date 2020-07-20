@@ -16,6 +16,9 @@ namespace LeadDataManagement.Models.Context
         public int StatusId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
+        public string ReferalCode { get; set; }
+        public int? ReferedUserId { get; set; }
+        public int? DiscountPercentage { get; set; }
     }
 
     public class LeadType
@@ -53,5 +56,17 @@ namespace LeadDataManagement.Models.Context
         public string MatchedPath { get; set; }
         public string UnMatchedPath { get; set; }
         public long ScrubCredits { get; set; }
+    }
+
+    public class CreditPackage
+    {
+        [Key]
+        public int Id { get; set; }
+        public string PackageName { get; set; }
+        public long Credits { get; set; }
+        public long Price { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? ModifiedAt { get; set; }
     }
 }

@@ -307,7 +307,7 @@ namespace LeadDataManagement.Controllers
             List<string> searchPhonesList = phonesNos.Select(x => x.ToString()).ToList();
             var newretDt = new DataTable();
             if(phonesNos.Count>0)
-                 uplodedFileDtRows.Where(x => searchPhonesList.Contains(x.Field<string>(phoneColName))).CopyToDataTable();
+                newretDt=uplodedFileDtRows.Where(x => searchPhonesList.Contains(x.Field<string>(phoneColName))).CopyToDataTable();
             return newretDt;
         }
         private List<DropDownModel> FilterDatatableColoumn(EnumerableRowCollection<DataRow> uplodedFileDtRows, DataTable RecordDT_, string col)
@@ -350,7 +350,7 @@ namespace LeadDataManagement.Controllers
                                 {
                                     var thisCol = rowValues[j];
                                     dtCsv.Columns.Add(thisCol); //add headers  
-                                    if (filterCols.Split(',').ToList().Contains(thisCol))
+                                    if (filterCols.Split(',').ToList().Contains(thisCol) || filterCols.Split(',').ToList().Contains(thisCol+"\r"))
                                     {
                                         phoneCol = thisCol;
                                     }
