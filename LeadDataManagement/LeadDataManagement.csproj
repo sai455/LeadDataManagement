@@ -160,6 +160,7 @@
     <Compile Include="Models\ViewModels\LeadViewModel.cs" />
     <Compile Include="Repository\CreditPackageRepository.cs" />
     <Compile Include="Repository\Interface\ICreditPackageRepository.cs" />
+    <Compile Include="Repository\Interface\IUserCreditLogsRepository.cs" />
     <Compile Include="Repository\Interface\IUserScrubRepository.cs" />
     <Compile Include="Repository\Interface\ILeadMasterDataRepository.cs" />
     <Compile Include="Repository\LeadMasterDataRepository.cs" />
@@ -176,14 +177,17 @@
     <Compile Include="Repository\Interface\IGenericRepository.cs" />
     <Compile Include="Repository\Interface\ILeadRepository.cs" />
     <Compile Include="Repository\Interface\IUserRepository.cs" />
+    <Compile Include="Repository\UserCreditLogsRepository.cs" />
     <Compile Include="Repository\UserRepository.cs" />
     <Compile Include="Repository\UserScrubRepository.cs" />
     <Compile Include="Services\CreditPackageService.cs" />
     <Compile Include="Services\Interface\ICreditPackageService.cs" />
     <Compile Include="Services\Interface\ILeadService.cs" />
+    <Compile Include="Services\Interface\IUserCreditLogsService.cs" />
     <Compile Include="Services\Interface\IUserScrubService.cs" />
     <Compile Include="Services\Interface\IUserService.cs" />
     <Compile Include="Services\LeadService.cs" />
+    <Compile Include="Services\UserCreditLogsService.cs" />
     <Compile Include="Services\UserScrubService.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>

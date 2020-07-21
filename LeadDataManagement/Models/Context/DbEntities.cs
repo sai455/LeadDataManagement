@@ -69,4 +69,21 @@ namespace LeadDataManagement.Models.Context
         public DateTime CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
     }
+
+    public class UserCreditLogs
+    {
+        [Key]
+        public long Id { get; set; }
+        public string PurchaseId { get; set; }
+        public int PackageId { get; set; }
+        public long Credits { get; set; }
+        public string TransactionDetails { get; set; }
+        public int UserId { get; set; }
+        public long Amount { get; set; }
+        public int DiscountPercentage { get; set; }
+        public Double FinalAmount { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? ModifiedAt { get; set; }
+        public long ReferalUserCredits { get; set; }
+    }
 }

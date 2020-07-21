@@ -12,6 +12,7 @@ namespace LeadDataManagement.Services.Interface
         IQueryable<User> GetUsers();
         User ValidateUserByEmailId(string email, string password);
         void SaveUser(UserViewModel u);
+        void UpdateUserDetails(User u);
         string GetStatusById(int statusId);
         void UpdateUserPassword(string email, string password);
         void UpdateUserStatus(int userId,long CreditScore,int statusId, int discountPercentage);

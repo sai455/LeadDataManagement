@@ -29,7 +29,10 @@ namespace LeadDataManagement.Services
         {
             return _userRepository.GetAll();
         }
-
+        public void UpdateUserDetails(User u)
+        {
+            _userRepository.Update(u, u.Id);
+        }
         public void SaveUser(UserViewModel user)
         {
             var referedUserId = 0;

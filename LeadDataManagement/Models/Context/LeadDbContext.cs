@@ -19,6 +19,8 @@ namespace LeadDataManagement.Models.Context
         public virtual DbSet<LeadMasterData> LeadMasterDatas { get; set; }
         public virtual DbSet<UserScrub> UserScrubs { get; set; }
         public virtual DbSet<CreditPackage> CreditPackages { get; set; }
+
+        public virtual DbSet<UserCreditLogs> UserCreditLogs { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().ToTable("User");
@@ -26,6 +28,7 @@ namespace LeadDataManagement.Models.Context
             modelBuilder.Entity<LeadMasterData>().ToTable("LeadMasterData");
             modelBuilder.Entity<UserScrub>().ToTable("UserScrub");
             modelBuilder.Entity<CreditPackage>().ToTable("CreditPackage");
+            modelBuilder.Entity<UserCreditLogs>().ToTable("User_Credits_Logs");
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             base.OnModelCreating(modelBuilder);
         }

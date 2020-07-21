@@ -85,7 +85,7 @@
                             <div class="col-sm-8">
                                 <select id="ddlIsActcive" class="form-control">
                                     <option value="true">Active</option>
-                                    <option value="false">In-Active</option>
+                                    <option value="false">InActive</option>
                                 </select>
                             </div>
                         </div>
@@ -205,6 +205,7 @@
             $('#packageName').val($(this).data('packagename'));
             $('#credits').val($(this).data('credits'));
             $('#price').val($(this).data('price'));
+            $('#ddlIsActcive').val($(this).data('status').toLocaleLowerCase());
             $('.modal-title').html("Edit Package");
             $('#Modal').modal('show');
         });

@@ -19,26 +19,47 @@ namespace LeadDataManagement.Controllers
         private IUserScrubService userScrubService;
         private IUserService userService;
         private ILeadService leadService;
+        private IUserCreditLogsService userCreditLogsService;
+        private ICreditPackageService creditPackageService;
         private string filterCols = "Phone,Ph,Home Phone,Telephone,phone,home phone,telephone";
-        public UsersController(IUserScrubService _userScrubService,IUserService _userService, ILeadService _leadService)
+        public UsersController(IUserScrubService _userScrubService, IUserService _userService, ILeadService _leadService, IUserCreditLogsService _userCreditLogsService, ICreditPackageService _creditPackageService)
         {
             userScrubService = _userScrubService;
             userService = _userService;
             leadService = _leadService;
+            userCreditLogsService = _userCreditLogsService;
+            creditPackageService = _creditPackageService;
         }
         public ActionResult Dashboard()
         {
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
+            ViewBag.PackagesList = creditPackageService.GetAllCreditPackages().Where(x => x.IsActive == true).Select(x => new DropDownModel
+            {
+                Id = x.Id,
+                Name = x.PackageName,
+                Count = x.Credits,
+                Amount = x.Price
+            }).ToList();
 
-            var usedCredits = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
-            var userTotalCredits = this.CurrentLoggedInUser.CreditScore;
-            var percentage = Math.Round((usedCredits / (decimal)userTotalCredits) * 100, 2);
-            ViewBag.remainingCredits = userTotalCredits-usedCredits;
-            ViewBag.totalCredits = userTotalCredits;
-            ViewBag.usedPercentage = percentage;
-            ViewBag.remainingPercentage = 100 - percentage;
             return View();
         }
+        public JsonResult GetUserCreditsDetails()
+        {
+            var usedCredits = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
+            var userTotalCredits = this.CurrentLoggedInUser.CreditScore;
+            var percentage = userTotalCredits>0?Math.Round((usedCredits / (decimal)userTotalCredits) * 100, 2):0;
+            var remainingCredits = userTotalCredits - usedCredits;
+            var remainingPercentage = 100 - percentage;
+
+            return Json(new
+            {
+                remainingCredits = remainingCredits,
+                totalCredits = userTotalCredits,
+                usedPercentage = percentage,
+                remainingPercentage = remainingPercentage
+            }, JsonRequestBehavior.AllowGet);
+        }
+        #region User Scrub
 
         public ActionResult Scrubber()
         {
@@ -66,20 +87,20 @@ namespace LeadDataManagement.Controllers
             List<UserScrubsGridModel> retData = new List<UserScrubsGridModel>();
             var userScrubs = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id);
             int iCount = 0;
-            foreach(var u in userScrubs)
+            foreach (var u in userScrubs)
             {
                 iCount += 1;
-                List<int>leadTypes = JsonConvert.DeserializeObject<List<DropDownModel>>(u.LeadTypeIds).Select(x=>x.Id).ToList();
+                List<int> leadTypes = JsonConvert.DeserializeObject<List<DropDownModel>>(u.LeadTypeIds).Select(x => x.Id).ToList();
                 string InputExtensions = u.InputFilePath.Split('.')[1];
                 retData.Add(new UserScrubsGridModel()
                 {
                     Sno = iCount,
-                    ScrubCredits=u.ScrubCredits,
-                    CreatedAt =u.CreatedDate.ToString("dd-MMM-yyyy hh:mm:ss tt"),
-                    LeadType = String.Join(",",Leads.Where(x => leadTypes.Contains(x.Id)).Select(x=>x.Name).ToList()),
-                    Matched = "Matched- " + u.MatchedCount + " <a href='"+u.MatchedPath+ ".csv' style='cursor:pointer' download='Matched-"+u.Id+".csv'><i class='fa fa-download' ></i></a><br>"+ "Clean- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='UnMatched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a>",
+                    ScrubCredits = u.ScrubCredits,
+                    CreatedAt = u.CreatedDate.ToString("dd-MMM-yyyy hh:mm:ss tt"),
+                    LeadType = String.Join(",", Leads.Where(x => leadTypes.Contains(x.Id)).Select(x => x.Name).ToList()),
+                    Matched = "Matched- " + u.MatchedCount + " <a href='" + u.MatchedPath + ".csv' style='cursor:pointer' download='Matched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a><br>" + "Clean- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='UnMatched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a>",
                     Duration = u.Duration,
-                    InputFile = "Input File  <a href='" + u.InputFilePath + "' style='cursor:pointer' download='InputFile-"+u.Id+"."+ InputExtensions + "'><i class='fa fa-download' ></i></a>",
+                    InputFile = "Input File  <a href='" + u.InputFilePath + "' style='cursor:pointer' download='InputFile-" + u.Id + "." + InputExtensions + "'><i class='fa fa-download' ></i></a>",
                 });
             }
             var jsonData = new { data = from emp in retData select emp };
@@ -87,11 +108,11 @@ namespace LeadDataManagement.Controllers
             {
                 Data = jsonData,
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                MaxJsonLength = Int32.MaxValue 
+                MaxJsonLength = Int32.MaxValue
             };
         }
 
-        public ActionResult PerformUserScrub(FormCollection formCollection,string PhoneNos,string SelectedLeads)
+        public ActionResult PerformUserScrub(FormCollection formCollection, string PhoneNos, string SelectedLeads)
         {
             bool isError = false;
             try
@@ -99,7 +120,7 @@ namespace LeadDataManagement.Controllers
 
                 var used = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
                 Stopwatch sw = Stopwatch.StartNew();
-                List<int> selectedLeads = JsonConvert.DeserializeObject<List<DropDownModel>>(SelectedLeads).Select(x=>x.Id).ToList();
+                List<int> selectedLeads = JsonConvert.DeserializeObject<List<DropDownModel>>(SelectedLeads).Select(x => x.Id).ToList();
                 if (string.IsNullOrEmpty(PhoneNos))
                 {
                     HttpPostedFileBase file = Request.Files["ScrubFile"];
@@ -180,7 +201,7 @@ namespace LeadDataManagement.Controllers
 
                         if (UserScrubPhonesList.Count > 0)
                         {
-                            
+
                             if ((this.CurrentLoggedInUser.CreditScore - used) >= UserScrubPhonesList.Count())
                             {
                                 var matchedList = leadService.GetAllLeadMasterDataByLeadTypes(selectedLeads).Select(x => x.Phone).Where(x => UserScrubPhonesList.Contains(x)).Distinct().ToList();
@@ -302,12 +323,15 @@ namespace LeadDataManagement.Controllers
             ViewBag.remainingPercentage = 100 - percentage;
             return View("Scrubber");
         }
-        private DataTable GetFilteredPhones(EnumerableRowCollection<DataRow> uplodedFileDtRows, List<long>phonesNos,string phoneColName)
+
+
+        #region User Scrub Private Functions
+        private DataTable GetFilteredPhones(EnumerableRowCollection<DataRow> uplodedFileDtRows, List<long> phonesNos, string phoneColName)
         {
             List<string> searchPhonesList = phonesNos.Select(x => x.ToString()).ToList();
             var newretDt = new DataTable();
-            if(phonesNos.Count>0)
-                newretDt=uplodedFileDtRows.Where(x => searchPhonesList.Contains(x.Field<string>(phoneColName))).CopyToDataTable();
+            if (phonesNos.Count > 0)
+                newretDt = uplodedFileDtRows.Where(x => searchPhonesList.Contains(x.Field<string>(phoneColName))).CopyToDataTable();
             return newretDt;
         }
         private List<DropDownModel> FilterDatatableColoumn(EnumerableRowCollection<DataRow> uplodedFileDtRows, DataTable RecordDT_, string col)
@@ -316,21 +340,21 @@ namespace LeadDataManagement.Controllers
             {
                 var dtt = uplodedFileDtRows.Select(x => new DropDownModel
                 {
-                   Name= x.Field<string>(col)
+                    Name = x.Field<string>(col)
                 }).ToList();
                 //DataTable TempTable = RecordDT_;
                 //DataView view = new DataView(TempTable);
                 //DataTable selected = view.ToTable("Selected", false, col);
                 return dtt;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
-           
+
         }
 
-        private DataTable ReadCsvFile(string path,ref string phoneCol)
+        private DataTable ReadCsvFile(string path, ref string phoneCol)
         {
             DataTable dtCsv = new DataTable();
             string Fulltext;
@@ -350,7 +374,7 @@ namespace LeadDataManagement.Controllers
                                 {
                                     var thisCol = rowValues[j];
                                     dtCsv.Columns.Add(thisCol); //add headers  
-                                    if (filterCols.Split(',').ToList().Contains(thisCol) || filterCols.Split(',').ToList().Contains(thisCol+"\r"))
+                                    if (filterCols.Split(',').ToList().Contains(thisCol) || filterCols.Split(',').ToList().Contains(thisCol + "\r"))
                                     {
                                         phoneCol = thisCol;
                                     }
@@ -425,5 +449,77 @@ namespace LeadDataManagement.Controllers
                 }
             }
         }
+
+        #endregion
+
+        #endregion
+
+        #region User Credits
+        public ActionResult UserCreditLogGrid()
+        {
+            List<UserCreditLogGridViewModel> retData = new List<UserCreditLogGridViewModel>();
+            var userCreditLogs = userCreditLogsService.GetAllUserCreditLogs().Where(x=>x.UserId==CurrentLoggedInUser.Id).ToList();
+            int iCount = 0;
+            foreach (var u in userCreditLogs)
+            {
+                iCount += 1;
+                retData.Add(new UserCreditLogGridViewModel()
+                {
+                    SNo = iCount,
+                    Id = u.Id,
+                    Date = u.CreatedAt.ToString("dd-MMM-yyyy hh:mm:ss tt"),
+                    CreatedAt = u.CreatedAt,
+                    Credits = u.Credits,
+                    DisCountPercentage = u.DiscountPercentage.ToString(),
+                    AmountPaid = u.FinalAmount.ToString(),
+                    PackageName = creditPackageService.GetAllCreditPackages().FirstOrDefault(x => x.Id == u.PackageId).PackageName
+                });
+            }
+            var usersRefered = userService.GetUsers().Where(x => x.ReferedUserId.HasValue && x.ReferedUserId.Value == CurrentLoggedInUser.Id).Select(x => x.Id).ToList();
+            var referalCreditsList = userCreditLogsService.GetAllUserCreditLogs().Where(x => usersRefered.Contains(x.UserId)).ToList();
+            foreach (var u in referalCreditsList)
+            {
+                iCount += 1;
+                retData.Add(new UserCreditLogGridViewModel()
+                {
+                    SNo = iCount,
+                    Id = u.Id,
+                    Date = u.CreatedAt.ToString("dd-MMM-yyyy hh:mm:ss tt"),
+                    CreatedAt = u.CreatedAt,
+                    Credits = u.ReferalUserCredits,
+                    DisCountPercentage = "-",
+                    AmountPaid = "-",
+                    PackageName = "Referral Bonus"
+                });
+            }
+
+            retData = retData.OrderByDescending(x => x.CreatedAt).ToList();
+            var jsonData = new { data = from emp in retData select emp };
+            return new JsonResult()
+            {
+                Data = jsonData,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        [HttpPost]
+        public ActionResult AddUserCredits(int packageId, int qty, long credits, long amount, int discountPercentage, float finalAmount, long referalCredits)
+        {
+            long rCredits = 0;
+            if (CurrentLoggedInUser.ReferedUserId.HasValue && CurrentLoggedInUser.ReferedUserId.Value > 0)
+            {
+                rCredits = referalCredits;
+                var userData = userService.GetUsers().Where(x => x.Id == CurrentLoggedInUser.ReferedUserId.Value).FirstOrDefault();
+                userData.CreditScore += referalCredits;
+                userService.UpdateUserDetails(userData);
+            }
+            userCreditLogsService.BuyCredits(CurrentLoggedInUser.Id, packageId, qty, credits, amount, discountPercentage, finalAmount, rCredits);
+            CurrentLoggedInUser.CreditScore += credits;
+            userService.UpdateUserDetails(CurrentLoggedInUser);
+            return Json("");
+        }
+        #endregion
     }
+
 }
