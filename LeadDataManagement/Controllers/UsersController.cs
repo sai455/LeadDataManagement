@@ -32,6 +32,7 @@ namespace LeadDataManagement.Controllers
         }
         public ActionResult Dashboard()
         {
+            ViewBag.PayPalClientId = "AdpPKo_1ekKlG7W9Njp8INCxwYKhDACND1RMgZZzliXv0YjhFLCnZ507Jlu0F7LBPNHNIVmFHe4njTKl";
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
             ViewBag.PackagesList = creditPackageService.GetAllCreditPackages().Where(x => x.IsActive == true).Select(x => new DropDownModel
             {
@@ -471,7 +472,7 @@ namespace LeadDataManagement.Controllers
                     CreatedAt = u.CreatedAt,
                     Credits = u.Credits,
                     DisCountPercentage = u.DiscountPercentage.ToString(),
-                    AmountPaid = u.FinalAmount.ToString(),
+                    AmountPaid = Math.Round(u.FinalAmount,2).ToString(),
                     PackageName = creditPackageService.GetAllCreditPackages().FirstOrDefault(x => x.Id == u.PackageId).PackageName
                 });
             }
@@ -505,7 +506,7 @@ namespace LeadDataManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddUserCredits(int packageId, int qty, long credits, long amount, int discountPercentage, float finalAmount, long referalCredits)
+        public ActionResult AddUserCredits(int packageId, int qty, long credits, long amount, int discountPercentage, float finalAmount, long referalCredits,string transactionDetails)
         {
             long rCredits = 0;
             if (CurrentLoggedInUser.ReferedUserId.HasValue && CurrentLoggedInUser.ReferedUserId.Value > 0)
@@ -515,7 +516,7 @@ namespace LeadDataManagement.Controllers
                 userData.CreditScore += referalCredits;
                 userService.UpdateUserDetails(userData);
             }
-            userCreditLogsService.BuyCredits(CurrentLoggedInUser.Id, packageId, qty, credits, amount, discountPercentage, finalAmount, rCredits);
+            userCreditLogsService.BuyCredits(CurrentLoggedInUser.Id, packageId, qty, credits, amount, discountPercentage, finalAmount, rCredits, transactionDetails);
             CurrentLoggedInUser.CreditScore += credits;
             userService.UpdateUserDetails(CurrentLoggedInUser);
             return Json("");

@@ -189,6 +189,11 @@
                                        readonly />
                             </div>
                         </div>
+                        <div class="">
+                            <div class="alert alert-danger background-danger" id="errorDiv" style="display:none">
+                                <strong>Error! </strong><span id="errorText"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -204,7 +209,7 @@
 @section Scripts {
     <script src="~/Content/lead-app-content/js/chartist.js" type="text/javascript"></script>
     <script type="text/javascript" src="~/Content/lead-app-content/js/sweetalert.min.js"></script>
-    <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD" data-sdk-integration-source="button-factory"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=@(ViewBag.PayPalClientId)&currency=USD" data-sdk-integration-source="button-factory"></script>
     <script type="text/javascript">
         $(document).ready(function (e) {
             getUserCreditsInformation();
@@ -248,15 +253,7 @@
             });
         }
 
-        function addCredits() {
-            if ($('.ddlPackage').val() == "") {
-                alert("Please select package");
-                return false;
-            }
-            if ($('#qty').val() == "" || $('#qty').val() == "0") {
-                alert("Qty is required");
-                return false;
-            }
+        function addCredits(transactionDetails) {
             var packageId = $('.ddlPackage').val();
             var qty = $('#qty').val();
             var credits = parseInt($('.ddlPackage').find(':selected').data('credits'))*parseInt(qty);
@@ -279,7 +276,8 @@
                      amount: price,
                      discountPercentage: "@ViewBag.CurrentUser.DiscountPercentage",
                      finalAmount: totalValue.toFixed(2),
-                     referalCredits: referalCredits
+                     referalCredits: referalCredits,
+                     transactionDetails: JSON.stringify(transactionDetails)
                  },
                 success: function (data) {
                     getUserCreditsInformation();
@@ -326,6 +324,29 @@
             $('#finalPay').val(totalValue.toFixed(2));
         });
 
+        function getValue() {
+            if ($('.ddlPackage').val() == "") {
+                $('#errorText').html("Package is required");
+                $('#errorDiv').show();
+                return false;
+            }
+            if ($('#qty').val() == "" || $('#qty').val() == "0") {
+                $('#errorText').html("Qty is required");
+                $('#errorDiv').show();
+                return false;
+            }
+            var packageId = $('.ddlPackage').val();
+            var qty = $('#qty').val();
+            var credits = parseInt($('.ddlPackage').find(':selected').data('credits'))*parseInt(qty);
+            var amt = $('.ddlPackage').find(':selected').data('amount');
+            var price = amt * qty;
+            var numVal1 = Number(price);
+            var numVal2 = Number("@ViewBag.CurrentUser.DiscountPercentage") / 100;
+            var totalValue = numVal1 - (numVal1 * numVal2)
+            var creditPercen = Number(10) / 100;
+            var referalCredits = (Number(credits) * creditPercen)
+            return '' + totalValue.toFixed(2) +'';
+        }
         paypal.Buttons({
             style: {
                 shape: 'pill',
@@ -338,7 +359,7 @@
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: '1'
+                            value: getValue()
                         }
                     }]
                 });
@@ -346,8 +367,7 @@
             onApprove: function (data, actions) {
                 return actions.order.capture().then(function (details) {
                     alert('Transaction completed by ' + details.payer.name.given_name + '!');
-                    //addCredits();
-
+                    addCredits(details);
                 });
             }
         }).render('#paypal-button-container');

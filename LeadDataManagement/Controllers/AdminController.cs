@@ -29,6 +29,10 @@ namespace LeadDataManagement.Controllers
         #region Dashboard
         public ActionResult Dashboard()
         {
+            if(!this.CurrentLoggedInUser.IsAdmin)
+            {
+                return RedirectToAction("Index", "Login");
+            }
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
             ViewBag.PstTime = DateTimeHelper.GetDateTimeNowByTimeZone(DateTimeHelper.TimeZoneList.PacificStandardTime).ToString("yyyy-MM-dd");
 
@@ -109,6 +113,10 @@ namespace LeadDataManagement.Controllers
         #region Users
         public ActionResult Users()
         {
+            if (!this.CurrentLoggedInUser.IsAdmin)
+            {
+                return RedirectToAction("Index", "Login");
+            }
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
             return View();
         }
@@ -177,6 +185,10 @@ namespace LeadDataManagement.Controllers
 
         public ActionResult LeadTypes()
         {
+            if (!this.CurrentLoggedInUser.IsAdmin)
+            {
+                return RedirectToAction("Index", "Login");
+            }
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
             return View();
         }
@@ -229,6 +241,10 @@ namespace LeadDataManagement.Controllers
         #region Lead Data
         public ActionResult LeadMasterData()
         {
+            if (!this.CurrentLoggedInUser.IsAdmin)
+            {
+                return RedirectToAction("Index", "Login");
+            }
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
             ViewBag.LeadTypesList = leadService.GetLeadTypes().Where(x=>x.IsActive).ToList().Select(x => new DropDownModel()
             {
@@ -303,6 +319,10 @@ namespace LeadDataManagement.Controllers
         #region Packages
         public ActionResult Packages()
         {
+            if (!this.CurrentLoggedInUser.IsAdmin)
+            {
+                return RedirectToAction("Index", "Login");
+            }
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
             return View();
         }

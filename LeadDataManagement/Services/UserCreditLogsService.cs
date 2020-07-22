@@ -20,14 +20,14 @@ namespace LeadDataManagement.Services
         {
             return userCreditLogsRepository.GetAll();
         }
-        public void BuyCredits(int userId,int packageId, int qty, long credits, long amount, int discountPercentage, float finalAmount,long referalCredits)
+        public void BuyCredits(int userId,int packageId, int qty, long credits, long amount, int discountPercentage, float finalAmount,long referalCredits,string transactionDetails)
         {
             userCreditLogsRepository.AddAsyn(new UserCreditLogs
             {
                 PurchaseId = Guid.NewGuid().ToString(),
                 PackageId=packageId,
                 Credits=credits,
-                TransactionDetails=string.Empty,
+                TransactionDetails= transactionDetails,
                 UserId= userId,
                 Amount=amount,
                 DiscountPercentage=discountPercentage,
