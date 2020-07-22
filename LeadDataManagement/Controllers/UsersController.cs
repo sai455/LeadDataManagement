@@ -65,7 +65,7 @@ namespace LeadDataManagement.Controllers
         {
             ViewBag.IsFileError = "false";
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
-            ViewBag.LeadTypesList = leadService.GetLeadTypes().ToList().Select(x => new DropDownModel()
+            ViewBag.LeadTypesList = leadService.GetLeadTypes().Where(x=>x.IsActive==true).ToList().Select(x => new DropDownModel()
             {
                 Name = x.Name,
                 Id = x.Id
@@ -225,7 +225,7 @@ namespace LeadDataManagement.Controllers
                                 ViewBag.NoCredits = true;
                                 ViewBag.IsFileError = false;
                                 ViewBag.CurrentUser = this.CurrentLoggedInUser;
-                                ViewBag.LeadTypesList = leadService.GetLeadTypes().ToList().Select(x => new DropDownModel()
+                                ViewBag.LeadTypesList = leadService.GetLeadTypes().Where(x=>x.IsActive==true).ToList().Select(x => new DropDownModel()
                                 {
                                     Name = x.Name,
                                     Id = x.Id
@@ -284,7 +284,7 @@ namespace LeadDataManagement.Controllers
                             ViewBag.NoCredits = true;
                             ViewBag.IsFileError = false;
                             ViewBag.CurrentUser = this.CurrentLoggedInUser;
-                            ViewBag.LeadTypesList = leadService.GetLeadTypes().ToList().Select(x => new DropDownModel()
+                            ViewBag.LeadTypesList = leadService.GetLeadTypes().Where(x=>x.IsActive==true).ToList().Select(x => new DropDownModel()
                             {
                                 Name = x.Name,
                                 Id = x.Id
@@ -309,7 +309,7 @@ namespace LeadDataManagement.Controllers
             ViewBag.NoCredits = false;
             ViewBag.IsFileError = isError;
             ViewBag.CurrentUser = this.CurrentLoggedInUser;
-            ViewBag.LeadTypesList = leadService.GetLeadTypes().ToList().Select(x => new DropDownModel()
+            ViewBag.LeadTypesList = leadService.GetLeadTypes().Where(x=>x.IsActive==true).ToList().Select(x => new DropDownModel()
             {
                 Name = x.Name,
                 Id = x.Id
@@ -475,11 +475,12 @@ namespace LeadDataManagement.Controllers
                     PackageName = creditPackageService.GetAllCreditPackages().FirstOrDefault(x => x.Id == u.PackageId).PackageName
                 });
             }
-            var usersRefered = userService.GetUsers().Where(x => x.ReferedUserId.HasValue && x.ReferedUserId.Value == CurrentLoggedInUser.Id).Select(x => x.Id).ToList();
-            var referalCreditsList = userCreditLogsService.GetAllUserCreditLogs().Where(x => usersRefered.Contains(x.UserId)).ToList();
+            var usersRefered = userService.GetUsers().Where(x => x.ReferedUserId.HasValue && x.ReferedUserId.Value == CurrentLoggedInUser.Id).ToList();
+            var referalCreditsList = userCreditLogsService.GetAllUserCreditLogs().ToList().Where(x => usersRefered.Select(y=>y.Id).Contains(x.UserId));
             foreach (var u in referalCreditsList)
             {
                 iCount += 1;
+                var thisUser = usersRefered.Where(x => x.Id == u.UserId).FirstOrDefault();
                 retData.Add(new UserCreditLogGridViewModel()
                 {
                     SNo = iCount,
@@ -489,7 +490,7 @@ namespace LeadDataManagement.Controllers
                     Credits = u.ReferalUserCredits,
                     DisCountPercentage = "-",
                     AmountPaid = "-",
-                    PackageName = "Referral Bonus"
+                    PackageName = "Referral Bonus From "+ thisUser.Name
                 });
             }
 

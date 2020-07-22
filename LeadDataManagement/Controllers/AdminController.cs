@@ -15,13 +15,15 @@ namespace LeadDataManagement.Controllers
         private IUserService userService;
         private ILeadService leadService;
         private IUserScrubService userScrubService;
+        private IUserCreditLogsService userCreditLogsService;
         private ICreditPackageService creditPackageService;
-        public AdminController(IUserService _userService, ILeadService _leadService, IUserScrubService userScrubService, ICreditPackageService creditPackageService)
+        public AdminController(IUserService _userService, ILeadService _leadService, IUserScrubService userScrubService, ICreditPackageService creditPackageService, IUserCreditLogsService _userCreditLogsService)
         {
             this.userService = _userService;
             this.leadService = _leadService;
             this.userScrubService = userScrubService;
             this.creditPackageService = creditPackageService;
+            this.userCreditLogsService = _userCreditLogsService;
         }
 
         #region Dashboard
@@ -63,6 +65,45 @@ namespace LeadDataManagement.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+        public ActionResult UserCreditLogsGrid(DateTime date)
+        {
+            List<UserCreditLogGridViewModel> retData = new List<UserCreditLogGridViewModel>();
+            var userCreditLogs = userCreditLogsService.GetAllUserCreditLogs().ToList().Where(x => x.CreatedAt.Date==date.Date);
+            var users = userService.GetUsers().ToList();
+            int iCount = 0;
+            foreach (var u in userCreditLogs)
+            {
+                var thisUser = users.Where(x => x.Id == u.UserId).FirstOrDefault();
+                string ReferalDetails = string.Empty;
+                if(thisUser.ReferedUserId.HasValue && thisUser.ReferedUserId.Value>0)
+                {
+                    ReferalDetails = string.Format("Referral Bonus {0} to {1}",u.ReferalUserCredits, users.Where(x => x.Id == thisUser.ReferedUserId.Value).FirstOrDefault().Name);
+                }
+                iCount += 1;
+                retData.Add(new UserCreditLogGridViewModel()
+                {
+                    SNo = iCount,
+                    Id = u.Id,
+                    UserName= thisUser.Name,
+                    Date = u.CreatedAt.ToString("dd-MMM-yyyy hh:mm:ss tt"),
+                    CreatedAt = u.CreatedAt,
+                    Credits = u.Credits,
+                    DisCountPercentage = u.DiscountPercentage.ToString(),
+                    AmountPaid = Math.Round(u.FinalAmount, 2).ToString(),
+                    PackageName = creditPackageService.GetAllCreditPackages().FirstOrDefault(x => x.Id == u.PackageId).PackageName,
+                    ReferalInfo= ReferalDetails
+                });
+            }
+            retData = retData.OrderByDescending(x => x.CreatedAt).ToList();
+            var jsonData = new { data = from emp in retData select emp };
+            return new JsonResult()
+            {
+                Data = jsonData,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
         #endregion
 
         #region Users

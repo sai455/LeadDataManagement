@@ -42,7 +42,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <h5>Scrubs </h5>
-                                <div class="col-sm-12 col-xl-4 m-b-30">
+                                <div class="col-sm-12 col-xl-4">
                                     <input type="date" class="form-control" id="date" value="@ViewBag.PstTime" />
                                 </div>
                                 <div class="card-header-right">
@@ -87,7 +87,46 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Credit Transactions </h5>
+                                <div class="col-sm-12 col-xl-4">
+                                    <input type="date" class="form-control" id="dt2" value="@ViewBag.PstTime" />
+                                </div>
+                            </div>
+                            <div class="card-block">
+                                <div class="table-responsive">
+                                    <table id="tbl" class="table table-hover m-b-0">
+                                        <thead>
+                                            <tr>
+                                                <th>User</th>
+                                                <th>Package</th>
+                                                <th>Credits</th>
+                                                <th>Discount(%)</th>
+                                                <th>Amount Paid</th>
+                                                <th>Referral Bonus</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>User</th>
+                                                <th>Package</th>
+                                                <th>Credits</th>
+                                                <th>Discount(%)</th>
+                                                <th>Amount Paid</th>
+                                                <th>Referral Bonus</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -102,11 +141,15 @@
     <script type="text/javascript">
         $(document).ready(function (e) {
             loadDataTable();
+            loadUserCreditLogsGrid();
         });
         $('#date').change(function (e) {
             loadDataTable();
-
         });
+        $('#dt2').change(function (e) {
+            loadUserCreditLogsGrid();
+        });
+
         function loadDataTable() {
             var date = $('#date').val();
             
@@ -123,6 +166,25 @@
                     { "data": "LeadType" },
                     { "data": "ScrubCredits" },
                     { "data": "CreatedAt" }
+                ]
+            });
+        }
+
+        function loadUserCreditLogsGrid() {
+            var date = $('#dt2').val();
+            $('#tbl').DataTable({
+                'responsive': false,
+                'autoWidth': true,
+                "bDestroy": true,
+                "iDisplayLength": 10,
+                "ajax": "/Admin/UserCreditLogsGrid/?date=" + date,
+                "columns": [
+                    { "data": "UserName" },
+                    { "data": "PackageName" },
+                    { "data": "Credits" },
+                    { "data": "DisCountPercentage" },
+                    { "data": "AmountPaid" },
+                    { "data": "ReferalInfo" }
                 ]
             });
         }

@@ -28,5 +28,8 @@ namespace LeadDataManagement.Models.ViewModels
         public string AmountPaid { get; set; }
         public string Date { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public string UserName { get; set; }
+        public string ReferalInfo { get; set; }
     }
 }
