@@ -35,6 +35,7 @@ namespace LeadDataManagement.Models.ViewModels
         public string Phone { get; set; }
         public string Status { get; set; }
         public long CreditScore { get; set; }
+        public string CreditScoreStr { get; set; }
         public string CreatedAt { get; set; }
         public string ModifiedAt { get; set; }
         public string EditBtn { get; set; }

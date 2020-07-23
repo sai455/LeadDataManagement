@@ -1,4 +1,5 @@
-﻿using LeadDataManagement.Models.Context;
+﻿using LeadDataManagement.Helpers;
+using LeadDataManagement.Models.Context;
 using LeadDataManagement.Models.ViewModels;
 using LeadDataManagement.Services.Interface;
 using System;
@@ -18,12 +19,15 @@ namespace LeadDataManagement.Controllers
         // GET: Login
         public ActionResult Index()
         {
+            
             return View();
         }
         [HttpPost]
         public ActionResult Index(string email, string password)
         {
-            var userData = _userService.ValidateUserByEmailId(email,password);
+
+            string passwordEncrpted = LeadsHelpers.Encrypt(password);
+            var userData = _userService.ValidateUserByEmailId(email, passwordEncrpted);
             if (userData!=null)
             {
                 if (userData.StatusId == 1)//Pending Activation
@@ -73,6 +77,7 @@ namespace LeadDataManagement.Controllers
                 }
                 else
                 {
+                    user.Password = LeadsHelpers.Encrypt(user.Password);
                     _userService.SaveUser(user);
                     return RedirectToAction("SignUpCompleted", "Login");
                 }
@@ -101,6 +106,7 @@ namespace LeadDataManagement.Controllers
                     ModelState.AddModelError("", "Confirm Password and Password do not match");
                     return View();
                 }
+                password = LeadsHelpers.Encrypt(password);
                 _userService.UpdateUserPassword(email, password);
                 return RedirectToAction("ResetPasswordCompleted", "Login");
             }

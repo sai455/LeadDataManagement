@@ -55,7 +55,7 @@ namespace LeadDataManagement.Controllers
                 {
                     Sno = iCount,
                     UserName= usersList.Where(x=>x.Id==u.UserId).FirstOrDefault().Name,
-                    ScrubCredits = u.ScrubCredits,
+                    ScrubCredits = LeadsHelpers.ToUsNumberFormat(u.ScrubCredits),
                     CreatedAt = u.CreatedDate.ToString("dd-MMM-yyyy hh:mm:ss tt"),
                     LeadType = String.Join(",", Leads.Where(x => leadTypes.Contains(x.Id)).Select(x => x.Name).ToList()),
                     Matched = "Input File  <a href='" + u.InputFilePath + "' style='cursor:pointer' download='InputFile-" + u.Id + "." + InputExtensions + "'><i class='fa fa-download' ></i></a><br>"+"Matched- " + u.MatchedCount + " <a href='" + u.MatchedPath + ".csv' style='cursor:pointer' download='Matched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a><br>"+ "Clean- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='UnMatched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a>",
@@ -81,7 +81,7 @@ namespace LeadDataManagement.Controllers
                 string ReferalDetails = string.Empty;
                 if(thisUser.ReferedUserId.HasValue && thisUser.ReferedUserId.Value>0)
                 {
-                    ReferalDetails = string.Format("Referral Bonus {0} to {1}",u.ReferalUserCredits, users.Where(x => x.Id == thisUser.ReferedUserId.Value).FirstOrDefault().Name);
+                    ReferalDetails = string.Format("Referral Bonus {0} to {1}",LeadsHelpers.ToUsNumberFormat(u.ReferalUserCredits), users.Where(x => x.Id == thisUser.ReferedUserId.Value).FirstOrDefault().Name);
                 }
                 iCount += 1;
                 retData.Add(new UserCreditLogGridViewModel()
@@ -91,7 +91,7 @@ namespace LeadDataManagement.Controllers
                     UserName= thisUser.Name,
                     Date = u.CreatedAt.ToString("dd-MMM-yyyy hh:mm:ss tt"),
                     CreatedAt = u.CreatedAt,
-                    Credits = u.Credits,
+                    Credits = LeadsHelpers.ToUsNumberFormat(u.Credits),
                     DisCountPercentage = u.DiscountPercentage.ToString(),
                     AmountPaid = Math.Round(u.FinalAmount, 2).ToString(),
                     PackageName = creditPackageService.GetAllCreditPackages().FirstOrDefault(x => x.Id == u.PackageId).PackageName,
@@ -132,6 +132,7 @@ namespace LeadDataManagement.Controllers
                 Password=x.Password,
                 CreatedAt=x.CreatedAt.ToString("dd-MMM-yyyy hh:mm:ss tt"),
                 CreditScore=x.CreditScore,
+                CreditScoreStr=LeadsHelpers.ToUsNumberFormat(x.CreditScore),
                 Status= userService.GetStatusById(x.StatusId),
                 ModifiedAt=x.ModifiedAt.HasValue?x.ModifiedAt.Value.ToString("dd-MMM-yyyy hh:mm:ss tt"):string.Empty,
                 StatusId=x.StatusId,
@@ -343,6 +344,7 @@ namespace LeadDataManagement.Controllers
                     IsActive = l.IsActive,
                     PackageName=l.PackageName,
                     Credits=l.Credits,
+                    CreditsStr=LeadsHelpers.ToUsNumberFormat(l.Credits),
                     Price=l.Price,
                     EditBtn = "<button type='button' class='btn btn-primary m-b-10 btnedit btn-sm' data-id='" + l.Id + "' data-packagename='" + l.PackageName + "' data-credits='" + l.Credits + "' data-price='" + l.Price + "' data-status='" + l.IsActive + "' data-id='" + l.Id + "'><i class='fa fa-pencil-square-o'></i> Edit</button>"
                 });

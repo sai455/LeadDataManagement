@@ -156,6 +156,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />
+    <Compile Include="Helpers\LeadsHelpers.cs" />
     <Compile Include="Models\ViewModels\CreditPackageViewModel.cs" />
     <Compile Include="Models\ViewModels\LeadViewModel.cs" />
     <Compile Include="Repository\CreditPackageRepository.cs" />

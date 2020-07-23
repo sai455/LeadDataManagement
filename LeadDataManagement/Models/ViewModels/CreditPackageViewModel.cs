@@ -11,6 +11,7 @@ namespace LeadDataManagement.Models.ViewModels
         public int SNo { get; set; }
         public string PackageName { get; set; }
         public long Credits { get; set; }
+        public string CreditsStr { get; set; }
         public long Price { get; set; }
         public string Status { get; set; }
         public bool IsActive { get; set; }
@@ -23,7 +24,7 @@ namespace LeadDataManagement.Models.ViewModels
         public int SNo { get; set; }
         public long Id { get; set; }
         public string PackageName { get; set; }
-        public long Credits { get; set; }
+        public string Credits { get; set; }
         public string DisCountPercentage { get; set; }
         public string AmountPaid { get; set; }
         public string Date { get; set; }

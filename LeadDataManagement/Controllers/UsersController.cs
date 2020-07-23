@@ -1,4 +1,5 @@
 ﻿using ExcelDataReader;
+using LeadDataManagement.Helpers;
 using LeadDataManagement.Models.ViewModels;
 using LeadDataManagement.Services.Interface;
 using Newtonsoft.Json;
@@ -54,8 +55,8 @@ namespace LeadDataManagement.Controllers
 
             return Json(new
             {
-                remainingCredits = remainingCredits,
-                totalCredits = userTotalCredits,
+                remainingCredits =LeadsHelpers.ToUsNumberFormat(remainingCredits),
+                totalCredits = LeadsHelpers.ToUsNumberFormat(userTotalCredits),
                 usedPercentage = percentage,
                 remainingPercentage = remainingPercentage
             }, JsonRequestBehavior.AllowGet);
@@ -73,9 +74,9 @@ namespace LeadDataManagement.Controllers
             }).OrderBy(x => x.Name).ToList();
             var usedCredits = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
             var userTotalCredits = this.CurrentLoggedInUser.CreditScore;
-            var percentage = Math.Round((usedCredits / (decimal)userTotalCredits) * 100, 2);
-            ViewBag.remainingCredits = userTotalCredits - usedCredits;
-            ViewBag.totalCredits = userTotalCredits;
+            var percentage = userTotalCredits>0?Math.Round((usedCredits / (decimal)userTotalCredits) * 100, 2):0;
+            ViewBag.remainingCredits =LeadsHelpers.ToUsNumberFormat(userTotalCredits - usedCredits);
+            ViewBag.totalCredits = LeadsHelpers.ToUsNumberFormat(userTotalCredits);
             ViewBag.usedPercentage = percentage;
             ViewBag.remainingPercentage = 100 - percentage;
             ViewBag.NoCredits = false;
@@ -96,7 +97,7 @@ namespace LeadDataManagement.Controllers
                 retData.Add(new UserScrubsGridModel()
                 {
                     Sno = iCount,
-                    ScrubCredits = u.ScrubCredits,
+                    ScrubCredits =LeadsHelpers.ToUsNumberFormat(u.ScrubCredits),
                     CreatedAt = u.CreatedDate.ToString("dd-MMM-yyyy hh:mm:ss tt"),
                     LeadType = String.Join(",", Leads.Where(x => leadTypes.Contains(x.Id)).Select(x => x.Name).ToList()),
                     Matched = "Matched- " + u.MatchedCount + " <a href='" + u.MatchedPath + ".csv' style='cursor:pointer' download='Matched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a><br>" + "Clean- " + u.UnMatchedCount + " <a href='" + u.UnMatchedPath + ".csv' style='cursor:pointer' download='UnMatched-" + u.Id + ".csv'><i class='fa fa-download' ></i></a>",
@@ -470,7 +471,7 @@ namespace LeadDataManagement.Controllers
                     Id = u.Id,
                     Date = u.CreatedAt.ToString("dd-MMM-yyyy hh:mm:ss tt"),
                     CreatedAt = u.CreatedAt,
-                    Credits = u.Credits,
+                    Credits =LeadsHelpers.ToUsNumberFormat(u.Credits),
                     DisCountPercentage = u.DiscountPercentage.ToString(),
                     AmountPaid = Math.Round(u.FinalAmount,2).ToString(),
                     PackageName = creditPackageService.GetAllCreditPackages().FirstOrDefault(x => x.Id == u.PackageId).PackageName
@@ -488,7 +489,7 @@ namespace LeadDataManagement.Controllers
                     Id = u.Id,
                     Date = u.CreatedAt.ToString("dd-MMM-yyyy hh:mm:ss tt"),
                     CreatedAt = u.CreatedAt,
-                    Credits = u.ReferalUserCredits,
+                    Credits =LeadsHelpers.ToUsNumberFormat(u.ReferalUserCredits),
                     DisCountPercentage = "-",
                     AmountPaid = "-",
                     PackageName = "Referral Bonus From "+ thisUser.Name
