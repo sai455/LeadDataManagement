@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace LeadDataManagement.Helpers
@@ -19,6 +20,23 @@ namespace LeadDataManagement.Helpers
                 return inputVal.ToString("N", nfi).Split('.')[0];
             }
             catch(Exception ex)
+            {
+                return inputVal.ToString();
+            }
+        }
+        public static string ProcessNumber(string inputVal)
+        {
+            try
+            {
+               var str=Regex.Replace(inputVal, @"[^0-9a-zA-Z:,]+", "");
+                if (str.Length > 10)
+                {
+                    var trimPos = str.Length - 10;
+                    str = str.Substring(trimPos);
+                }
+                return str;
+            }
+            catch (Exception ex)
             {
                 return inputVal.ToString();
             }

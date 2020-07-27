@@ -9,6 +9,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -180,7 +181,7 @@ namespace LeadDataManagement.Controllers
                                 row = excelDt.NewRow();
                                 for (int col = 0; col < dt_.Columns.Count; col++)
                                 {
-                                    row[col] = dt_.Rows[row_][col].ToString();
+                                    row[col] =LeadsHelpers.ProcessNumber(dt_.Rows[row_][col].ToString());
                                     rowcounter++;
                                 }
                                 excelDt.Rows.Add(row);
@@ -234,9 +235,11 @@ namespace LeadDataManagement.Controllers
                                 }).OrderBy(x => x.Name).ToList();
                                 var usedCredits1 = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
                                 var userTotalCredits1 = this.CurrentLoggedInUser.CreditScore;
-                                var percentage1 = Math.Round((usedCredits1 / (decimal)userTotalCredits1) * 100, 2);
-                                ViewBag.remainingCredits = userTotalCredits1 - usedCredits1;
-                                ViewBag.totalCredits = userTotalCredits1;
+                                var percentage1 = userTotalCredits1 > 0 ? Math.Round((usedCredits1 / (decimal)userTotalCredits1) * 100, 2):0;
+                                ViewBag.remainingCredits = LeadsHelpers.ToUsNumberFormat(userTotalCredits1 - usedCredits1);
+                                ViewBag.totalCredits = LeadsHelpers.ToUsNumberFormat(userTotalCredits1);
+
+
                                 ViewBag.usedPercentage = percentage1;
                                 ViewBag.remainingPercentage = 100 - percentage1;
                                 return View("Scrubber");
@@ -252,7 +255,7 @@ namespace LeadDataManagement.Controllers
                     foreach (var i in inputList)
                     {
                         long number;
-                        bool isSuccess = Int64.TryParse(i, out number);
+                        bool isSuccess = Int64.TryParse(LeadsHelpers.ProcessNumber(i), out number);
                         if (isSuccess)
                         {
                             UserScrubPhonesList.Add(number);
@@ -293,9 +296,10 @@ namespace LeadDataManagement.Controllers
                             }).OrderBy(x => x.Name).ToList();
                             var usedCredits1 = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
                             var userTotalCredits1 = this.CurrentLoggedInUser.CreditScore;
-                            var percentage1 = Math.Round((usedCredits1 / (decimal)userTotalCredits1) * 100, 2);
-                            ViewBag.remainingCredits = userTotalCredits1 - usedCredits1;
-                            ViewBag.totalCredits = userTotalCredits1;
+                            var percentage1 = userTotalCredits1 > 0 ? Math.Round((usedCredits1 / (decimal)userTotalCredits1) * 100, 2):0;
+                            ViewBag.remainingCredits =LeadsHelpers.ToUsNumberFormat(userTotalCredits1 - usedCredits1);
+                            ViewBag.totalCredits = LeadsHelpers.ToUsNumberFormat(userTotalCredits1);
+
                             ViewBag.usedPercentage = percentage1;
                             ViewBag.remainingPercentage = 100 - percentage1;
                             return View("Scrubber");
@@ -318,9 +322,9 @@ namespace LeadDataManagement.Controllers
             }).OrderBy(x => x.Name).ToList();
             var usedCredits = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
             var userTotalCredits = this.CurrentLoggedInUser.CreditScore;
-            var percentage = Math.Round((usedCredits / (decimal)userTotalCredits) * 100, 2);
-            ViewBag.remainingCredits = userTotalCredits - usedCredits;
-            ViewBag.totalCredits = userTotalCredits;
+            var percentage = userTotalCredits > 0 ? Math.Round((usedCredits / (decimal)userTotalCredits) * 100, 2):0;
+            ViewBag.remainingCredits =LeadsHelpers.ToUsNumberFormat(userTotalCredits - usedCredits);
+            ViewBag.totalCredits =LeadsHelpers.ToUsNumberFormat(userTotalCredits);
             ViewBag.usedPercentage = percentage;
             ViewBag.remainingPercentage = 100 - percentage;
             return View("Scrubber");
@@ -388,7 +392,7 @@ namespace LeadDataManagement.Controllers
                                 DataRow dr = dtCsv.NewRow();
                                 for (int k = 0; k < rowValues.Count(); k++)
                                 {
-                                    dr[k] = rowValues[k].Replace("\r", "").ToString();
+                                    dr[k] = LeadsHelpers.ProcessNumber(rowValues[k].Replace("\r", "").ToString());
                                 }
                                 dtCsv.Rows.Add(dr); //add other rows  
                             }
