@@ -13,8 +13,15 @@ namespace LeadDataManagement.Helpers
     {
         public static string ToUsNumberFormat(long inputVal)
         {
-            NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
-            return inputVal.ToString("N", nfi).Split('.')[0];
+            try
+            {
+                NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
+                return inputVal.ToString("N", nfi).Split('.')[0];
+            }
+            catch(Exception ex)
+            {
+                return inputVal.ToString();
+            }
         }
         public static string Encrypt(string clearText)
         {

@@ -22,7 +22,7 @@ namespace LeadDataManagement.Controllers
         private ILeadService leadService;
         private IUserCreditLogsService userCreditLogsService;
         private ICreditPackageService creditPackageService;
-        private string filterCols = "Phone,Ph,Home Phone,Telephone,phone,home phone,telephone";
+        private string filterCols = "Phone,Ph,Home Phone,Telephone,Phone Home,phone home,PhoneHome,phonehome,phone,home phone,telephone";
         public UsersController(IUserScrubService _userScrubService, IUserService _userService, ILeadService _leadService, IUserCreditLogsService _userCreditLogsService, ICreditPackageService _creditPackageService)
         {
             userScrubService = _userScrubService;
@@ -137,8 +137,8 @@ namespace LeadDataManagement.Controllers
                         string phoneCol = string.Empty;
                         if (ext.ToLower() == ".csv")
                         {
-                            var csvDt = ReadCsvFile(path, ref phoneCol);
-                            List<DropDownModel> dt = FilterDatatableColoumn(csvDt.AsEnumerable(), csvDt, phoneCol);
+                            excelDt = ReadCsvFile(path, ref phoneCol);
+                            List<DropDownModel> dt = FilterDatatableColoumn(excelDt.AsEnumerable(), excelDt, phoneCol);
 
                             foreach (var r in dt)
                             {
@@ -358,6 +358,7 @@ namespace LeadDataManagement.Controllers
 
         private DataTable ReadCsvFile(string path, ref string phoneCol)
         {
+            string empty = string.Empty;
             DataTable dtCsv = new DataTable();
             string Fulltext;
             using (StreamReader sr = new StreamReader(path))
@@ -375,10 +376,10 @@ namespace LeadDataManagement.Controllers
                                 for (int j = 0; j < rowValues.Count(); j++)
                                 {
                                     var thisCol = rowValues[j];
-                                    dtCsv.Columns.Add(thisCol); //add headers  
-                                    if (filterCols.Split(',').ToList().Contains(thisCol) || filterCols.Split(',').ToList().Contains(thisCol + "\r"))
+                                    dtCsv.Columns.Add(thisCol.Replace("\r", "")); //add headers  
+                                    if (filterCols.Split(',').ToList().Contains(thisCol.Replace("\r", "")) || filterCols.Split(',').ToList().Contains(thisCol.Replace("\r", "")))
                                     {
-                                        phoneCol = thisCol;
+                                        phoneCol = thisCol.Replace("\r", "");
                                     }
                                 }
                             }
@@ -387,7 +388,7 @@ namespace LeadDataManagement.Controllers
                                 DataRow dr = dtCsv.NewRow();
                                 for (int k = 0; k < rowValues.Count(); k++)
                                 {
-                                    dr[k] = rowValues[k].ToString();
+                                    dr[k] = rowValues[k].Replace("\r", "").ToString();
                                 }
                                 dtCsv.Rows.Add(dr); //add other rows  
                             }

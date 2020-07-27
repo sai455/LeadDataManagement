@@ -303,7 +303,7 @@ namespace LeadDataManagement.Controllers
                     file.SaveAs(path);
                     
                     string[] lines = System.IO.File.ReadAllLines(path);
-                    List<long> PhoneNo = lines.Select(x => Convert.ToInt64(x.Replace(",","").Trim())).Skip(0).Take(30000).ToList();
+                    List<long> PhoneNo = lines.Select(x => Convert.ToInt64(x.Replace(",","").Trim())).Take(300000).ToList();
                     leadService.SaveMasterData(PhoneNo, LeadTypeId);
                 }
             }
