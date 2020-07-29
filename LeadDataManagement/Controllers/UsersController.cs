@@ -50,16 +50,11 @@ namespace LeadDataManagement.Controllers
         {
             var usedCredits = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
             var userTotalCredits = this.CurrentLoggedInUser.CreditScore;
-            var percentage = userTotalCredits>0?Math.Round((usedCredits / (decimal)userTotalCredits) * 100, 2):0;
             var remainingCredits = userTotalCredits - usedCredits;
-            var remainingPercentage = 100 - percentage;
-
             return Json(new
             {
                 remainingCredits =LeadsHelpers.ToUsNumberFormat(remainingCredits),
                 totalCredits = LeadsHelpers.ToUsNumberFormat(userTotalCredits),
-                usedPercentage = percentage,
-                remainingPercentage = remainingPercentage
             }, JsonRequestBehavior.AllowGet);
         }
         #region User Scrub
@@ -75,11 +70,8 @@ namespace LeadDataManagement.Controllers
             }).OrderBy(x => x.Name).ToList();
             var usedCredits = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
             var userTotalCredits = this.CurrentLoggedInUser.CreditScore;
-            var percentage = userTotalCredits>0?Math.Round((usedCredits / (decimal)userTotalCredits) * 100, 2):0;
             ViewBag.remainingCredits =LeadsHelpers.ToUsNumberFormat(userTotalCredits - usedCredits);
             ViewBag.totalCredits = LeadsHelpers.ToUsNumberFormat(userTotalCredits);
-            ViewBag.usedPercentage = percentage;
-            ViewBag.remainingPercentage = 100 - percentage;
             ViewBag.NoCredits = false;
             return View();
         }
@@ -133,86 +125,42 @@ namespace LeadDataManagement.Controllers
                         string newFileName = Guid.NewGuid().ToString();
                         string path = Path.Combine(Server.MapPath("~/Content/DataLoads/"), newFileName + ext);
                         file.SaveAs(path);
+
                         List<long> UserScrubPhonesList = new List<long>();
                         DataTable excelDt = new DataTable();
                         string phoneCol = string.Empty;
+                        List<DropDownModel> dt = new List<DropDownModel>();
                         if (ext.ToLower() == ".csv")
                         {
                             excelDt = ReadCsvFile(path, ref phoneCol);
-                            List<DropDownModel> dt = FilterDatatableColoumn(excelDt.AsEnumerable(), excelDt, phoneCol);
-
-                            foreach (var r in dt)
-                            {
-                                long number;
-                                bool isSuccess = Int64.TryParse(r.Name, out number);
-                                if (isSuccess)
-                                {
-                                    UserScrubPhonesList.Add(number);
-                                }
-                            }
+                            dt = FilterDatatableColoumn(excelDt.AsEnumerable(), excelDt, phoneCol);
                         }
                         else
                         {
-                            FileStream stream = System.IO.File.Open(path, FileMode.Open, FileAccess.Read);
-                            IExcelDataReader excelReader = null;
-                            if (ext == ".xls")
-                                excelReader = ExcelReaderFactory.CreateBinaryReader(stream);
-                            else
-                                excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-
-                            int fieldcount = excelReader.FieldCount;
-                            int rowcount = excelReader.RowCount;
-
-                            DataRow row;
-                            DataTable dt_ = new DataTable();
-                            dt_ = excelReader.AsDataSet().Tables[0];
-                            for (int i = 0; i < dt_.Columns.Count; i++)
-                            {
-                                var thisCol = dt_.Rows[0][i].ToString();
-                                excelDt.Columns.Add(thisCol);
-                                if (filterCols.Split(',').ToList().Contains(thisCol))
-                                {
-                                    phoneCol = thisCol;
-                                }
-                            }
-                            int rowcounter = 0;
-                            for (int row_ = 1; row_ < dt_.Rows.Count; row_++)
-                            {
-                                row = excelDt.NewRow();
-                                for (int col = 0; col < dt_.Columns.Count; col++)
-                                {
-                                    row[col] =LeadsHelpers.ProcessNumber(dt_.Rows[row_][col].ToString());
-                                    rowcounter++;
-                                }
-                                excelDt.Rows.Add(row);
-                            }
-                            excelReader.Close();
-                            excelReader.Dispose();
-
-                            List<DropDownModel> fDt = FilterDatatableColoumn(excelDt.AsEnumerable(), excelDt, phoneCol);
-                            foreach (var r in fDt)
-                            {
-                                long number;
-                                bool isSuccess = Int64.TryParse(r.Name, out number);
-                                if (isSuccess)
-                                {
-                                    UserScrubPhonesList.Add(number);
-                                }
-                            }
-
+                            excelDt = ReadExcelFile(ext, path,ref phoneCol);
+                            dt = FilterDatatableColoumn(excelDt.AsEnumerable(), excelDt, phoneCol);
                         }
-
+                        foreach (var r in dt)
+                        {
+                            long number;
+                            bool isSuccess = Int64.TryParse(r.Name, out number);
+                            if (isSuccess)
+                            {
+                                UserScrubPhonesList.Add(number);
+                            }
+                        }
                         if (UserScrubPhonesList.Count > 0)
                         {
 
                             if ((this.CurrentLoggedInUser.CreditScore - used) >= UserScrubPhonesList.Count())
                             {
-                                var matchedList = leadService.GetAllLeadMasterDataByLeadTypes(selectedLeads).Select(x => x.Phone).Where(x => UserScrubPhonesList.Contains(x)).Distinct().ToList();
+                                var matchedList = leadService.ScrubPhoneNos(selectedLeads, UserScrubPhonesList).ToList();
                                 var unmatchedCount = UserScrubPhonesList.Except(matchedList).ToList();
                                 var dtList = excelDt.AsEnumerable();
                                 var matchedDt = GetFilteredPhones(dtList, matchedList, phoneCol);
                                 var unMatchedDt = GetFilteredPhones(dtList, unmatchedCount, phoneCol);
                                 sw.Stop();
+
                                 //  Matched File Create
                                 string matchedFileName = Guid.NewGuid().ToString();
                                 CreatedDataTableCSV(matchedDt, matchedFileName);
@@ -235,13 +183,8 @@ namespace LeadDataManagement.Controllers
                                 }).OrderBy(x => x.Name).ToList();
                                 var usedCredits1 = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
                                 var userTotalCredits1 = this.CurrentLoggedInUser.CreditScore;
-                                var percentage1 = userTotalCredits1 > 0 ? Math.Round((usedCredits1 / (decimal)userTotalCredits1) * 100, 2):0;
                                 ViewBag.remainingCredits = LeadsHelpers.ToUsNumberFormat(userTotalCredits1 - usedCredits1);
                                 ViewBag.totalCredits = LeadsHelpers.ToUsNumberFormat(userTotalCredits1);
-
-
-                                ViewBag.usedPercentage = percentage1;
-                                ViewBag.remainingPercentage = 100 - percentage1;
                                 return View("Scrubber");
                             }
                         }
@@ -250,7 +193,6 @@ namespace LeadDataManagement.Controllers
                 else
                 {
                     List<string> inputList = PhoneNos.Split(',').ToList();
-
                     List<long> UserScrubPhonesList = new List<long>();
                     foreach (var i in inputList)
                     {
@@ -265,7 +207,7 @@ namespace LeadDataManagement.Controllers
                     {
                         if ((this.CurrentLoggedInUser.CreditScore - used) >= UserScrubPhonesList.Count())
                         {
-                            var matchedList = leadService.GetAllLeadMasterDataByLeadTypes(selectedLeads).Select(x => x.Phone).Where(x => UserScrubPhonesList.Contains(x)).Distinct().ToList();
+                            var matchedList = leadService.ScrubPhoneNos(selectedLeads, UserScrubPhonesList).ToList();
                             var unmatchedCount = UserScrubPhonesList.Except(matchedList).ToList();
 
                             sw.Stop();
@@ -296,12 +238,8 @@ namespace LeadDataManagement.Controllers
                             }).OrderBy(x => x.Name).ToList();
                             var usedCredits1 = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
                             var userTotalCredits1 = this.CurrentLoggedInUser.CreditScore;
-                            var percentage1 = userTotalCredits1 > 0 ? Math.Round((usedCredits1 / (decimal)userTotalCredits1) * 100, 2):0;
                             ViewBag.remainingCredits =LeadsHelpers.ToUsNumberFormat(userTotalCredits1 - usedCredits1);
                             ViewBag.totalCredits = LeadsHelpers.ToUsNumberFormat(userTotalCredits1);
-
-                            ViewBag.usedPercentage = percentage1;
-                            ViewBag.remainingPercentage = 100 - percentage1;
                             return View("Scrubber");
                         }
                     }
@@ -322,11 +260,8 @@ namespace LeadDataManagement.Controllers
             }).OrderBy(x => x.Name).ToList();
             var usedCredits = userScrubService.GetScrubsByUserId(this.CurrentLoggedInUser.Id).Sum(x => x.ScrubCredits);
             var userTotalCredits = this.CurrentLoggedInUser.CreditScore;
-            var percentage = userTotalCredits > 0 ? Math.Round((usedCredits / (decimal)userTotalCredits) * 100, 2):0;
             ViewBag.remainingCredits =LeadsHelpers.ToUsNumberFormat(userTotalCredits - usedCredits);
             ViewBag.totalCredits =LeadsHelpers.ToUsNumberFormat(userTotalCredits);
-            ViewBag.usedPercentage = percentage;
-            ViewBag.remainingPercentage = 100 - percentage;
             return View("Scrubber");
         }
 
@@ -340,6 +275,7 @@ namespace LeadDataManagement.Controllers
                 newretDt = uplodedFileDtRows.Where(x => searchPhonesList.Contains(x.Field<string>(phoneColName))).CopyToDataTable();
             return newretDt;
         }
+       
         private List<DropDownModel> FilterDatatableColoumn(EnumerableRowCollection<DataRow> uplodedFileDtRows, DataTable RecordDT_, string col)
         {
             try
@@ -360,6 +296,47 @@ namespace LeadDataManagement.Controllers
 
         }
 
+        private DataTable ReadExcelFile(string ext, string path, ref string phoneCol)
+        {
+            DataTable excelDt = new DataTable();
+            FileStream stream = System.IO.File.Open(path, FileMode.Open, FileAccess.Read);
+            IExcelDataReader excelReader = null;
+            if (ext == ".xls")
+                excelReader = ExcelReaderFactory.CreateBinaryReader(stream);
+            else
+                excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+
+            int fieldcount = excelReader.FieldCount;
+            int rowcount = excelReader.RowCount;
+
+            DataRow row;
+            DataTable dt_ = new DataTable();
+            dt_ = excelReader.AsDataSet().Tables[0];
+            for (int i = 0; i < dt_.Columns.Count; i++)
+            {
+                var thisCol = dt_.Rows[0][i].ToString();
+                excelDt.Columns.Add(thisCol);
+                if (filterCols.Split(',').ToList().Contains(thisCol))
+                {
+                    phoneCol = thisCol;
+                }
+            }
+            int rowcounter = 0;
+            for (int row_ = 1; row_ < dt_.Rows.Count; row_++)
+            {
+                row = excelDt.NewRow();
+                for (int col = 0; col < dt_.Columns.Count; col++)
+                {
+                    row[col] = LeadsHelpers.ProcessNumber(dt_.Rows[row_][col].ToString());
+                    rowcounter++;
+                }
+                excelDt.Rows.Add(row);
+            }
+            excelReader.Close();
+            excelReader.Dispose();
+            return excelDt;
+        }
+        
         private DataTable ReadCsvFile(string path, ref string phoneCol)
         {
             string empty = string.Empty;
@@ -402,6 +379,7 @@ namespace LeadDataManagement.Controllers
             }
             return dtCsv;
         }
+        
         public void CreatedDataTableCSV(DataTable dtDataTable, string newFileName)
         {
             var path = Path.Combine(Server.MapPath("~/Content/DataLoads/"), newFileName + ".csv");
@@ -442,6 +420,7 @@ namespace LeadDataManagement.Controllers
             }
             sw.Close();
         }
+        
         private void CreateSaveCsvFile(string newFileName, List<long> UserScrubPhonesList)
         {
             var file = Path.Combine(Server.MapPath("~/Content/DataLoads/"), newFileName + ".csv");

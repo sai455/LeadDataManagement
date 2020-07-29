@@ -122,6 +122,7 @@ namespace LeadDataManagement.Controllers
         }
         public ActionResult UsersGrid()
         {
+            var userScrubLogs = userScrubService.GetAllUserScrubs().ToList();
             List<UserGridViewModel> retData = new List<UserGridViewModel>();
             retData = userService.GetUsers().Where(x => x.IsAdmin == false).ToList().Select(x => new UserGridViewModel 
             { 
@@ -132,8 +133,7 @@ namespace LeadDataManagement.Controllers
                 Password=x.Password,
                 CreatedAt=x.CreatedAt.ToString("dd-MMM-yyyy hh:mm:ss tt"),
                 CreditScore=x.CreditScore,
-                CreditScoreStr=LeadsHelpers.ToUsNumberFormat(x.CreditScore),
-                Status= userService.GetStatusById(x.StatusId),
+                Status = userService.GetStatusById(x.StatusId),
                 ModifiedAt=x.ModifiedAt.HasValue?x.ModifiedAt.Value.ToString("dd-MMM-yyyy hh:mm:ss tt"):string.Empty,
                 StatusId=x.StatusId,
                 ReferalCode=x.ReferalCode,
@@ -145,7 +145,8 @@ namespace LeadDataManagement.Controllers
             {
                 iCount += 1;
                 r.SNo = iCount;
-                if(r.StatusId==1)
+                r.CreditScoreStr = LeadsHelpers.ToUsNumberFormat(r.CreditScore-userScrubLogs.Where(x=>x.UserId==r.Id).Sum(x => x.ScrubCredits));
+                if (r.StatusId==1)
                 {
                     r.EditBtn = "<button type='button' class='btn btn-success m-b-10 btnapprove btn-sm' data-id='" + r.Id+ "'data-discountPercentage='"+ r.DiscountPercentage +"' data-score='" + r.CreditScore+"'>Approve</button>";
                 }else if(r.StatusId==2)
@@ -179,6 +180,7 @@ namespace LeadDataManagement.Controllers
             }
             return Json("",JsonRequestBehavior.AllowGet);
         }
+
 
         #endregion
 

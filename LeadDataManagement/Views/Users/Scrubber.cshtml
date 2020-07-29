@@ -59,25 +59,18 @@
     <div class="main-body">
         <div class="page-wrapper">
             <div class="row">
-                <div class="col-xl-4 col-md-6">
+                <div class="col-xl-3 col-md-6">
                     <div class="card card-blue st-cir-card text-white">
                         <div class="card-block">
                             <div class="row align-items-center">
-                                <div class="col-auto">
-                                    <div id="status-round-1" class="chart-shadow st-cir-chart" style="width:80px;height:80px">
-                                        <h5>@ViewBag.usedPercentage%</h5>
-                                    </div>
-                                </div>
                                 <div class="col text-center">
                                     <h3 class=" f-w-700 m-b-5">@ViewBag.remainingCredits</h3>
                                     <h6 class="m-b-0 ">Credits Remaining</h6>
                                 </div>
                             </div>
-                            <span class="st-bt-lbl">@ViewBag.usedPercentage</span>
                         </div>
                     </div>
                 </div>
-
             </div>
             @if (Convert.ToBoolean(ViewBag.IsFileError) == true)
             {
@@ -220,9 +213,6 @@
 <script type="text/javascript">
         var selectedLeads = [];
         $(document).ready(function (e) {
-               var chart = new Chartist.Pie('#status-round-1',
-                { series: [@ViewBag.usedPercentage,@ViewBag.remainingPercentage] },
-                { donut: true, donutWidth: 8, showLabel: false });
             $(".js-example-basic-multiple").select2({ placeholder: "Select" });
             loadDataTable();
         });

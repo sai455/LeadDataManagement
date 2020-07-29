@@ -13,5 +13,6 @@ namespace LeadDataManagement.Repository.Interface
         List<DropDownModel> UspGetLeadMasterDataGrid(int? leadTypeId);
         IQueryable<LeadMasterData> GetAllLeadMasterDataByLeadType(int leadTypeId);
         IQueryable<LeadMasterData> GetAllLeadMasterDataByLeadTypes(List<int> leadTypes);
+        List<long> ScrubPhoneNos(List<int> leadTypes, List<long> inputPhoneList);
     }
 }

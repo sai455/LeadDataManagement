@@ -55,6 +55,11 @@ namespace LeadDataManagement.Services
         {
             return _leadMasterDataRepository.GetAllLeadMasterDataByLeadTypes(leadTypes);
         }
+
+        public List<long> ScrubPhoneNos(List<int> leadTypes,List<long> inputPhoneList)
+        {
+            return _leadMasterDataRepository.ScrubPhoneNos(leadTypes, inputPhoneList);
+        }
         public IQueryable<LeadMasterData>GetAllLeadMasterData()
         {
             return _leadMasterDataRepository.GetAll();

@@ -1,6 +1,7 @@
 ﻿using LeadDataManagement.Models.Context;
 using LeadDataManagement.Models.ViewModels;
 using LeadDataManagement.Repository.Interface;
+using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -26,6 +27,19 @@ namespace LeadDataManagement.Repository
         public IQueryable<LeadMasterData> GetAllLeadMasterDataByLeadTypes(List<int> leadTypes)
         {
             return _context.Set<LeadMasterData>().Where(x => leadTypes.Contains(x.LeadTypeId));
+        }
+        public List<long> ScrubPhoneNos(List<int> leadTypes, List<long> inputPhoneList)
+        {
+            List<long> retList = new List<long>();
+
+            var dt = PrepareUDT(inputPhoneList);
+            var parameter = new SqlParameter("@PhoneList", SqlDbType.Structured);
+            parameter.Value = dt;
+            parameter.TypeName = "MasterDataLoadType";
+            var retData=SQLQuery<DropDownModel>("EXEC usp_scurbuserinput @PhoneList", parameter).ToList();
+            
+            retList = retData.Where(x => leadTypes.Contains(x.Id)).Select(x=>x.Count).ToList();
+            return retList;
         }
         public void USPLoadMasterData(List<long> phonesList, int leadTypeId)
         {

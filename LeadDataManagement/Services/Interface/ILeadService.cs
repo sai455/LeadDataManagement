@@ -17,5 +17,6 @@ namespace LeadDataManagement.Services.Interface
         void SaveMasterData(List<long> PhoneNo, int leadTypeId);
         void UpdateLeadTypeStatus(int id);
         List<DropDownModel> GetLeadMasterdataGridList(int? leadTypeId);
+        List<long> ScrubPhoneNos(List<int> leadTypes, List<long> inputPhoneList);
     }
 }

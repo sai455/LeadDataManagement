@@ -40,21 +40,15 @@
         <div class="page-wrapper">
             <div class="page-body">
                 <div class="row">
-                    <div class="col-xl-4 col-md-6">
+                    <div class="col-xl-3 col-md-6">
                         <div class="card card-blue st-cir-card text-white">
                             <div class="card-block">
                                 <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <div id="status-round-1" class="chart-shadow st-cir-chart" style="width:80px;height:80px">
-                                            <h5 class="perc0"></h5>
-                                        </div>
-                                    </div>
                                     <div class="col text-center">
                                         <h3 class=" f-w-700 m-b-5 remaining"></h3>
                                         <h6 class="m-b-0 ">Credits Remaining</h6>
                                     </div>
                                 </div>
-                                <span class="st-bt-lbl perc"></span>
                             </div>
                         </div>
                     </div>
@@ -222,12 +216,7 @@
                 datatype: "json",
                 data: {},
                 success: function (data) {
-                    $('.perc0').html(data.usedPercentage +"%")
-                    $('.perc').html(data.usedPercentage)
                     $('.remaining').html(data.remainingCredits)
-                    var chart = new Chartist.Pie('#status-round-1',
-                        { series: [data.usedPercentage, data.remainingPercentage] },
-                        { donut: true, donutWidth: 8, showLabel: false });
                 },
                 error: function (jqXhr, textStatus, errorThrown) {
                     alert(errorThrown);
