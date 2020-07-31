@@ -1,4 +1,4 @@
-﻿@model LeadDataManagement.Models.ViewModels.UserViewModel
+@model LeadDataManagement.Models.ViewModels.UserViewModel
 @{
     Layout = null;
 }
@@ -124,11 +124,6 @@
                                             @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-group form-primary">
-                                    <input type="text" name="Phone" class="form-control" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" />
-                                    <span class="form-bar"></span>
-                                    <label class="float-label">Phone</label>
                                 </div>
                                 <div class="form-group form-primary">
                                     @Html.TextBoxFor(m => m.ReferedByCode, new { @type = "text", @class = "form-control", autocomplete = "off" })
